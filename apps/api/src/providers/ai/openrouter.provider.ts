@@ -16,6 +16,28 @@ export interface ChatResponse {
   };
 }
 
+export interface AnalysisData {
+  emotionalState: {
+    primary: string;
+    secondary?: string;
+    intensity: 'low' | 'moderate' | 'high';
+  };
+  biases: Array<{
+    name: string;
+    confidence: number;
+    description: string;
+  }>;
+  patterns: Array<{
+    name: string;
+    percentage: number;
+  }>;
+  insights: string[];
+}
+
+export interface ChatWithAnalysisResponse extends ChatResponse {
+  analysis: AnalysisData | null;
+}
+
 @Injectable()
 export class OpenRouterProvider {
   private readonly logger = new Logger(OpenRouterProvider.name);
@@ -148,6 +170,60 @@ export class OpenRouterProvider {
       message: fullMessage,
       model: this.model,
       usage,
+    };
+  }
+
+  /**
+   * Chat with psychological analysis - returns both response and analysis
+   */
+  async chatWithAnalysis(messages: ChatMessage[]): Promise<ChatWithAnalysisResponse> {
+    if (!this.apiKey) {
+      throw new Error('OpenRouter API key not configured');
+    }
+
+    this.logger.log(`Sending chat+analysis request to OpenRouter using model: ${this.model}`);
+
+    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': this.configService.get<string>('frontendUrl') || 'http://localhost:3000',
+        'X-Title': 'Matcha AI',
+      },
+      body: JSON.stringify({
+        model: this.model,
+        messages,
+        response_format: { type: 'json_object' },
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      this.logger.error(`OpenRouter API error: ${error}`);
+      throw new Error(`OpenRouter API error: ${response.status} ${error}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices[0]?.message?.content || '{}';
+
+    let parsed: { reply?: string; analysis?: AnalysisData | null } = {};
+    try {
+      parsed = JSON.parse(content);
+    } catch (e) {
+      this.logger.warn('Failed to parse JSON response, using raw content');
+      parsed = { reply: content, analysis: null };
+    }
+
+    return {
+      message: parsed.reply || content,
+      model: data.model,
+      usage: {
+        promptTokens: data.usage?.prompt_tokens || 0,
+        completionTokens: data.usage?.completion_tokens || 0,
+        totalTokens: data.usage?.total_tokens || 0,
+      },
+      analysis: parsed.analysis || null,
     };
   }
 

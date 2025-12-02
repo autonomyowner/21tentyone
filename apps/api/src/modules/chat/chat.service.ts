@@ -6,13 +6,50 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { OpenRouterProvider, ChatMessage } from '../../providers/ai/openrouter.provider';
+import { OpenRouterProvider, ChatMessage, AnalysisData } from '../../providers/ai/openrouter.provider';
 import { SendMessageDto, CreateConversationDto } from './dto/chat.dto';
 import { MessageRole } from '@prisma/client';
 
-const SYSTEM_PROMPT = `You are a helpful AI assistant called Matcha. You are friendly, knowledgeable, and conversational.
-Help users with their questions, provide thoughtful responses, and engage in meaningful conversations.
-Keep your responses concise but informative. If you don't know something, be honest about it.`;
+// System prompt that requests JSON with both reply and psychological analysis
+const SYSTEM_PROMPT_WITH_ANALYSIS = `You are Matcha, a friendly AI assistant specialized in psychological insight and personal growth.
+
+Your role is to:
+1. Have helpful, empathetic conversations
+2. Analyze the user's thought patterns, cognitive biases, and emotional state
+3. Provide insights that help them understand themselves better
+
+IMPORTANT: You MUST respond in valid JSON format with this exact structure:
+{
+  "reply": "Your conversational response to the user (friendly, helpful, natural)",
+  "analysis": {
+    "emotionalState": {
+      "primary": "the main emotion detected (e.g., anxious, curious, frustrated, hopeful, confused, determined)",
+      "secondary": "optional secondary emotion or null",
+      "intensity": "low" or "moderate" or "high"
+    },
+    "biases": [
+      {
+        "name": "Name of cognitive bias (e.g., Confirmation Bias, Catastrophizing, Black-and-White Thinking)",
+        "confidence": 0.0 to 1.0,
+        "description": "Brief explanation of how this bias appears in their message"
+      }
+    ],
+    "patterns": [
+      {"name": "Analytical", "percentage": 0-100},
+      {"name": "Emotional", "percentage": 0-100},
+      {"name": "Pragmatic", "percentage": 0-100},
+      {"name": "Creative", "percentage": 0-100}
+    ],
+    "insights": ["Key insight about their thinking", "Another observation"]
+  }
+}
+
+Guidelines:
+- Keep reply conversational and warm, not clinical
+- Only include biases you're confident about (confidence > 0.5)
+- Patterns should roughly sum to 100%
+- Provide 1-3 actionable insights
+- If the message is simple (greetings, etc.), still provide basic analysis but mark confidence as low`;
 
 // FREE tier limits
 const FREE_TIER_MONTHLY_MESSAGES = 50;
@@ -130,20 +167,20 @@ export class ChatService {
       take: 20, // Limit context window
     });
 
-    // Build messages for OpenRouter
+    // Build messages for OpenRouter with analysis prompt
     const chatMessages: ChatMessage[] = [
-      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'system', content: SYSTEM_PROMPT_WITH_ANALYSIS },
       ...messages.map((m) => ({
         role: m.role.toLowerCase() as 'user' | 'assistant',
         content: m.content,
       })),
     ];
 
-    // Get AI response with error handling
+    // Get AI response with analysis
     let response;
     try {
-      this.logger.log(`Sending message to OpenRouter for conversation ${conversationId}`);
-      response = await this.openRouter.chat(chatMessages);
+      this.logger.log(`Sending message with analysis to OpenRouter for conversation ${conversationId}`);
+      response = await this.openRouter.chatWithAnalysis(chatMessages);
     } catch (error) {
       this.logger.error('OpenRouter API error:', error);
 
@@ -174,17 +211,99 @@ export class ChatService {
       },
     });
 
-    // Update conversation timestamp
-    await this.prisma.conversation.update({
+    // Update conversation with analysis data
+    const updatedConversation = await this.prisma.conversation.update({
       where: { id: conversationId },
-      data: { updatedAt: new Date() },
+      data: {
+        updatedAt: new Date(),
+        analysisUpdatedAt: new Date(),
+        // Store the latest analysis - this accumulates insights over time
+        ...(response.analysis && {
+          emotionalState: response.analysis.emotionalState,
+          biases: await this.mergeAnalysisArray(
+            conversationId,
+            'biases',
+            response.analysis.biases,
+          ),
+          patterns: response.analysis.patterns,
+          insights: await this.mergeInsights(
+            conversationId,
+            response.analysis.insights,
+          ),
+        }),
+      },
     });
 
     return {
       conversationId,
       message: assistantMessage,
+      analysis: response.analysis,
       usage: response.usage,
     };
+  }
+
+  /**
+   * Merge new biases with existing ones, keeping unique entries
+   */
+  private async mergeAnalysisArray(
+    conversationId: string,
+    field: 'biases',
+    newItems: Array<{ name: string; confidence: number; description: string }>,
+  ) {
+    const conversation = await this.prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { [field]: true },
+    });
+
+    const existing = (conversation?.[field] as typeof newItems) || [];
+    const merged = [...existing];
+
+    for (const newItem of newItems) {
+      const existingIndex = merged.findIndex((e) => e.name === newItem.name);
+      if (existingIndex >= 0) {
+        // Update confidence if higher
+        if (newItem.confidence > merged[existingIndex].confidence) {
+          merged[existingIndex] = newItem;
+        }
+      } else {
+        merged.push(newItem);
+      }
+    }
+
+    // Keep top 10 biases by confidence
+    return merged
+      .sort((a, b) => b.confidence - a.confidence)
+      .slice(0, 10);
+  }
+
+  /**
+   * Merge new insights with existing ones, keeping unique entries
+   */
+  private async mergeInsights(
+    conversationId: string,
+    newInsights: string[],
+  ): Promise<string[]> {
+    const conversation = await this.prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { insights: true },
+    });
+
+    const existing = (conversation?.insights as string[]) || [];
+    const merged = [...existing];
+
+    for (const insight of newInsights) {
+      // Simple deduplication - check if similar insight exists
+      const isDuplicate = merged.some(
+        (e) => e.toLowerCase().includes(insight.toLowerCase().slice(0, 20)) ||
+               insight.toLowerCase().includes(e.toLowerCase().slice(0, 20)),
+      );
+      if (!isDuplicate) {
+        merged.push(insight);
+      }
+    }
+
+    // Keep last 20 insights
+    return merged.slice(-20);
   }
 
   /**

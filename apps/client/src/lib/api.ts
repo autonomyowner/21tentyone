@@ -111,6 +111,24 @@ export interface Message {
   createdAt: string;
 }
 
+export interface AnalysisData {
+  emotionalState: {
+    primary: string;
+    secondary?: string;
+    intensity: 'low' | 'moderate' | 'high';
+  };
+  biases: Array<{
+    name: string;
+    confidence: number;
+    description: string;
+  }>;
+  patterns: Array<{
+    name: string;
+    percentage: number;
+  }>;
+  insights: string[];
+}
+
 export interface Conversation {
   id: string;
   userId: string;
@@ -118,11 +136,18 @@ export interface Conversation {
   createdAt: string;
   updatedAt: string;
   messages?: Message[];
+  // Analysis data
+  emotionalState?: AnalysisData['emotionalState'];
+  biases?: AnalysisData['biases'];
+  patterns?: AnalysisData['patterns'];
+  insights?: string[];
+  analysisUpdatedAt?: string;
 }
 
 export interface SendMessageResponse {
   conversationId: string;
   message: Message;
+  analysis: AnalysisData | null;
   usage: {
     promptTokens: number;
     completionTokens: number;

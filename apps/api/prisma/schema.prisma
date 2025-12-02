@@ -75,6 +75,13 @@ model Conversation {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
 
+  // Real-time analysis (updated with each message)
+  emotionalState    Json?   @map("emotional_state")
+  biases            Json?
+  patterns          Json?
+  insights          Json?
+  analysisUpdatedAt DateTime? @map("analysis_updated_at")
+
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages Message[]
 
