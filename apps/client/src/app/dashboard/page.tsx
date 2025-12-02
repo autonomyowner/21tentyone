@@ -79,8 +79,13 @@ export default function DashboardPage() {
   const isPro = dashboardData?.profile.tier === 'PRO';
   const firstName = dashboardData?.profile.firstName || user?.firstName || 'User';
   const analysesRemaining = dashboardData?.usage.analysesRemaining;
+  const chatMessagesRemaining = dashboardData?.usage.chatMessagesRemaining;
   const totalAnalyses = dashboardData?.usage.totalAnalyses || 0;
+  const totalConversations = dashboardData?.usage.totalConversationsWithAnalysis || 0;
   const profileCompletion = dashboardData?.profile.completionPercentage || 0;
+
+  // Emotional trends from chat
+  const emotionalTrends = dashboardData?.stats.emotionalTrends || [];
 
   // Format member since date
   const memberSince = dashboardData?.profile.memberSince
@@ -89,9 +94,16 @@ export default function DashboardPage() {
 
   // Format last analysis date
   const lastAnalysisDate = dashboardData?.usage.lastAnalysisDate;
+  const lastChatDate = dashboardData?.usage.lastChatAnalysisDate;
   let lastAnalysis = language === 'en' ? 'No analyses yet' : 'Aucune analyse';
-  if (lastAnalysisDate) {
-    const daysAgo = Math.floor((Date.now() - new Date(lastAnalysisDate).getTime()) / (1000 * 60 * 60 * 24));
+
+  // Use the most recent between analysis and chat
+  const latestDate = lastAnalysisDate && lastChatDate
+    ? new Date(lastAnalysisDate) > new Date(lastChatDate) ? lastAnalysisDate : lastChatDate
+    : lastAnalysisDate || lastChatDate;
+
+  if (latestDate) {
+    const daysAgo = Math.floor((Date.now() - new Date(latestDate).getTime()) / (1000 * 60 * 60 * 24));
     lastAnalysis = language === 'en'
       ? `${daysAgo} ${t.dashboard.daysAgo} ago`
       : `Il y a ${daysAgo} ${t.dashboard.daysAgo}`;
@@ -128,16 +140,27 @@ export default function DashboardPage() {
               {t.dashboard.subtitle}
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 flex-wrap">
             {!isPro && analysesRemaining !== null && (
               <div
-                className="px-4 py-2 rounded-full text-sm"
+                className="px-3 py-1.5 rounded-full text-sm"
                 style={{
                   background: 'var(--cream-200)',
                   color: 'var(--text-secondary)',
                 }}
               >
                 {analysesRemaining} {analysesRemaining !== 1 ? t.dashboard.analysesRemainingPlural : t.dashboard.analysesRemaining}
+              </div>
+            )}
+            {!isPro && chatMessagesRemaining !== null && (
+              <div
+                className="px-3 py-1.5 rounded-full text-sm"
+                style={{
+                  background: 'var(--matcha-100)',
+                  color: 'var(--matcha-700)',
+                }}
+              >
+                {chatMessagesRemaining} {language === 'en' ? 'chat msgs' : 'msgs chat'}
               </div>
             )}
             <span className={`matcha-badge ${isPro ? 'matcha-badge-pro' : 'matcha-badge-free'}`}>
@@ -197,6 +220,10 @@ export default function DashboardPage() {
               <div className="flex justify-between">
                 <span style={{ color: 'var(--text-secondary)' }}>{t.dashboard.analysesCompleted}</span>
                 <span style={{ color: 'var(--text-primary)' }} className="font-medium">{totalAnalyses}</span>
+              </div>
+              <div className="flex justify-between">
+                <span style={{ color: 'var(--text-secondary)' }}>{language === 'en' ? 'Chat Insights' : 'Analyses chat'}</span>
+                <span style={{ color: 'var(--text-primary)' }} className="font-medium">{totalConversations}</span>
               </div>
               <div className="flex justify-between">
                 <span style={{ color: 'var(--text-secondary)' }}>{t.dashboard.memberSince}</span>
@@ -352,6 +379,59 @@ export default function DashboardPage() {
             ))}
           </div>
         </div>
+
+        {/* Emotional Trends from Chat */}
+        {emotionalTrends.length > 0 && (
+          <div
+            className="mt-6 rounded-3xl p-6"
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-soft)',
+              boxShadow: 'var(--shadow-md)',
+            }}
+          >
+            <h2
+              className="text-xl mb-6"
+              style={{
+                fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                color: 'var(--text-primary)',
+              }}
+            >
+              {language === 'en' ? 'Emotional Trends' : 'Tendances Emotionnelles'}
+            </h2>
+
+            <div className="grid md:grid-cols-5 gap-4">
+              {emotionalTrends.map((trend: { emotion: string; count: number; avgIntensity: number }, i: number) => (
+                <div
+                  key={i}
+                  className="p-4 rounded-2xl text-center"
+                  style={{
+                    background: `linear-gradient(135deg, var(--matcha-${50 + i * 50}) 0%, var(--cream-100) 100%)`,
+                  }}
+                >
+                  <div
+                    className="text-lg font-medium capitalize mb-1"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
+                    {trend.emotion}
+                  </div>
+                  <div
+                    className="text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {trend.count}x {language === 'en' ? 'detected' : 'detecte'}
+                  </div>
+                  <div className="mt-2 matcha-progress h-1">
+                    <div
+                      className="matcha-progress-bar"
+                      style={{ width: `${trend.avgIntensity}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Progress Over Time (Pro only) */}
         <div

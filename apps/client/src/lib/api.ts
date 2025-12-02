@@ -80,12 +80,17 @@ export interface DashboardData {
   usage: {
     analysesThisMonth: number;
     analysesRemaining: number | null;
+    chatMessagesThisMonth: number;
+    chatMessagesRemaining: number | null;
     totalAnalyses: number;
+    totalConversationsWithAnalysis: number;
     lastAnalysisDate: string | null;
+    lastChatAnalysisDate: string | null;
   };
   stats: {
     topBiases: Array<{ name: string; avgIntensity: number; count: number }>;
     patterns: Array<{ name: string; avgPercentage: number }>;
+    emotionalTrends: Array<{ emotion: string; count: number; avgIntensity: number }>;
   };
   recentInsights: string[];
 }
