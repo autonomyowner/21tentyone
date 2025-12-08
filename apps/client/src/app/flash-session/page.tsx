@@ -116,7 +116,7 @@ function IntroScreen({ session }: { session: ReturnType<typeof useFlashSession> 
         <div className="intro-form">
           <div className="form-group">
             <label className="form-label">What has been weighing on you?</label>
-            <p className="form-hint">Just the topic - we won't go into details</p>
+            <p className="form-hint">Just the topic - we won&apos;t go into details</p>
             <input
               type="text"
               className="form-input"
@@ -161,10 +161,10 @@ function IntroScreen({ session }: { session: ReturnType<typeof useFlashSession> 
           <div className="intro-instructions">
             <h3>How the Flash Technique works</h3>
             <ul>
-              <li>Focus completely on your peaceful place - don't think about the problem</li>
+              <li>Focus completely on your peaceful place - don&apos;t think about the problem</li>
               <li>Tap your legs slowly - left, right, left, right</li>
-              <li>When you see "Flash" - blink 3 times quickly</li>
-              <li>We'll do 5 flashes per set, then check how you feel</li>
+              <li>When you see &quot;Flash&quot; - blink 3 times quickly</li>
+              <li>We&apos;ll do 5 flashes per set, then check how you feel</li>
               <li>The goal is to reduce distress without having to relive the memory</li>
             </ul>
           </div>
@@ -270,7 +270,7 @@ function SetPauseScreen({ session }: { session: ReturnType<typeof useFlashSessio
         </p>
 
         <p className="pause-prompt">What did you notice during that set?</p>
-        <p className="pause-hint">You don't need to answer - just notice.</p>
+        <p className="pause-hint">You don&apos;t need to answer - just notice.</p>
 
         <div className="pause-actions">
           <button className="continue-btn" onClick={session.continueSet}>
@@ -301,7 +301,7 @@ function ClosingScreen({ session }: { session: ReturnType<typeof useFlashSession
         <p className="closing-subtitle">
           Gently bring to mind what was bothering you earlier...
         </p>
-        <p className="closing-topic">"{session.data.topic}"</p>
+        <p className="closing-topic">&quot;{session.data.topic}&quot;</p>
 
         <div className="closing-question">
           <label className="form-label">How does it feel now?</label>

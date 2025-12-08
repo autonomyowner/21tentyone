@@ -176,7 +176,6 @@ export function useFlashSession(): UseFlashSessionReturn {
     if (state !== 'SET_ACTIVE') return;
 
     const startTime = Date.now();
-    let currentFlash = 0;
 
     // Progress timer
     timerIntervalRef.current = setInterval(() => {
@@ -250,7 +249,8 @@ export function useFlashSession(): UseFlashSessionReturn {
       setBlinkActive(false);
       setBlinkCount(0);
     };
-  }, [state]); // Only depend on state, not data
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]); // Only depend on state - callbacks use refs
 
   // Actions
   const setTopic = useCallback((topic: string) => {
