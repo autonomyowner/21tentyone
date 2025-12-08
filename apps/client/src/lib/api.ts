@@ -160,6 +160,71 @@ export interface SendMessageResponse {
   };
 }
 
+// EMDR Flash Technique Types
+export type EmdrPhase =
+  | 'PREPARATION'
+  | 'TRAUMA_RECALL'
+  | 'BILATERAL_START'
+  | 'POSITIVE_RESOURCE'
+  | 'BILATERAL_POSITIVE'
+  | 'INTEGRATION'
+  | 'COMPLETED';
+
+export const EMDR_PHASE_LABELS: Record<EmdrPhase, string> = {
+  PREPARATION: 'Preparation',
+  TRAUMA_RECALL: 'Recall',
+  BILATERAL_START: 'Bilateral',
+  POSITIVE_RESOURCE: 'Positive',
+  BILATERAL_POSITIVE: 'Integration',
+  INTEGRATION: 'Closing',
+  COMPLETED: 'Complete',
+};
+
+export const EMDR_PHASES_ORDER: EmdrPhase[] = [
+  'PREPARATION',
+  'TRAUMA_RECALL',
+  'BILATERAL_START',
+  'POSITIVE_RESOURCE',
+  'BILATERAL_POSITIVE',
+  'INTEGRATION',
+  'COMPLETED',
+];
+
+export interface EmdrSession {
+  id: string;
+  conversationId: string;
+  currentPhase: EmdrPhase;
+  blinkIntervalMin: number;
+  blinkIntervalMax: number;
+  blinksPerSet: number;
+  tapIntervalMs: number;
+  distressStart: number | null;
+  distressEnd: number | null;
+  setsCompleted: number;
+  startedAt: string;
+  completedAt: string | null;
+}
+
+export interface EmdrGuidance {
+  shouldShowBilateral: boolean;
+  shouldShowBlinks: boolean;
+  blinkCount: number;
+  suggestedNextPhase: EmdrPhase | null;
+  groundingNeeded: boolean;
+}
+
+export interface EmdrMessageResponse {
+  conversationId: string;
+  message: {
+    id: string;
+    role: 'USER' | 'ASSISTANT';
+    content: string;
+    createdAt: string;
+  };
+  session: EmdrSession;
+  guidance: EmdrGuidance;
+}
+
 // API Functions
 export const api = {
   // User
@@ -232,6 +297,72 @@ export const api = {
     apiClient<SendMessageResponse>('/chat/send', {
       method: 'POST',
       body: JSON.stringify({ message, conversationId }),
+      token,
+    }),
+
+  // EMDR Flash Technique
+  startEmdrSession: (token: string) =>
+    apiClient<EmdrMessageResponse>('/chat/emdr/start', {
+      method: 'POST',
+      token,
+    }),
+
+  sendEmdrMessage: (token: string, conversationId: string, message: string) =>
+    apiClient<EmdrMessageResponse>('/chat/emdr/send', {
+      method: 'POST',
+      body: JSON.stringify({ conversationId, message }),
+      token,
+    }),
+
+  getEmdrSession: (token: string, conversationId: string) =>
+    apiClient<{
+      session: EmdrSession;
+      conversation: {
+        id: string;
+        title: string;
+        messages: Message[];
+        createdAt: string;
+      };
+    }>(`/chat/emdr/${conversationId}`, { token }),
+
+  updateEmdrPhase: (token: string, conversationId: string, phase: EmdrPhase, distressLevel?: number) =>
+    apiClient<EmdrSession>(`/chat/emdr/${conversationId}/phase`, {
+      method: 'PATCH',
+      body: JSON.stringify({ phase, distressLevel }),
+      token,
+    }),
+
+  completeEmdrSession: (token: string, conversationId: string, distressEnd: number) =>
+    apiClient<EmdrSession>(`/chat/emdr/${conversationId}/complete`, {
+      method: 'POST',
+      body: JSON.stringify({ distressEnd }),
+      token,
+    }),
+
+  // Text-to-Speech (ElevenLabs)
+  textToSpeech: async (token: string, text: string): Promise<ArrayBuffer> => {
+    const response = await fetch(`${API_URL}/tts/speak`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ text }),
+    });
+
+    if (!response.ok) {
+      throw new ApiError(response.status, await response.json().catch(() => ({})));
+    }
+
+    return response.arrayBuffer();
+  },
+
+  getTtsStatus: (token: string) =>
+    apiClient<{ configured: boolean; cacheSize: number }>('/tts/status', { token }),
+
+  preloadTtsPhrases: (token: string) =>
+    apiClient<{ success: boolean; cacheSize: number }>('/tts/preload', {
+      method: 'POST',
       token,
     }),
 };

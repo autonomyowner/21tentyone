@@ -12,15 +12,24 @@ import {
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { ChatService } from './chat.service';
+import { EmdrService } from './emdr.service';
 import { ClerkAuthGuard, AuthenticatedUser } from '../auth/guards/clerk-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { sendMessageSchema, createConversationSchema } from './dto/chat.dto';
+import {
+  sendEmdrMessageSchema,
+  updateEmdrPhaseSchema,
+  completeEmdrSessionSchema,
+} from './dto/emdr.dto';
 import { z } from 'zod';
 
 @Controller('chat')
 @UseGuards(ClerkAuthGuard)
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly emdrService: EmdrService,
+  ) {}
 
   @Post('conversations')
   async createConversation(
@@ -96,5 +105,60 @@ export class ChatController {
       throw new BadRequestException(result.error.format());
     }
     return this.chatService.sendMessage(user.id, user.tier, result.data);
+  }
+
+  // ==================== EMDR Flash Technique Endpoints ====================
+
+  @Post('emdr/start')
+  @Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 sessions per minute max
+  async startEmdrSession(@CurrentUser() user: AuthenticatedUser) {
+    return this.emdrService.startSession(user.id, user.tier);
+  }
+
+  @Post('emdr/send')
+  @Throttle({ default: { limit: 20, ttl: 60000 } }) // 20 messages per minute max
+  async sendEmdrMessage(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: unknown,
+  ) {
+    const result = sendEmdrMessageSchema.safeParse(body);
+    if (!result.success) {
+      throw new BadRequestException(result.error.format());
+    }
+    return this.emdrService.sendMessage(user.id, user.tier, result.data);
+  }
+
+  @Get('emdr/:conversationId')
+  async getEmdrSession(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('conversationId') conversationId: string,
+  ) {
+    return this.emdrService.getSession(user.id, conversationId);
+  }
+
+  @Patch('emdr/:conversationId/phase')
+  async updateEmdrPhase(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('conversationId') conversationId: string,
+    @Body() body: unknown,
+  ) {
+    const result = updateEmdrPhaseSchema.safeParse(body);
+    if (!result.success) {
+      throw new BadRequestException(result.error.format());
+    }
+    return this.emdrService.updatePhase(user.id, conversationId, result.data);
+  }
+
+  @Post('emdr/:conversationId/complete')
+  async completeEmdrSession(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('conversationId') conversationId: string,
+    @Body() body: unknown,
+  ) {
+    const result = completeEmdrSessionSchema.safeParse(body);
+    if (!result.success) {
+      throw new BadRequestException(result.error.format());
+    }
+    return this.emdrService.completeSession(user.id, conversationId, result.data);
   }
 }

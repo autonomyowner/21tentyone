@@ -189,6 +189,11 @@ export default function ChatPage() {
     }
   };
 
+  // Navigate to Flash Session
+  const handleStartFlashSession = () => {
+    router.push('/flash-session');
+  };
+
   if (!isLoaded || !isSignedIn) {
     return (
       <div className="h-[calc(100vh-64px)] flex items-center justify-center" style={{ background: 'var(--cream-50)' }}>
@@ -315,6 +320,22 @@ export default function ChatPage() {
             <h1 className="text-base sm:text-lg font-medium truncate" style={{ color: 'var(--text-primary)' }}>
               {t.chat?.title || 'Chat with Matcha'}
             </h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleStartFlashSession}
+              className="px-3 py-2 rounded-lg text-sm font-medium transition-colors hidden sm:flex items-center gap-2"
+              style={{
+                background: 'linear-gradient(135deg, var(--matcha-500) 0%, var(--matcha-600) 100%)',
+                color: 'white',
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+              Flash Session
+            </button>
           </div>
           <button
             onClick={() => setAnalysisPanelOpen(!analysisPanelOpen)}
@@ -596,6 +617,7 @@ export default function ChatPage() {
           )}
         </div>
       </div>
+
     </div>
   );
 }

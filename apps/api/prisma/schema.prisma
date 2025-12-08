@@ -19,6 +19,21 @@ enum AnalysisStatus {
   FAILED
 }
 
+enum SessionType {
+  REGULAR
+  EMDR_FLASH
+}
+
+enum EmdrPhase {
+  PREPARATION
+  TRAUMA_RECALL
+  BILATERAL_START
+  POSITIVE_RESOURCE
+  BILATERAL_POSITIVE
+  INTEGRATION
+  COMPLETED
+}
+
 model User {
   id        String   @id // Clerk user ID
   email     String   @unique
@@ -69,11 +84,12 @@ model UsageLimit {
 }
 
 model Conversation {
-  id        String    @id @default(cuid())
-  userId    String    @map("user_id")
-  title     String?
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+  id          String      @id @default(cuid())
+  userId      String      @map("user_id")
+  title       String?
+  sessionType SessionType @default(REGULAR) @map("session_type")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
 
   // Real-time analysis (updated with each message)
   emotionalState    Json?   @map("emotional_state")
@@ -82,8 +98,9 @@ model Conversation {
   insights          Json?
   analysisUpdatedAt DateTime? @map("analysis_updated_at")
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages Message[]
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages    Message[]
+  emdrSession EmdrSession?
 
   @@index([userId, updatedAt(sort: Desc)])
   @@map("conversations")
@@ -106,4 +123,29 @@ model Message {
 
   @@index([conversationId, createdAt])
   @@map("messages")
+}
+
+model EmdrSession {
+  id             String    @id @default(cuid())
+  conversationId String    @unique @map("conversation_id")
+  currentPhase   EmdrPhase @default(PREPARATION) @map("current_phase")
+
+  // Configuration
+  blinkIntervalMin Int @default(3000) @map("blink_interval_min")
+  blinkIntervalMax Int @default(8000) @map("blink_interval_max")
+  blinksPerSet     Int @default(5) @map("blinks_per_set")
+  tapIntervalMs    Int @default(1000) @map("tap_interval_ms")
+
+  // Tracking
+  distressStart  Int? @map("distress_start")
+  distressEnd    Int? @map("distress_end")
+  setsCompleted  Int  @default(0) @map("sets_completed")
+
+  // Timestamps
+  startedAt   DateTime  @default(now()) @map("started_at")
+  completedAt DateTime? @map("completed_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("emdr_sessions")
 }

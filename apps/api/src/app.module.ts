@@ -10,6 +10,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { PlansModule } from './modules/plans/plans.module';
 import { WebhooksModule } from './modules/webhooks/webhooks.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { TtsModule } from './modules/tts/tts.module';
 import { PrismaModule } from './prisma/prisma.module';
 import configuration from './config/configuration';
 
@@ -45,6 +46,7 @@ import configuration from './config/configuration';
     PlansModule,
     WebhooksModule,
     ChatModule,
+    TtsModule,
     HealthModule,
   ],
   controllers: [],

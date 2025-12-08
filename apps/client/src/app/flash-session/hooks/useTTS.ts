@@ -1,0 +1,152 @@
+'use client';
+
+import { useCallback, useRef, useState, useEffect } from 'react';
+import { useAuth } from '@clerk/nextjs';
+import { api } from '../../../lib/api';
+
+interface UseTTSReturn {
+  speak: (text: string) => void;
+  speakSequence: (texts: string[]) => void;
+  stop: () => void;
+  isSpeaking: boolean;
+  isLoading: boolean;
+  preloadPhrases: (phrases: string[]) => Promise<void>;
+}
+
+export function useTTS(): UseTTSReturn {
+  const { getToken } = useAuth();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCache = useRef<Map<string, string>>(new Map());
+  const isMountedRef = useRef(true);
+  const isPlayingRef = useRef(false);
+  const queueRef = useRef<string[]>([]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
+      audioCache.current.forEach((url) => URL.revokeObjectURL(url));
+      audioCache.current.clear();
+    };
+  }, []);
+
+  const fetchAudio = useCallback(async (text: string): Promise<string | null> => {
+    // Check cache first
+    const cached = audioCache.current.get(text);
+    if (cached) return cached;
+
+    try {
+      const token = await getToken();
+      if (!token) return null;
+
+      const audioBuffer = await api.textToSpeech(token, text);
+      const blob = new Blob([audioBuffer], { type: 'audio/mpeg' });
+      const url = URL.createObjectURL(blob);
+      audioCache.current.set(text, url);
+      return url;
+    } catch (error) {
+      console.error('TTS fetch error:', error);
+      return null;
+    }
+  }, [getToken]);
+
+  const playNext = useCallback(async () => {
+    if (!isMountedRef.current || isPlayingRef.current || queueRef.current.length === 0) {
+      return;
+    }
+
+    const text = queueRef.current.shift()!;
+    isPlayingRef.current = true;
+    setIsSpeaking(true);
+
+    try {
+      setIsLoading(true);
+      const url = await fetchAudio(text);
+      setIsLoading(false);
+
+      if (!url || !isMountedRef.current) {
+        isPlayingRef.current = false;
+        setIsSpeaking(false);
+        playNext();
+        return;
+      }
+
+      const audio = new Audio(url);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        if (isMountedRef.current) {
+          isPlayingRef.current = false;
+          setIsSpeaking(queueRef.current.length > 0);
+          playNext();
+        }
+      };
+
+      audio.onerror = () => {
+        if (isMountedRef.current) {
+          isPlayingRef.current = false;
+          setIsSpeaking(queueRef.current.length > 0);
+          playNext();
+        }
+      };
+
+      await audio.play();
+    } catch (error) {
+      console.error('Audio play error:', error);
+      isPlayingRef.current = false;
+      setIsSpeaking(false);
+      playNext();
+    }
+  }, [fetchAudio]);
+
+  const speak = useCallback((text: string) => {
+    queueRef.current.push(text);
+    if (!isPlayingRef.current) {
+      playNext();
+    }
+  }, [playNext]);
+
+  const speakSequence = useCallback((texts: string[]) => {
+    queueRef.current.push(...texts);
+    if (!isPlayingRef.current) {
+      playNext();
+    }
+  }, [playNext]);
+
+  const stop = useCallback(() => {
+    queueRef.current = [];
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = '';
+    }
+    isPlayingRef.current = false;
+    setIsSpeaking(false);
+    setIsLoading(false);
+  }, []);
+
+  const preloadPhrases = useCallback(async (phrases: string[]) => {
+    const promises = phrases.map(async (phrase) => {
+      if (!audioCache.current.has(phrase)) {
+        await fetchAudio(phrase);
+      }
+    });
+    await Promise.all(promises);
+  }, [fetchAudio]);
+
+  return {
+    speak,
+    speakSequence,
+    stop,
+    isSpeaking,
+    isLoading,
+    preloadPhrases,
+  };
+}
