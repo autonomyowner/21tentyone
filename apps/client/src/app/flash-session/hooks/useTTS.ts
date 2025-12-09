@@ -38,6 +38,27 @@ export function useTTS(): UseTTSReturn {
     };
   }, []);
 
+  // Fallback to browser TTS
+  const speakWithBrowser = useCallback((text: string): Promise<void> => {
+    return new Promise((resolve) => {
+      if (!window.speechSynthesis) {
+        resolve();
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      utterance.onend = () => resolve();
+      utterance.onerror = () => resolve();
+
+      window.speechSynthesis.cancel(); // Cancel any ongoing speech
+      window.speechSynthesis.speak(utterance);
+    });
+  }, []);
+
   const fetchAudio = useCallback(async (text: string): Promise<string | null> => {
     // Check cache first
     const cached = audioCache.current.get(text);
@@ -45,7 +66,11 @@ export function useTTS(): UseTTSReturn {
 
     try {
       const token = await getToken();
-      if (!token) return null;
+      if (!token) {
+        // Fallback to browser TTS if no token
+        await speakWithBrowser(text);
+        return null;
+      }
 
       const audioBuffer = await api.textToSpeech(token, text);
       const blob = new Blob([audioBuffer], { type: 'audio/mpeg' });
@@ -53,10 +78,12 @@ export function useTTS(): UseTTSReturn {
       audioCache.current.set(text, url);
       return url;
     } catch (error) {
-      console.error('TTS fetch error:', error);
+      console.error('TTS fetch error, falling back to browser TTS:', error);
+      // Fallback to browser TTS on error
+      await speakWithBrowser(text);
       return null;
     }
-  }, [getToken]);
+  }, [getToken, speakWithBrowser]);
 
   const playNext = useCallback(async () => {
     if (!isMountedRef.current || isPlayingRef.current || queueRef.current.length === 0) {
