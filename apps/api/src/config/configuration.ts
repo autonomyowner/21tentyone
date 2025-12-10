@@ -32,7 +32,12 @@ export default () => {
 
     openrouter: {
       apiKey: env.OPENROUTER_API_KEY,
-      model: env.OPENROUTER_MODEL,
+      model: env.OPENROUTER_MODEL, // Legacy - kept for backward compatibility
+      fastModel: env.OPENROUTER_FAST_MODEL,
+      deepModel: env.OPENROUTER_DEEP_MODEL,
+      thinkingBudget: env.OPENROUTER_THINKING_BUDGET,
+      fastTemperature: env.OPENROUTER_FAST_TEMPERATURE,
+      deepTemperature: env.OPENROUTER_DEEP_TEMPERATURE,
     },
   };
 };

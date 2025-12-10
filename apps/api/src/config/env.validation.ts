@@ -26,9 +26,14 @@ export const envSchema = z.object({
   R2_SECRET_ACCESS_KEY: z.string().optional(),
   R2_BUCKET_NAME: z.string().optional(),
 
-  // OpenRouter AI
+  // OpenRouter AI - Tiered Models
   OPENROUTER_API_KEY: z.string().optional(),
-  OPENROUTER_MODEL: z.string().default('openai/gpt-4o-mini'),
+  OPENROUTER_MODEL: z.string().default('openai/gpt-4o-mini'), // Legacy - kept for backward compatibility
+  OPENROUTER_FAST_MODEL: z.string().default('openai/gpt-4o-mini'),
+  OPENROUTER_DEEP_MODEL: z.string().default('anthropic/claude-sonnet-4'),
+  OPENROUTER_THINKING_BUDGET: z.string().default('10000').transform(Number),
+  OPENROUTER_FAST_TEMPERATURE: z.string().default('0.7').transform(Number),
+  OPENROUTER_DEEP_TEMPERATURE: z.string().default('0.3').transform(Number),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

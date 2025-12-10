@@ -9,47 +9,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { OpenRouterProvider, ChatMessage, AnalysisData } from '../../providers/ai/openrouter.provider';
 import { SendMessageDto, CreateConversationDto } from './dto/chat.dto';
 import { MessageRole } from '@prisma/client';
-
-// System prompt that requests JSON with both reply and psychological analysis
-const SYSTEM_PROMPT_WITH_ANALYSIS = `You are Matcha, a friendly AI assistant specialized in psychological insight and personal growth.
-
-Your role is to:
-1. Have helpful, empathetic conversations
-2. Analyze the user's thought patterns, cognitive biases, and emotional state
-3. Provide insights that help them understand themselves better
-
-IMPORTANT: You MUST respond in valid JSON format with this exact structure:
-{
-  "reply": "Your conversational response to the user (friendly, helpful, natural)",
-  "analysis": {
-    "emotionalState": {
-      "primary": "the main emotion detected (e.g., anxious, curious, frustrated, hopeful, confused, determined)",
-      "secondary": "optional secondary emotion or null",
-      "intensity": "low" or "moderate" or "high"
-    },
-    "biases": [
-      {
-        "name": "Name of cognitive bias (e.g., Confirmation Bias, Catastrophizing, Black-and-White Thinking)",
-        "confidence": 0.0 to 1.0,
-        "description": "Brief explanation of how this bias appears in their message"
-      }
-    ],
-    "patterns": [
-      {"name": "Analytical", "percentage": 0-100},
-      {"name": "Emotional", "percentage": 0-100},
-      {"name": "Pragmatic", "percentage": 0-100},
-      {"name": "Creative", "percentage": 0-100}
-    ],
-    "insights": ["Key insight about their thinking", "Another observation"]
-  }
-}
-
-Guidelines:
-- Keep reply conversational and warm, not clinical
-- Only include biases you're confident about (confidence > 0.5)
-- Patterns should roughly sum to 100%
-- Provide 1-3 actionable insights
-- If the message is simple (greetings, etc.), still provide basic analysis but mark confidence as low`;
+import { getSystemPromptWithAnalysis } from './prompts/matcha-prompt';
 
 // FREE tier limits
 const FREE_TIER_MONTHLY_MESSAGES = 50;
@@ -167,20 +127,47 @@ export class ChatService {
       take: 20, // Limit context window
     });
 
-    // Build messages for OpenRouter with analysis prompt
+    // Determine model tier based on context
+    const messageCount = messages.length;
+    const hasComplexEmotionalContent = this.detectComplexEmotionalContent(data.message);
+    const modelTier = this.openRouter.determineModelTier({
+      messageCount,
+      isSessionEnd: data.isSessionEnd || false,
+      requiresDeepAnalysis: data.requestDeepAnalysis || false,
+      hasComplexEmotionalContent,
+    });
+
+    // Get previous emotions for context
+    const previousEmotions = await this.getPreviousEmotions(conversationId);
+
+    // Build dynamic system prompt with context
+    const systemPrompt = getSystemPromptWithAnalysis({
+      messageCount,
+      isDeepAnalysis: modelTier === 'deep',
+      previousEmotions,
+    });
+
+    // Build messages for OpenRouter
     const chatMessages: ChatMessage[] = [
-      { role: 'system', content: SYSTEM_PROMPT_WITH_ANALYSIS },
+      { role: 'system', content: systemPrompt },
       ...messages.map((m) => ({
         role: m.role.toLowerCase() as 'user' | 'assistant',
         content: m.content,
       })),
     ];
 
-    // Get AI response with analysis
+    // Get AI response with tiered model and optional extended thinking
     let response;
     try {
-      this.logger.log(`Sending message with analysis to OpenRouter for conversation ${conversationId}`);
-      response = await this.openRouter.chatWithAnalysis(chatMessages);
+      this.logger.log(
+        `Sending message to OpenRouter (tier: ${modelTier}, thinking: ${modelTier === 'deep'}) for conversation ${conversationId}`,
+      );
+      response = await this.openRouter.chatWithThinking(chatMessages, {
+        modelTier,
+        thinking: {
+          enabled: modelTier === 'deep',
+        },
+      });
     } catch (error) {
       this.logger.error('OpenRouter API error:', error);
 
@@ -239,6 +226,7 @@ export class ChatService {
       message: assistantMessage,
       analysis: response.analysis,
       usage: response.usage,
+      modelTier, // Include which tier was used for transparency
     };
   }
 
@@ -412,5 +400,49 @@ export class ChatService {
       where: { id: conversationId },
       data: { title },
     });
+  }
+
+  /**
+   * Detect if message contains complex emotional content that needs deeper analysis
+   * This triggers the deep model tier for more careful handling
+   */
+  private detectComplexEmotionalContent(message: string): boolean {
+    const indicators = [
+      // Crisis/safety indicators
+      /\b(suicide|suicidal|kill myself|end my life|self.?harm|hurt myself|give up on life)\b/i,
+      // High distress indicators
+      /\b(panic|panicking|terrified|devastated|hopeless|worthless|can't go on)\b/i,
+      // Trauma-related content
+      /\b(trauma|traumatic|abuse|abused|assault|attacked|ptsd)\b/i,
+      // Mental health treatment mentions (may need careful handling)
+      /\b(diagnosed|medication|psychiatrist|hospitalized|crisis)\b/i,
+      // Intense emotional distress
+      /\b(can't stop crying|breaking down|falling apart|losing my mind)\b/i,
+      // Relationship crises
+      /\b(divorce|cheated on|betrayed|abandoned)\b/i,
+      // Loss and grief
+      /\b(died|death|passed away|lost my|funeral)\b/i,
+    ];
+
+    return indicators.some((pattern) => pattern.test(message));
+  }
+
+  /**
+   * Get previous emotions from conversation for context
+   */
+  private async getPreviousEmotions(conversationId: string): Promise<string[]> {
+    const conversation = await this.prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { emotionalState: true },
+    });
+
+    if (!conversation?.emotionalState) return [];
+
+    const state = conversation.emotionalState as {
+      primary?: string;
+      secondary?: string;
+    };
+
+    return [state.primary, state.secondary].filter(Boolean) as string[];
   }
 }

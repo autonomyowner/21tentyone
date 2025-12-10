@@ -21,11 +21,13 @@ export interface AnalysisData {
     primary: string;
     secondary?: string;
     intensity: 'low' | 'moderate' | 'high';
+    evidence?: string;
   };
   biases: Array<{
     name: string;
     confidence: number;
     description: string;
+    evidence?: string;
   }>;
   patterns: Array<{
     name: string;
@@ -38,20 +40,97 @@ export interface ChatWithAnalysisResponse extends ChatResponse {
   analysis: AnalysisData | null;
 }
 
+// Tiered model types
+export type ModelTier = 'fast' | 'deep';
+
+export interface GenerationParams {
+  temperature?: number;
+  maxTokens?: number;
+  topP?: number;
+}
+
+export interface ThinkingConfig {
+  enabled: boolean;
+  budgetTokens?: number;
+}
+
+export interface ExtendedChatOptions {
+  modelTier: ModelTier;
+  thinking?: ThinkingConfig;
+  generation?: GenerationParams;
+}
+
+export interface ModelTierContext {
+  messageCount: number;
+  isSessionEnd?: boolean;
+  requiresDeepAnalysis?: boolean;
+  hasComplexEmotionalContent?: boolean;
+}
+
 @Injectable()
 export class OpenRouterProvider {
   private readonly logger = new Logger(OpenRouterProvider.name);
   private readonly apiKey: string;
   private readonly model: string;
+  private readonly fastModel: string;
+  private readonly deepModel: string;
+  private readonly thinkingBudget: number;
+  private readonly fastTemperature: number;
+  private readonly deepTemperature: number;
   private readonly baseUrl = 'https://openrouter.ai/api/v1';
 
   constructor(private configService: ConfigService) {
     this.apiKey = this.configService.get<string>('openrouter.apiKey') || '';
     this.model = this.configService.get<string>('openrouter.model') || 'openai/gpt-4o-mini';
+    this.fastModel = this.configService.get<string>('openrouter.fastModel') || 'openai/gpt-4o-mini';
+    this.deepModel = this.configService.get<string>('openrouter.deepModel') || 'anthropic/claude-sonnet-4';
+    this.thinkingBudget = this.configService.get<number>('openrouter.thinkingBudget') || 10000;
+    this.fastTemperature = this.configService.get<number>('openrouter.fastTemperature') || 0.7;
+    this.deepTemperature = this.configService.get<number>('openrouter.deepTemperature') || 0.3;
 
     if (!this.apiKey) {
       this.logger.warn('OpenRouter API key not configured');
     }
+  }
+
+  /**
+   * Get model based on tier
+   */
+  private getModelForTier(tier: ModelTier): string {
+    return tier === 'deep' ? this.deepModel : this.fastModel;
+  }
+
+  /**
+   * Get temperature based on tier
+   */
+  private getTemperatureForTier(tier: ModelTier): number {
+    return tier === 'deep' ? this.deepTemperature : this.fastTemperature;
+  }
+
+  /**
+   * Determine which model tier to use based on conversation context
+   */
+  determineModelTier(context: ModelTierContext): ModelTier {
+    // Use deep model for:
+    // - Final session analysis (session end)
+    // - Explicit deep analysis request
+    // - Complex emotional content that needs careful handling
+    // - Every 5th message for periodic deeper analysis
+
+    if (context.isSessionEnd || context.requiresDeepAnalysis) {
+      return 'deep';
+    }
+
+    if (context.hasComplexEmotionalContent) {
+      return 'deep';
+    }
+
+    // Periodic deep analysis every 5 messages (starting from message 5)
+    if (context.messageCount > 0 && context.messageCount % 5 === 0) {
+      return 'deep';
+    }
+
+    return 'fast';
   }
 
   async chat(messages: ChatMessage[]): Promise<ChatResponse> {
@@ -229,5 +308,87 @@ export class OpenRouterProvider {
 
   isConfigured(): boolean {
     return !!this.apiKey;
+  }
+
+  /**
+   * Chat with tiered model selection and optional extended thinking support
+   */
+  async chatWithThinking(
+    messages: ChatMessage[],
+    options: ExtendedChatOptions,
+  ): Promise<ChatWithAnalysisResponse> {
+    if (!this.apiKey) {
+      throw new Error('OpenRouter API key not configured');
+    }
+
+    const model = this.getModelForTier(options.modelTier);
+    const temperature =
+      options.generation?.temperature ?? this.getTemperatureForTier(options.modelTier);
+
+    this.logger.log(
+      `Sending chat request to OpenRouter using model: ${model} (tier: ${options.modelTier}, thinking: ${options.thinking?.enabled ?? false})`,
+    );
+
+    const requestBody: Record<string, unknown> = {
+      model,
+      messages,
+      temperature,
+      max_tokens: options.generation?.maxTokens || 4096,
+      response_format: { type: 'json_object' },
+    };
+
+    // Add reasoning parameter for Claude models with extended thinking
+    if (options.thinking?.enabled && model.includes('anthropic/claude')) {
+      requestBody.reasoning = {
+        max_tokens: options.thinking.budgetTokens || this.thinkingBudget,
+      };
+      this.logger.log(
+        `Extended thinking enabled with budget: ${options.thinking.budgetTokens || this.thinkingBudget} tokens`,
+      );
+    }
+
+    if (options.generation?.topP !== undefined) {
+      requestBody.top_p = options.generation.topP;
+    }
+
+    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer':
+          this.configService.get<string>('frontendUrl') || 'http://localhost:3000',
+        'X-Title': 'Matcha AI',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      this.logger.error(`OpenRouter API error: ${error}`);
+      throw new Error(`OpenRouter API error: ${response.status} ${error}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices[0]?.message?.content || '{}';
+
+    let parsed: { reply?: string; analysis?: AnalysisData | null } = {};
+    try {
+      parsed = JSON.parse(content);
+    } catch (e) {
+      this.logger.warn('Failed to parse JSON response, using raw content');
+      parsed = { reply: content, analysis: null };
+    }
+
+    return {
+      message: parsed.reply || content,
+      model: data.model,
+      usage: {
+        promptTokens: data.usage?.prompt_tokens || 0,
+        completionTokens: data.usage?.completion_tokens || 0,
+        totalTokens: data.usage?.total_tokens || 0,
+      },
+      analysis: parsed.analysis || null,
+    };
   }
 }
