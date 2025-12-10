@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Matcha",
+    "slug": "matcha",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "matcha",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#5a9470"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.matcha.app"
+    },
+    "android": {
+      "package": "com.matcha.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

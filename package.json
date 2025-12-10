@@ -26,7 +26,8 @@
   "type": "commonjs",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "apps/api",
+    "apps/client"
   ],
   "devDependencies": {
     "concurrently": "^9.1.2"
