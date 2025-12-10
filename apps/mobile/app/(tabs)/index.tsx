@@ -1,12 +1,11 @@
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DashboardScreen() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fefdfb' }} edges={['bottom']}>
+    <View style={{ flex: 1, backgroundColor: '#fefdfb' }}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
         {/* Header */}
         <View style={{ marginBottom: 24 }}>
@@ -22,7 +21,7 @@ export default function DashboardScreen() {
         <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
           <TouchableOpacity
             style={{ flex: 1, backgroundColor: '#5a9470', borderRadius: 12, paddingVertical: 16 }}
-            onPress={() => router.push('/(tabs)/chat')}
+            onPress={() => router.push('/chat/new')}
           >
             <Text style={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>
               Start Chat
@@ -67,6 +66,6 @@ export default function DashboardScreen() {
           ))}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

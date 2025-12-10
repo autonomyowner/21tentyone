@@ -9,6 +9,7 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
+  Keyboard,
 } from 'react-native';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { useAuth } from '@clerk/clerk-expo';
@@ -175,6 +176,18 @@ export default function ChatDetailScreen() {
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Scroll to bottom when keyboard shows
+  useEffect(() => {
+    const keyboardShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => {
+        setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
+      }
+    );
+
+    return () => keyboardShowListener.remove();
+  }, []);
+
   const fetchConversation = useCallback(async () => {
     if (!id || id === 'new') {
       // New conversation - don't fetch, just show empty chat
@@ -238,7 +251,7 @@ export default function ChatDetailScreen() {
       const api = createApiClient(getToken);
       const response = await api.sendMessage({
         message: messageText,
-        conversationId: id,
+        conversationId: id === 'new' ? undefined : id,
       });
 
       // Update with real messages
@@ -247,6 +260,11 @@ export default function ChatDetailScreen() {
         { ...tempUserMessage, id: `user-${Date.now()}` },
         response.data.message,
       ]);
+
+      // If this was a new conversation, navigate to the real conversation ID
+      if (id === 'new' && response.data.conversationId) {
+        router.replace(`/chat/${response.data.conversationId}`);
+      }
 
       // Update analysis
       if (response.data.analysis) {
@@ -307,9 +325,9 @@ export default function ChatDetailScreen() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView className="flex-1 bg-cream-50" edges={['bottom']}>
         <KeyboardAvoidingView
-          className="flex-1"
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={90}
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         >
           {/* Messages */}
           <FlatList
@@ -317,15 +335,28 @@ export default function ChatDetailScreen() {
             data={messages}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => <MessageBubble message={item} />}
-            contentContainerStyle={{ paddingVertical: 16 }}
-            onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
+            contentContainerStyle={{ paddingVertical: 16, flexGrow: 1 }}
+            onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+            onLayout={() => flatListRef.current?.scrollToEnd({ animated: false })}
             ListFooterComponent={isSending ? <TypingIndicator /> : null}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="interactive"
           />
 
           {/* Input Area */}
-          <View className="flex-row items-end px-4 py-3 bg-white border-t border-warm-100">
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              backgroundColor: 'white',
+              borderTopWidth: 1,
+              borderTopColor: '#f5ebe0',
+            }}
+          >
             <TouchableOpacity
-              className="w-10 h-10 items-center justify-center"
+              style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}
               onPress={toggleAnalysis}
             >
               <Ionicons
@@ -334,21 +365,44 @@ export default function ChatDetailScreen() {
                 color={showAnalysis ? '#5a9470' : '#a69889'}
               />
             </TouchableOpacity>
-            <View className="flex-1 bg-warm-50 rounded-2xl px-4 py-2 mx-2 max-h-32">
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: '#faf8f5',
+                borderRadius: 20,
+                paddingHorizontal: 16,
+                paddingVertical: 10,
+                marginHorizontal: 8,
+                maxHeight: 120,
+                minHeight: 40,
+              }}
+            >
               <TextInput
-                className="text-warm-900 max-h-24"
+                style={{
+                  color: '#2d3a2e',
+                  fontSize: 16,
+                  maxHeight: 100,
+                  paddingTop: 0,
+                  paddingBottom: 0,
+                }}
                 placeholder="Type a message..."
                 placeholderTextColor="#a69889"
                 value={inputText}
                 onChangeText={setInputText}
                 multiline
                 maxLength={10000}
+                textAlignVertical="center"
               />
             </View>
             <TouchableOpacity
-              className={`w-10 h-10 rounded-full items-center justify-center ${
-                inputText.trim() && !isSending ? 'bg-matcha-600' : 'bg-warm-200'
-              }`}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: inputText.trim() && !isSending ? '#5a9470' : '#e5ddd5',
+              }}
               onPress={handleSend}
               disabled={!inputText.trim() || isSending}
             >
