@@ -225,7 +225,7 @@ export default function ChatPage() {
       <div
         className={`
           fixed lg:relative inset-y-0 left-0 z-30
-          w-72 lg:w-72
+          w-full sm:w-72 lg:w-72
           transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:w-0 lg:overflow-hidden'}
           lg:transition-all lg:duration-300
@@ -237,11 +237,11 @@ export default function ChatPage() {
           height: 'calc(100vh - 64px)',
         }}
       >
-        <div className="h-full flex flex-col w-72">
-          <div className="p-4 border-b" style={{ borderColor: 'var(--border-soft)' }}>
+        <div className="h-full flex flex-col w-full sm:w-72">
+          <div className="p-4 border-b flex items-center justify-between gap-3" style={{ borderColor: 'var(--border-soft)' }}>
             <button
               onClick={startNewConversation}
-              className="w-full py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-medium transition-all"
+              className="flex-1 py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-medium transition-all"
               style={{
                 background: 'linear-gradient(135deg, var(--matcha-500) 0%, var(--matcha-600) 100%)',
                 color: 'var(--text-inverse)',
@@ -253,6 +253,16 @@ export default function ChatPage() {
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
               {t.chat?.newChat || 'New Chat'}
+            </button>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="p-2 rounded-lg sm:hidden flex-shrink-0 transition-colors hover:bg-[var(--cream-100)]"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
             </button>
           </div>
 
@@ -294,6 +304,28 @@ export default function ChatPage() {
                 </div>
               ))
             )}
+          </div>
+
+          {/* Flash Session button for mobile */}
+          <div className="p-4 border-t sm:hidden" style={{ borderColor: 'var(--border-soft)' }}>
+            <button
+              onClick={() => {
+                setSidebarOpen(false);
+                router.push('/flash-session');
+              }}
+              className="w-full py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-medium transition-all"
+              style={{
+                background: 'var(--cream-100)',
+                color: 'var(--matcha-600)',
+                border: '1px solid var(--matcha-200)',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+              Flash Session
+            </button>
           </div>
         </div>
       </div>
@@ -339,7 +371,7 @@ export default function ChatPage() {
           </div>
           <button
             onClick={() => setAnalysisPanelOpen(!analysisPanelOpen)}
-            className={`p-2 rounded-lg transition-colors ${analysisPanelOpen ? 'bg-[var(--matcha-100)]' : 'hover:bg-[var(--cream-100)]'}`}
+            className={`p-2 rounded-lg transition-colors hidden sm:flex ${analysisPanelOpen ? 'bg-[var(--matcha-100)]' : 'hover:bg-[var(--cream-100)]'}`}
             style={{ color: analysisPanelOpen ? 'var(--matcha-600)' : 'var(--text-secondary)' }}
             title="Toggle Analysis Panel"
           >
