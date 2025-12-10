@@ -80,11 +80,38 @@ function CheckoutContent() {
     e.preventDefault();
     setIsProcessing(true);
 
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // Create Stripe Checkout session via API
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          billing,
+          successUrl: `${window.location.origin}/dashboard?upgraded=true`,
+          cancelUrl: `${window.location.origin}/checkout?plan=pro&billing=${billing}`,
+        }),
+      });
 
-    // Redirect to success page or dashboard
-    router.push('/dashboard?upgraded=true');
+      const data = await response.json();
+
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        // Stripe not configured - show early access message
+        alert(language === 'en'
+          ? 'Early access! Contact us at support@matcha.ai to activate your Pro subscription.'
+          : 'Accès anticipé ! Contactez-nous à support@matcha.ai pour activer votre abonnement Pro.');
+        setIsProcessing(false);
+      }
+    } catch (error) {
+      // Fallback for early access
+      alert(language === 'en'
+        ? 'Early access! Contact us at support@matcha.ai to activate your Pro subscription.'
+        : 'Accès anticipé ! Contactez-nous à support@matcha.ai pour activer votre abonnement Pro.');
+      setIsProcessing(false);
+    }
   };
 
   return (

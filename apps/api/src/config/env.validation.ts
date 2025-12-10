@@ -26,6 +26,12 @@ export const envSchema = z.object({
   R2_SECRET_ACCESS_KEY: z.string().optional(),
   R2_BUCKET_NAME: z.string().optional(),
 
+  // Stripe Payments (optional - payments disabled if not set)
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
+  STRIPE_MONTHLY_PRICE_ID: z.string().optional(),
+  STRIPE_YEARLY_PRICE_ID: z.string().optional(),
+
   // OpenRouter AI - Tiered Models
   OPENROUTER_API_KEY: z.string().optional(),
   OPENROUTER_MODEL: z.string().default('openai/gpt-4o-mini'), // Legacy - kept for backward compatibility

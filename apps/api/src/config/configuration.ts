@@ -30,6 +30,13 @@ export default () => {
       bucketName: env.R2_BUCKET_NAME,
     },
 
+    stripe: {
+      secretKey: env.STRIPE_SECRET_KEY,
+      webhookSecret: env.STRIPE_WEBHOOK_SECRET,
+      monthlyPriceId: env.STRIPE_MONTHLY_PRICE_ID,
+      yearlyPriceId: env.STRIPE_YEARLY_PRICE_ID,
+    },
+
     openrouter: {
       apiKey: env.OPENROUTER_API_KEY,
       model: env.OPENROUTER_MODEL, // Legacy - kept for backward compatibility
