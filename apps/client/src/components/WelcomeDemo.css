@@ -399,7 +399,7 @@
 
 @keyframes typeIn {
   to {
-    width: 180px;
+    width: 11em;
   }
 }
 
@@ -664,32 +664,113 @@
    RESPONSIVE
    ============================================= */
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .welcome-demo-section {
+    padding: 40px 16px;
+  }
+
+  .welcome-demo-container {
+    max-width: 100%;
+  }
+
+  /* Hide desktop browser chrome on mobile */
+  .demo-chrome {
+    display: none;
+  }
+
+  /* Device frame - phone style */
+  .demo-device {
+    border-radius: 28px;
+    margin: 0 auto;
+    max-width: 360px;
+  }
+
+  /* Full-height screen for mobile - taller aspect ratio */
+  .demo-screen {
+    aspect-ratio: 9/14;
+    border-radius: 24px;
+  }
+
+  /* Larger ambient orbs for immersive feel */
+  .screen-orb.orb-a {
+    width: 180px;
+    height: 180px;
+    opacity: 0.4;
+  }
+
+  .screen-orb.orb-b {
+    width: 140px;
+    height: 140px;
+    opacity: 0.35;
+  }
+
+  /* Typography - larger for mobile readability */
   .demo-title {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    line-height: 1.2;
   }
 
   .demo-title-sm {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
+    line-height: 1.3;
   }
 
+  .demo-tagline {
+    font-size: 1.1rem;
+    margin-top: 8px;
+  }
+
+  .demo-text {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  /* Phase content - more padding */
+  .phase-content {
+    padding: 24px;
+  }
+
+  /* Welcome pulse - larger */
+  .welcome-pulse {
+    width: 100px;
+    height: 100px;
+    margin-top: 40px;
+  }
+
+  /* Flash badge - larger touch target */
+  .flash-badge {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  /* Safe words - vertical layout with more emphasis */
   .safe-words {
     flex-direction: column;
-    gap: 16px;
+    gap: 24px;
   }
 
   .safe-words .word {
-    font-size: 1.5rem;
+    font-size: 2.2rem;
+    letter-spacing: 0.05em;
   }
 
+  /* Processing visual - vertical with better spacing */
   .processing-visual {
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
+  }
+
+  .memory-block {
+    padding: 18px 28px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 200px;
   }
 
   .processing-arrow {
     width: 2px;
-    height: 30px;
+    height: 40px;
     background: linear-gradient(180deg, #d4a5a5, #7db88f);
   }
 
@@ -700,21 +781,147 @@
     transform: rotate(135deg);
   }
 
+  /* Peaceful input - full width */
+  .peaceful-input {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+
+  .peaceful-input label {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .input-mock {
+    padding: 16px 20px;
+    font-size: 1.1rem;
+    border-radius: 14px;
+  }
+
+  .cursor {
+    height: 22px;
+  }
+
+  /* Bilateral demo - larger circles */
+  .bilateral-demo {
+    gap: 32px;
+  }
+
+  .bi-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bi-center {
+    font-size: 1rem;
+  }
+
+  .flash-overlay-demo {
+    font-size: 2rem;
+  }
+
+  /* Journey icon - larger */
+  .journey-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 24px;
+  }
+
+  /* Play button - much larger for easy tapping */
+  .play-btn {
+    padding: 28px 48px;
+    border-radius: 20px;
+    border-width: 2px;
+  }
+
+  .play-btn span {
+    font-size: 1.1rem;
+  }
+
+  .play-btn svg {
+    width: 56px;
+    height: 56px;
+  }
+
+  /* Pause button - larger touch target */
+  .pause-overlay-btn {
+    width: 48px;
+    height: 48px;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 12px;
+  }
+
+  .pause-overlay-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Progress bar - thicker */
+  .demo-progress {
+    height: 4px;
+    border-radius: 0 0 24px 24px;
+  }
+
+  /* Caption */
+  .demo-caption {
+    font-size: 1rem;
+    margin-top: 20px;
+    padding: 0 8px;
+  }
+
+  /* Reduce ambient glow on mobile for performance */
+  .demo-glow-1 {
+    width: 250px;
+    height: 250px;
+    filter: blur(80px);
+  }
+
+  .demo-glow-2 {
+    width: 200px;
+    height: 200px;
+    filter: blur(70px);
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+  .demo-device {
+    max-width: 100%;
+    border-radius: 24px;
+  }
+
+  .demo-screen {
+    border-radius: 20px;
+  }
+
+  .demo-title {
+    font-size: 2rem;
+  }
+
+  .demo-title-sm {
+    font-size: 1.5rem;
+  }
+
+  .safe-words .word {
+    font-size: 1.8rem;
+  }
+
+  .bi-circle {
+    width: 65px;
+    height: 65px;
+  }
+
   .bilateral-demo {
     gap: 24px;
   }
 
-  .bi-circle {
-    width: 60px;
-    height: 60px;
-  }
-
   .play-btn {
-    padding: 20px 36px;
+    padding: 24px 40px;
   }
 
   .play-btn svg {
-    width: 36px;
-    height: 36px;
+    width: 48px;
+    height: 48px;
   }
 }
