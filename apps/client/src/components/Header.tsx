@@ -2,11 +2,9 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { useUser, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { useLanguage } from './LanguageProvider';
 
 export default function Header() {
-  const { user } = useUser();
   const { language, setLanguage, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -40,9 +38,16 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <Link
-              href="/assessment"
+              href="/dashboard"
               className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
               style={{ color: 'var(--brand-600)' }}
+            >
+              My Journey
+            </Link>
+            <Link
+              href="/assessment"
+              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
+              style={{ color: 'var(--text-secondary)' }}
             >
               Free Assessment
             </Link>
@@ -67,25 +72,9 @@ export default function Header() {
             >
               Blog
             </Link>
-            <Link
-              href="/reels"
-              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Reels
-            </Link>
-            <SignedIn>
-              <Link
-                href="/dashboard"
-                className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.header.dashboard}
-              </Link>
-            </SignedIn>
           </nav>
 
-          {/* Desktop Auth Buttons + Language Switcher */}
+          {/* Desktop Language Switcher + CTA */}
           <div className="hidden md:flex items-center gap-3">
             {/* Language Switcher */}
             <button
@@ -99,38 +88,12 @@ export default function Header() {
               {language === 'en' ? 'FR' : 'EN'}
             </button>
 
-            <SignedIn>
-              <span
-                className="text-sm"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.header.hello}, {user?.firstName || user?.username || 'User'}
-              </span>
-              <UserButton
-                afterSignOutUrl="/"
-                appearance={{
-                  elements: {
-                    avatarBox: {
-                      width: '32px',
-                      height: '32px',
-                    },
-                  },
-                }}
-              />
-            </SignedIn>
-
-            <SignedOut>
-              <Link
-                href="/login"
-                className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.header.login}
-              </Link>
-              <Link href="/signup" className="matcha-btn matcha-btn-primary text-sm px-5 py-2">
-                {t.header.getStarted}
-              </Link>
-            </SignedOut>
+            <Link
+              href="/dashboard"
+              className="matcha-btn matcha-btn-primary text-sm px-5 py-2"
+            >
+              Start Healing
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -164,9 +127,17 @@ export default function Header() {
           <div className="md:hidden py-4 border-t border-[var(--border-soft)]">
             <nav className="flex flex-col gap-3">
               <Link
-                href="/assessment"
+                href="/dashboard"
                 className="text-sm font-semibold py-2"
                 style={{ color: 'var(--brand-600)' }}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                My Journey
+              </Link>
+              <Link
+                href="/assessment"
+                className="text-sm font-medium py-2"
+                style={{ color: 'var(--text-secondary)' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Free Assessment
@@ -195,24 +166,6 @@ export default function Header() {
               >
                 Blog
               </Link>
-              <Link
-                href="/reels"
-                className="text-sm font-medium py-2"
-                style={{ color: 'var(--text-secondary)' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Reels
-              </Link>
-              <SignedIn>
-                <Link
-                  href="/dashboard"
-                  className="text-sm font-medium py-2"
-                  style={{ color: 'var(--text-secondary)' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t.header.dashboard}
-                </Link>
-              </SignedIn>
 
               {/* Mobile Language Switcher */}
               <button
@@ -232,48 +185,13 @@ export default function Header() {
               </button>
 
               <div className="pt-3 border-t border-[var(--border-soft)]">
-                <SignedIn>
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
-                      <UserButton
-                        afterSignOutUrl="/"
-                        appearance={{
-                          elements: {
-                            avatarBox: {
-                              width: '32px',
-                              height: '32px',
-                            },
-                          },
-                        }}
-                      />
-                      <span
-                        className="text-sm"
-                        style={{ color: 'var(--text-secondary)' }}
-                      >
-                        {user?.firstName || user?.username || 'User'}
-                      </span>
-                    </div>
-                  </div>
-                </SignedIn>
-
-                <SignedOut>
-                  <div className="flex flex-col gap-3">
-                    <Link
-                      href="/login"
-                      className="matcha-btn matcha-btn-secondary text-sm w-full text-center"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {t.header.login}
-                    </Link>
-                    <Link
-                      href="/signup"
-                      className="matcha-btn matcha-btn-primary text-sm w-full text-center"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {t.header.getStarted}
-                    </Link>
-                  </div>
-                </SignedOut>
+                <Link
+                  href="/dashboard"
+                  className="matcha-btn matcha-btn-primary text-sm w-full text-center block"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Start Healing
+                </Link>
               </div>
             </nav>
           </div>

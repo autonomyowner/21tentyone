@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useUser, useAuth } from '@clerk/nextjs';
 import {
   ProgressRing,
   MilestoneTimeline,
@@ -18,10 +16,6 @@ import { DAILY_CONTENT, WEEK_PHASES } from '@/lib/healing-mock-data';
 import { DailyEntry } from '@/lib/healing-types';
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const { user, isLoaded: userLoaded } = useUser();
-  const { isSignedIn, isLoaded: authLoaded } = useAuth();
-
   const {
     progress,
     isLoading: journeyLoading,
@@ -42,15 +36,9 @@ export default function DashboardPage() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (authLoaded && !isSignedIn) {
-      router.replace('/login');
-    }
-  }, [isSignedIn, authLoaded, router]);
+  const isLoading = !mounted || journeyLoading || !progress;
 
-  const isLoading = !mounted || !userLoaded || !authLoaded || journeyLoading || !progress;
-
-  if (isLoading || !isSignedIn) {
+  if (isLoading) {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
@@ -69,7 +57,7 @@ export default function DashboardPage() {
     );
   }
 
-  const firstName = user?.firstName || 'Friend';
+  const firstName = 'Friend';
   const currentDay = progress.currentDay;
   const todayContent = DAILY_CONTENT[currentDay - 1] || DAILY_CONTENT[0];
   const weekPhase = WEEK_PHASES[todayContent.weekPhase];
