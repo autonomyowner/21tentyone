@@ -1,63 +1,46 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useUser, useAuth } from '@clerk/nextjs';
-import { useLanguage } from '../../components/LanguageProvider';
-import { Button } from '../../components/ui/Button';
-import { useDashboard } from '../../hooks/useApi';
+import {
+  ProgressRing,
+  MilestoneTimeline,
+  TodaysFocus,
+  DailyCheckIn,
+  HealingTasks,
+  GoalTracker,
+  MilestoneCelebration,
+  StreakBadge,
+} from '@/components/healing';
+import { useHealingJourney } from '@/hooks/useHealingJourney';
+import { DAILY_CONTENT, WEEK_PHASES } from '@/lib/healing-mock-data';
+import { DailyEntry } from '@/lib/healing-types';
 
 export default function DashboardPage() {
   const router = useRouter();
   const { user, isLoaded: userLoaded } = useUser();
   const { isSignedIn, isLoaded: authLoaded } = useAuth();
-  const { t, language } = useLanguage();
-  const { data: dashboardData, isLoading: dashboardLoading, error: dashboardError } = useDashboard();
 
-  const isLoading = !userLoaded || !authLoaded || dashboardLoading;
+  const {
+    progress,
+    isLoading: journeyLoading,
+    pendingMilestone,
+    saveDailyEntry,
+    toggleTaskCompletion,
+    updateGoalProgress,
+    addGoal,
+    deleteGoal,
+    acknowledgeMilestone,
+    getTodayEntry,
+    setCurrentDay,
+  } = useHealingJourney();
 
-  // Fallback data when API is not available or still loading
-  const fallbackBiases = [
-    { name: t.dashboard.confirmationBias, intensity: 75, description: t.dashboard.confirmationBiasDesc },
-    { name: t.dashboard.haloEffect, intensity: 60, description: t.dashboard.haloEffectDesc },
-    { name: t.dashboard.lossAversion, intensity: 45, description: t.dashboard.lossAversionDesc },
-    { name: t.dashboard.anchoringBias, intensity: 55, description: t.dashboard.anchoringBiasDesc },
-  ];
+  const [mounted, setMounted] = useState(false);
 
-  const fallbackPatterns = [
-    { name: t.dashboard.analytical, value: 72, color: 'var(--matcha-500)' },
-    { name: t.dashboard.creative, value: 58, color: 'var(--terra-400)' },
-    { name: t.dashboard.pragmatic, value: 85, color: 'var(--matcha-600)' },
-    { name: t.dashboard.emotional, value: 40, color: 'var(--terra-500)' },
-  ];
-
-  const fallbackInsights = [
-    t.dashboard.insight1,
-    t.dashboard.insight2,
-    t.dashboard.insight3,
-  ];
-
-  // Use API data if available, otherwise fallback
-  const biases = dashboardData?.stats.topBiases.length
-    ? dashboardData.stats.topBiases.map(b => ({
-        name: b.name,
-        intensity: Math.round(b.avgIntensity),
-        description: `Detected ${b.count} times`,
-      }))
-    : fallbackBiases;
-
-  const patterns = dashboardData?.stats.patterns.length
-    ? dashboardData.stats.patterns.map((p, i) => ({
-        name: p.name,
-        value: Math.round(p.avgPercentage),
-        color: ['var(--matcha-500)', 'var(--terra-400)', 'var(--matcha-600)', 'var(--terra-500)'][i % 4],
-      }))
-    : fallbackPatterns;
-
-  const insights = dashboardData?.recentInsights.length
-    ? dashboardData.recentInsights.slice(0, 3)
-    : fallbackInsights;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (authLoaded && !isSignedIn) {
@@ -65,443 +48,338 @@ export default function DashboardPage() {
     }
   }, [isSignedIn, authLoaded, router]);
 
+  const isLoading = !mounted || !userLoaded || !authLoaded || journeyLoading || !progress;
+
   if (isLoading || !isSignedIn) {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ background: 'var(--cream-50)' }}
+        style={{ backgroundColor: '#fafafa' }}
       >
-        <p style={{ color: 'var(--text-secondary)' }}>Loading...</p>
+        <div className="text-center">
+          <div
+            className="w-12 h-12 rounded-full border-3 border-t-transparent animate-spin mx-auto mb-4"
+            style={{ borderColor: 'rgba(125, 69, 96, 0.2)', borderTopColor: '#7d4560', borderWidth: '3px' }}
+          />
+          <p className="text-sm" style={{ color: '#9a6b7d' }}>
+            Loading your healing journey...
+          </p>
+        </div>
       </div>
     );
   }
 
-  const isPro = dashboardData?.profile.tier === 'PRO';
-  const firstName = dashboardData?.profile.firstName || user?.firstName || 'User';
-  const analysesRemaining = dashboardData?.usage.analysesRemaining;
-  const chatMessagesRemaining = dashboardData?.usage.chatMessagesRemaining;
-  const totalAnalyses = dashboardData?.usage.totalAnalyses || 0;
-  const totalConversations = dashboardData?.usage.totalConversationsWithAnalysis || 0;
-  const profileCompletion = dashboardData?.profile.completionPercentage || 0;
+  const firstName = user?.firstName || 'Friend';
+  const currentDay = progress.currentDay;
+  const todayContent = DAILY_CONTENT[currentDay - 1] || DAILY_CONTENT[0];
+  const weekPhase = WEEK_PHASES[todayContent.weekPhase];
+  const todayEntry = getTodayEntry();
 
-  // Emotional trends from chat
-  const emotionalTrends = dashboardData?.stats.emotionalTrends || [];
+  const completedTaskIds = progress.taskCompletions.map((tc) => tc.taskId);
 
-  // Format member since date
-  const memberSince = dashboardData?.profile.memberSince
-    ? new Date(dashboardData.profile.memberSince).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { month: 'short', year: 'numeric' })
-    : 'N/A';
+  const handleSaveEntry = (entry: DailyEntry) => {
+    saveDailyEntry(entry);
+  };
 
-  // Format last analysis date
-  const lastAnalysisDate = dashboardData?.usage.lastAnalysisDate;
-  const lastChatDate = dashboardData?.usage.lastChatAnalysisDate;
-  let lastAnalysis = language === 'en' ? 'No analyses yet' : 'Aucune analyse';
-
-  // Use the most recent between analysis and chat
-  const latestDate = lastAnalysisDate && lastChatDate
-    ? new Date(lastAnalysisDate) > new Date(lastChatDate) ? lastAnalysisDate : lastChatDate
-    : lastAnalysisDate || lastChatDate;
-
-  if (latestDate) {
-    const daysAgo = Math.floor((Date.now() - new Date(latestDate).getTime()) / (1000 * 60 * 60 * 24));
-    lastAnalysis = language === 'en'
-      ? `${daysAgo} ${t.dashboard.daysAgo} ago`
-      : `Il y a ${daysAgo} ${t.dashboard.daysAgo}`;
-  }
+  const handleIntentionSave = (intention: string) => {
+    const existingEntry = getTodayEntry();
+    if (existingEntry) {
+      saveDailyEntry({ ...existingEntry, intention });
+    }
+  };
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--cream-50)' }}>
-      {/* Decorative Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div
-          className="absolute top-0 right-0 w-[400px] h-[400px] opacity-15"
-          style={{
-            background: 'radial-gradient(circle, var(--matcha-200) 0%, transparent 70%)',
-            borderRadius: '50%',
-            transform: 'translate(20%, -30%)',
-          }}
-        />
-      </div>
+    <div
+      className="min-h-screen pb-16"
+      style={{
+        backgroundColor: '#fafafa',
+        backgroundImage: `
+          radial-gradient(ellipse at 20% 0%, rgba(125, 69, 96, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(125, 152, 175, 0.04) 0%, transparent 50%)
+        `,
+      }}
+    >
+      {/* Header */}
+      <header
+        className="sticky top-0 z-40 backdrop-blur-md"
+        style={{
+          backgroundColor: 'rgba(250, 250, 250, 0.9)',
+          borderBottom: '1px solid rgba(125, 69, 96, 0.08)',
+        }}
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <p className="text-sm mb-1" style={{ color: '#9a6b7d' }}>
+                Welcome back, {firstName}
+              </p>
+              <h1
+                className="text-xl sm:text-2xl font-serif"
+                style={{ color: '#7d4560' }}
+              >
+                Heal Your Attachment
+              </h1>
+              <p className="text-sm mt-0.5" style={{ color: '#6b5a62' }}>
+                Build healthy relationships
+              </p>
+            </div>
 
-      <div className="relative max-w-6xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-          <div>
-            <h1
-              className="text-3xl mb-2"
-              style={{
-                fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                color: 'var(--text-primary)',
-              }}
-            >
-              {t.dashboard.hello}, {firstName}
-            </h1>
-            <p style={{ color: 'var(--text-secondary)' }}>
-              {t.dashboard.subtitle}
-            </p>
-          </div>
-          <div className="flex items-center gap-3 flex-wrap">
-            {!isPro && analysesRemaining !== null && (
+            <div className="flex items-center gap-3 sm:gap-4">
+              {/* Week phase badge */}
               <div
-                className="px-3 py-1.5 rounded-full text-sm"
+                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full"
                 style={{
-                  background: 'var(--cream-200)',
-                  color: 'var(--text-secondary)',
+                  backgroundColor: `${weekPhase.color}10`,
+                  border: `1px solid ${weekPhase.color}20`,
                 }}
               >
-                {analysesRemaining} {analysesRemaining !== 1 ? t.dashboard.analysesRemainingPlural : t.dashboard.analysesRemaining}
+                <span
+                  className="text-xs font-medium tracking-wider uppercase"
+                  style={{ color: weekPhase.color }}
+                >
+                  Week {Math.ceil(currentDay / 7)}: {weekPhase.label}
+                </span>
               </div>
-            )}
-            {!isPro && chatMessagesRemaining !== null && (
-              <div
-                className="px-3 py-1.5 rounded-full text-sm"
-                style={{
-                  background: 'var(--matcha-100)',
-                  color: 'var(--matcha-700)',
-                }}
-              >
-                {chatMessagesRemaining} {language === 'en' ? 'chat msgs' : 'msgs chat'}
-              </div>
-            )}
-            <span className={`matcha-badge ${isPro ? 'matcha-badge-pro' : 'matcha-badge-free'}`}>
-              {isPro ? 'Pro' : (language === 'en' ? 'Free' : 'Gratuit')}
-            </span>
-          </div>
-        </div>
 
-        {/* API Error Banner */}
-        {dashboardError && (
-          <div
-            className="mb-6 p-4 rounded-xl text-sm"
-            style={{
-              background: 'rgba(239, 176, 68, 0.1)',
-              color: 'var(--terra-600)',
-              border: '1px solid rgba(239, 176, 68, 0.3)',
-            }}
-          >
-            Unable to load real-time data. Showing sample data.
-          </div>
-        )}
-
-        {/* Main Grid */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Profile Summary */}
-          <div
-            className="lg:col-span-1 rounded-3xl p-6"
-            style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-soft)',
-              boxShadow: 'var(--shadow-md)',
-            }}
-          >
-            <h2
-              className="text-xl mb-4"
-              style={{
-                fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                color: 'var(--text-primary)',
-              }}
-            >
-              {t.dashboard.yourProfile}
-            </h2>
-
-            {/* Profile Completion */}
-            <div className="mb-6">
-              <div className="flex justify-between text-sm mb-2">
-                <span style={{ color: 'var(--text-secondary)' }}>{t.dashboard.profileCompletion}</span>
-                <span style={{ color: 'var(--matcha-600)' }}>{profileCompletion}%</span>
-              </div>
-              <div className="matcha-progress">
-                <div className="matcha-progress-bar" style={{ width: `${profileCompletion}%` }} />
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div className="space-y-4">
-              <div className="flex justify-between">
-                <span style={{ color: 'var(--text-secondary)' }}>{t.dashboard.analysesCompleted}</span>
-                <span style={{ color: 'var(--text-primary)' }} className="font-medium">{totalAnalyses}</span>
-              </div>
-              <div className="flex justify-between">
-                <span style={{ color: 'var(--text-secondary)' }}>{language === 'en' ? 'Chat Insights' : 'Analyses chat'}</span>
-                <span style={{ color: 'var(--text-primary)' }} className="font-medium">{totalConversations}</span>
-              </div>
-              <div className="flex justify-between">
-                <span style={{ color: 'var(--text-secondary)' }}>{t.dashboard.memberSince}</span>
-                <span style={{ color: 'var(--text-primary)' }} className="font-medium">{memberSince}</span>
-              </div>
-              <div className="flex justify-between">
-                <span style={{ color: 'var(--text-secondary)' }}>{t.dashboard.lastAnalysis}</span>
-                <span style={{ color: 'var(--text-primary)' }} className="font-medium">{lastAnalysis}</span>
-              </div>
-            </div>
-
-            {/* CTA */}
-            <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--border-soft)' }}>
-              <Button fullWidth>
-                {t.dashboard.startNewAnalysis}
-              </Button>
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Cognitive Biases */}
-            <div
-              className="rounded-3xl p-6"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border-soft)',
-                boxShadow: 'var(--shadow-md)',
-              }}
-            >
-              <h2
-                className="text-xl mb-6"
-                style={{
-                  fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                  color: 'var(--text-primary)',
-                }}
-              >
-                {t.dashboard.cognitiveBiases}
-              </h2>
-
-              <div className="space-y-5">
-                {biases.map((bias, i) => (
-                  <div key={i}>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span style={{ color: 'var(--text-primary)' }} className="font-medium">
-                        {bias.name}
-                      </span>
-                      <span style={{ color: 'var(--matcha-600)' }}>{bias.intensity}%</span>
-                    </div>
-                    <div className="matcha-progress mb-2">
-                      <div
-                        className="matcha-progress-bar"
-                        style={{ width: `${bias.intensity}%` }}
-                      />
-                    </div>
-                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                      {bias.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Thinking Patterns */}
-            <div
-              className="rounded-3xl p-6"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border-soft)',
-                boxShadow: 'var(--shadow-md)',
-              }}
-            >
-              <h2
-                className="text-xl mb-6"
-                style={{
-                  fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                  color: 'var(--text-primary)',
-                }}
-              >
-                {t.dashboard.thinkingPatterns}
-              </h2>
-
-              <div className="grid grid-cols-2 gap-4">
-                {patterns.map((pattern, i) => (
-                  <div
-                    key={i}
-                    className="p-4 rounded-2xl"
-                    style={{ background: 'var(--cream-100)' }}
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <span
-                        className="font-medium"
-                        style={{ color: 'var(--text-primary)' }}
-                      >
-                        {pattern.name}
-                      </span>
-                      <span
-                        className="text-2xl font-bold"
-                        style={{ color: pattern.color }}
-                      >
-                        {pattern.value}%
-                      </span>
-                    </div>
-                    <div className="matcha-progress">
-                      <div
-                        className="h-full rounded-full"
-                        style={{
-                          width: `${pattern.value}%`,
-                          background: pattern.color,
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <StreakBadge
+                streak={progress.streak}
+                longestStreak={progress.longestStreak}
+              />
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Insights Section */}
-        <div
-          className="mt-6 rounded-3xl p-6"
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-soft)',
-            boxShadow: 'var(--shadow-md)',
-          }}
-        >
-          <h2
-            className="text-xl mb-6"
-            style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
-              color: 'var(--text-primary)',
-            }}
-          >
-            {t.dashboard.personalizedInsights}
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-4">
-            {insights.map((insight, i) => (
-              <div
-                key={i}
-                className="p-4 rounded-2xl"
+      {/* Main content */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        {/* Demo controls (for testing - can be removed in production) */}
+        <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: 'rgba(125, 152, 175, 0.08)' }}>
+          <p className="text-xs mb-2" style={{ color: '#7d98af' }}>
+            Demo: Jump to day to test milestones
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {[1, 7, 8, 14, 15, 21].map((day) => (
+              <button
+                key={day}
+                onClick={() => setCurrentDay(day)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  currentDay === day ? 'text-white' : ''
+                }`}
                 style={{
-                  background: 'linear-gradient(135deg, var(--matcha-50) 0%, var(--cream-100) 100%)',
-                  borderLeft: '3px solid var(--matcha-500)',
+                  backgroundColor:
+                    currentDay === day ? '#7d4560' : 'rgba(125, 69, 96, 0.1)',
+                  color: currentDay === day ? '#fff' : '#7d4560',
                 }}
               >
-                <p className="text-sm" style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                  {insight}
-                </p>
-              </div>
+                Day {day}
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Emotional Trends from Chat */}
-        {emotionalTrends.length > 0 && (
+        {/* Hero section: Progress Ring + Today's Focus */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Progress Ring */}
           <div
-            className="mt-6 rounded-3xl p-6"
+            className="flex flex-col items-center justify-center p-6 sm:p-8 rounded-3xl lg:col-span-1"
             style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-soft)',
-              boxShadow: 'var(--shadow-md)',
+              background: 'linear-gradient(180deg, #fff 0%, rgba(250, 250, 250, 0.9) 100%)',
+              boxShadow: '0 4px 24px rgba(125, 69, 96, 0.06)',
+              border: '1px solid rgba(125, 69, 96, 0.08)',
+            }}
+          >
+            <ProgressRing currentDay={currentDay} />
+            <p
+              className="mt-4 text-sm text-center max-w-[200px]"
+              style={{ color: '#6b5a62' }}
+            >
+              {currentDay <= 7
+                ? 'Discovering your attachment patterns'
+                : currentDay <= 14
+                  ? 'Deep healing is unfolding'
+                  : 'Integrating secure attachment'}
+            </p>
+
+            {/* Mobile week phase badge */}
+            <div
+              className="sm:hidden mt-4 px-4 py-2 rounded-full"
+              style={{
+                backgroundColor: `${weekPhase.color}10`,
+                border: `1px solid ${weekPhase.color}20`,
+              }}
+            >
+              <span
+                className="text-xs font-medium tracking-wider uppercase"
+                style={{ color: weekPhase.color }}
+              >
+                Week {Math.ceil(currentDay / 7)}: {weekPhase.label}
+              </span>
+            </div>
+          </div>
+
+          {/* Today's Focus */}
+          <div className="lg:col-span-2">
+            <TodaysFocus
+              content={todayContent}
+              intention={todayEntry?.intention}
+              onIntentionSave={handleIntentionSave}
+            />
+          </div>
+        </section>
+
+        {/* Timeline */}
+        <section className="mb-8">
+          <div
+            className="rounded-3xl p-4 sm:p-6"
+            style={{
+              background: 'linear-gradient(180deg, #fff 0%, rgba(250, 250, 250, 0.9) 100%)',
+              boxShadow: '0 4px 24px rgba(125, 69, 96, 0.06)',
+              border: '1px solid rgba(125, 69, 96, 0.08)',
             }}
           >
             <h2
-              className="text-xl mb-6"
+              className="text-lg font-serif mb-4 sm:mb-6 text-center"
+              style={{ color: '#7d4560' }}
+            >
+              Your 21-Day Journey
+            </h2>
+            <MilestoneTimeline
+              currentDay={currentDay}
+              completedDays={progress.completedDays}
+            />
+          </div>
+        </section>
+
+        {/* Check-in and Tasks */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <DailyCheckIn
+            day={currentDay}
+            existingEntry={todayEntry}
+            onSave={handleSaveEntry}
+          />
+          <HealingTasks
+            tasks={todayContent.tasks}
+            completedTaskIds={completedTaskIds}
+            onTaskToggle={toggleTaskCompletion}
+          />
+        </section>
+
+        {/* Goals */}
+        <section className="mb-8">
+          <GoalTracker
+            goals={progress.goals}
+            onUpdateProgress={updateGoalProgress}
+            onAddGoal={addGoal}
+            onDeleteGoal={deleteGoal}
+          />
+        </section>
+
+        {/* Recent reflections */}
+        {progress.entries.length > 0 && (
+          <section>
+            <div
+              className="rounded-3xl p-4 sm:p-6"
               style={{
-                fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                color: 'var(--text-primary)',
+                background: 'linear-gradient(180deg, #fff 0%, rgba(250, 250, 250, 0.9) 100%)',
+                boxShadow: '0 4px 24px rgba(125, 69, 96, 0.06)',
+                border: '1px solid rgba(125, 69, 96, 0.08)',
               }}
             >
-              {language === 'en' ? 'Emotional Trends' : 'Tendances Emotionnelles'}
-            </h2>
-
-            <div className="grid md:grid-cols-5 gap-4">
-              {emotionalTrends.map((trend: { emotion: string; count: number; avgIntensity: number }, i: number) => (
-                <div
-                  key={i}
-                  className="p-4 rounded-2xl text-center"
-                  style={{
-                    background: `linear-gradient(135deg, var(--matcha-${50 + i * 50}) 0%, var(--cream-100) 100%)`,
-                  }}
-                >
-                  <div
-                    className="text-lg font-medium capitalize mb-1"
-                    style={{ color: 'var(--text-primary)' }}
-                  >
-                    {trend.emotion}
-                  </div>
-                  <div
-                    className="text-sm"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {trend.count}x {language === 'en' ? 'detected' : 'detecte'}
-                  </div>
-                  <div className="mt-2 matcha-progress h-1">
+              <h2
+                className="text-lg font-serif mb-4"
+                style={{ color: '#7d4560' }}
+              >
+                Recent Reflections
+              </h2>
+              <div className="space-y-4">
+                {progress.entries
+                  .slice(-3)
+                  .reverse()
+                  .map((entry) => (
                     <div
-                      className="matcha-progress-bar"
-                      style={{ width: `${trend.avgIntensity}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Progress Over Time (Pro only) */}
-        <div
-          className="mt-6 rounded-3xl p-6 relative overflow-hidden"
-          style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-soft)',
-            boxShadow: 'var(--shadow-md)',
-          }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h2
-              className="text-xl"
-              style={{
-                fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                color: 'var(--text-primary)',
-              }}
-            >
-              {t.dashboard.progressTitle}
-            </h2>
-            {!isPro && (
-              <span className="matcha-badge matcha-badge-pro">Pro</span>
-            )}
-          </div>
-
-          {/* Chart mockup */}
-          <div className={`relative ${!isPro ? 'locked-blur' : ''}`}>
-            <div className="h-48 flex items-end justify-between gap-2 px-4">
-              {[45, 52, 48, 55, 60, 58, 65, 62, 68, 72, 70, 75].map((value, i) => (
-                <div
-                  key={i}
-                  className="flex-1 rounded-t-lg"
-                  style={{
-                    height: `${value}%`,
-                    background: `linear-gradient(180deg, var(--matcha-400) 0%, var(--matcha-600) 100%)`,
-                    opacity: 0.8 + (i * 0.015),
-                  }}
-                />
-              ))}
-            </div>
-            <div className="flex justify-between mt-2 text-xs" style={{ color: 'var(--text-muted)' }}>
-              <span>Oct 27</span>
-              <span>Nov 26</span>
-            </div>
-          </div>
-
-          {/* Upgrade overlay */}
-          {!isPro && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm rounded-3xl">
-              <div className="text-center p-6">
-                <h3
-                  className="text-lg mb-2"
-                  style={{
-                    fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                    color: 'var(--text-primary)',
-                  }}
-                >
-                  {t.dashboard.unlockProgress}
-                </h3>
-                <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-                  {t.dashboard.upgradeDesc}
-                </p>
-                <Link href="/pricing">
-                  <Button>{t.dashboard.upgradeToPro}</Button>
-                </Link>
+                      key={entry.id}
+                      className="p-4 rounded-xl"
+                      style={{
+                        backgroundColor: 'rgba(125, 69, 96, 0.04)',
+                        borderLeft: '3px solid rgba(125, 69, 96, 0.2)',
+                      }}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span
+                          className="text-xs font-medium"
+                          style={{ color: '#7d4560' }}
+                        >
+                          Day {entry.day}
+                        </span>
+                        <span className="text-xs" style={{ color: '#a8aabe' }}>
+                          {new Date(entry.date).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </span>
+                      </div>
+                      {entry.reflection && (
+                        <p
+                          className="text-sm leading-relaxed"
+                          style={{ color: '#5a4a52' }}
+                        >
+                          {entry.reflection}
+                        </p>
+                      )}
+                      {entry.gratitude && (
+                        <p
+                          className="text-sm mt-2 italic"
+                          style={{ color: '#7d98af' }}
+                        >
+                          Grateful for: {entry.gratitude}
+                        </p>
+                      )}
+                    </div>
+                  ))}
               </div>
             </div>
-          )}
-        </div>
-      </div>
+          </section>
+        )}
+      </main>
+
+      {/* Milestone Celebration Modal */}
+      {pendingMilestone && (
+        <MilestoneCelebration
+          milestone={pendingMilestone}
+          isOpen={!!pendingMilestone}
+          onClose={() => acknowledgeMilestone(pendingMilestone)}
+          completedDaysCount={progress.completedDays.length}
+          completedTasksCount={progress.taskCompletions.length}
+        />
+      )}
+
+      {/* Global styles */}
+      <style jsx global>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fadeInUp {
+          animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        /* Hide scrollbar for timeline */
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 }

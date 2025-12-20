@@ -1,9 +1,28 @@
 import { View, Text, ScrollView, TouchableOpacity, Alert, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth, useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import { useUserStore } from '../../stores/userStore';
 import { useNotifications } from '../../hooks/useNotifications';
+import { isTestMode, testUser } from '../../lib/auth';
+
+// Safe auth hooks that work in test mode
+function useSafeAuth() {
+  if (isTestMode) {
+    return { signOut: async () => {}, isSignedIn: true, isLoaded: true };
+  }
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { useAuth } = require('@clerk/clerk-expo');
+  return useAuth();
+}
+
+function useSafeUser() {
+  if (isTestMode) {
+    return { user: testUser };
+  }
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { useUser } = require('@clerk/clerk-expo');
+  return useUser();
+}
 
 function SettingItem({ icon, title, subtitle, onPress, rightElement }: {
   icon: string;
@@ -14,18 +33,18 @@ function SettingItem({ icon, title, subtitle, onPress, rightElement }: {
 }) {
   return (
     <TouchableOpacity
-      style={{ flexDirection: 'row', alignItems: 'center', padding: 16, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#f5ebe0' }}
+      style={{ flexDirection: 'row', alignItems: 'center', padding: 16, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E8E9ED' }}
       onPress={onPress}
       disabled={!onPress && !rightElement}
     >
-      <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#dcedde', alignItems: 'center', justifyContent: 'center' }}>
-        <Ionicons name={icon as any} size={20} color="#5a9470" />
+      <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#E8E9ED', alignItems: 'center', justifyContent: 'center' }}>
+        <Ionicons name={icon as any} size={20} color="#2E1020" />
       </View>
       <View style={{ flex: 1, marginLeft: 12 }}>
-        <Text style={{ fontWeight: '500', color: '#2d3a2e' }}>{title}</Text>
-        {subtitle && <Text style={{ color: '#a69889', fontSize: 14 }}>{subtitle}</Text>}
+        <Text style={{ fontWeight: '500', color: '#2E1020' }}>{title}</Text>
+        {subtitle && <Text style={{ color: '#9FB3C8', fontSize: 14 }}>{subtitle}</Text>}
       </View>
-      {rightElement ? rightElement : onPress && <Ionicons name="chevron-forward" size={20} color="#d9d0c5" />}
+      {rightElement ? rightElement : onPress && <Ionicons name="chevron-forward" size={20} color="#C0C2D3" />}
     </TouchableOpacity>
   );
 }
@@ -35,25 +54,25 @@ function GuestHeader() {
   const router = useRouter();
 
   return (
-    <View style={{ alignItems: 'center', padding: 24, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#f5ebe0' }}>
-      <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#f5ebe0', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-        <Ionicons name="person-outline" size={36} color="#a69889" />
+    <View style={{ alignItems: 'center', padding: 24, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E8E9ED' }}>
+      <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#E8E9ED', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+        <Ionicons name="person-outline" size={36} color="#9FB3C8" />
       </View>
-      <Text style={{ fontSize: 20, fontWeight: '600', color: '#2d3a2e' }}>Guest User</Text>
-      <Text style={{ color: '#a69889', marginTop: 4 }}>Sign in to save your data</Text>
+      <Text style={{ fontSize: 20, fontWeight: '600', color: '#2E1020' }}>Guest User</Text>
+      <Text style={{ color: '#9FB3C8', marginTop: 4 }}>Sign in to save your data</Text>
 
       <View style={{ flexDirection: 'row', gap: 12, marginTop: 16, width: '100%' }}>
         <TouchableOpacity
-          style={{ flex: 1, backgroundColor: '#5a9470', borderRadius: 12, paddingVertical: 12, alignItems: 'center' }}
+          style={{ flex: 1, backgroundColor: '#2E1020', borderRadius: 12, paddingVertical: 12, alignItems: 'center' }}
           onPress={() => router.push('/(auth)/signup')}
         >
           <Text style={{ color: 'white', fontWeight: '600' }}>Sign Up</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ flex: 1, backgroundColor: 'white', borderRadius: 12, paddingVertical: 12, alignItems: 'center', borderWidth: 1, borderColor: '#5a9470' }}
+          style={{ flex: 1, backgroundColor: 'white', borderRadius: 12, paddingVertical: 12, alignItems: 'center', borderWidth: 1, borderColor: '#2E1020' }}
           onPress={() => router.push('/(auth)/login')}
         >
-          <Text style={{ color: '#5a9470', fontWeight: '600' }}>Sign In</Text>
+          <Text style={{ color: '#2E1020', fontWeight: '600' }}>Sign In</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -62,29 +81,29 @@ function GuestHeader() {
 
 // Authenticated user header
 function AuthHeader() {
-  const { user } = useUser();
+  const { user } = useSafeUser();
 
   const userEmail = user?.emailAddresses[0]?.emailAddress || 'user@example.com';
-  const userName = user?.firstName || 'Matcha User';
+  const userName = user?.firstName || 'Twenty One User';
   const userInitial = userName.charAt(0).toUpperCase();
 
   return (
-    <View style={{ alignItems: 'center', padding: 24, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#f5ebe0' }}>
-      <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#dcedde', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 32, fontFamily: 'DMSerifDisplay_400Regular', color: '#5a9470' }}>{userInitial}</Text>
+    <View style={{ alignItems: 'center', padding: 24, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E8E9ED' }}>
+      <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#E8E9ED', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+        <Text style={{ fontSize: 32, fontFamily: 'DMSerifDisplay_400Regular', color: '#2E1020' }}>{userInitial}</Text>
       </View>
-      <Text style={{ fontSize: 20, fontWeight: '600', color: '#2d3a2e' }}>{userName}</Text>
-      <Text style={{ color: '#a69889' }}>{userEmail}</Text>
-      <View style={{ marginTop: 12, paddingHorizontal: 16, paddingVertical: 4, borderRadius: 12, backgroundColor: '#f5ebe0' }}>
-        <Text style={{ fontWeight: '600', color: '#5a5347' }}>FREE Plan</Text>
+      <Text style={{ fontSize: 20, fontWeight: '600', color: '#2E1020' }}>{userName}</Text>
+      <Text style={{ color: '#9FB3C8' }}>{userEmail}</Text>
+      <View style={{ marginTop: 12, paddingHorizontal: 16, paddingVertical: 4, borderRadius: 12, backgroundColor: '#E8E9ED' }}>
+        <Text style={{ fontWeight: '600', color: '#9FB3C8' }}>FREE Plan</Text>
       </View>
     </View>
   );
 }
 
 export default function ProfileScreen() {
-  const { signOut, isSignedIn, isLoaded } = useAuth();
-  const { user } = useUser();
+  const { signOut, isSignedIn, isLoaded } = useSafeAuth();
+  const { user } = useSafeUser();
   const router = useRouter();
   const {
     totalMessages,
@@ -142,7 +161,7 @@ export default function ProfileScreen() {
   const memberSince = user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : null;
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fefdfb' }}>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <ScrollView>
         {/* Header - different for guest vs authenticated */}
         {isSignedIn ? <AuthHeader /> : <GuestHeader />}
@@ -150,16 +169,16 @@ export default function ProfileScreen() {
         {/* Upgrade prompt - only for authenticated users */}
         {isSignedIn && (
           <TouchableOpacity
-            style={{ margin: 16, backgroundColor: '#5a9470', borderRadius: 16, padding: 16 }}
+            style={{ margin: 16, backgroundColor: '#2E1020', borderRadius: 16, padding: 16 }}
             onPress={() => Alert.alert('Upgrade', 'Upgrade feature coming soon!')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Upgrade to Pro</Text>
-                <Text style={{ color: '#dcedde', marginTop: 4 }}>Unlimited chats and deeper analysis</Text>
+                <Text style={{ color: '#C0C2D3', marginTop: 4 }}>to get access to the 21day protocol</Text>
               </View>
               <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 }}>
-                <Text style={{ color: 'white', fontWeight: '600' }}>$5/mo</Text>
+                <Text style={{ color: 'white', fontWeight: '600' }}>$35/mo</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -167,26 +186,26 @@ export default function ProfileScreen() {
 
         {/* Stats - available for everyone (local data) */}
         <View style={{ paddingHorizontal: 16, marginTop: isSignedIn ? 0 : 16, marginBottom: 8 }}>
-          <Text style={{ color: '#a69889', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Your Stats</Text>
+          <Text style={{ color: '#9FB3C8', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Your Stats</Text>
         </View>
-        <View style={{ flexDirection: 'row', backgroundColor: 'white', borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#f5ebe0' }}>
-          <View style={{ flex: 1, alignItems: 'center', paddingVertical: 16, borderRightWidth: 1, borderRightColor: '#f5ebe0' }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#5a9470' }}>{totalMessages}</Text>
-            <Text style={{ color: '#a69889', fontSize: 14 }}>Messages</Text>
+        <View style={{ flexDirection: 'row', backgroundColor: 'white', borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#E8E9ED' }}>
+          <View style={{ flex: 1, alignItems: 'center', paddingVertical: 16, borderRightWidth: 1, borderRightColor: '#E8E9ED' }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#2E1020' }}>{totalMessages}</Text>
+            <Text style={{ color: '#9FB3C8', fontSize: 14 }}>Messages</Text>
           </View>
-          <View style={{ flex: 1, alignItems: 'center', paddingVertical: 16, borderRightWidth: 1, borderRightColor: '#f5ebe0' }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#5a9470' }}>{totalSessions}</Text>
-            <Text style={{ color: '#a69889', fontSize: 14 }}>Sessions</Text>
+          <View style={{ flex: 1, alignItems: 'center', paddingVertical: 16, borderRightWidth: 1, borderRightColor: '#E8E9ED' }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#2E1020' }}>{totalSessions}</Text>
+            <Text style={{ color: '#9FB3C8', fontSize: 14 }}>Sessions</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'center', paddingVertical: 16 }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#c97d52' }}>{currentStreak}</Text>
-            <Text style={{ color: '#a69889', fontSize: 14 }}>Day Streak</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#9FB3C8' }}>{currentStreak}</Text>
+            <Text style={{ color: '#9FB3C8', fontSize: 14 }}>Day Streak</Text>
           </View>
         </View>
 
         {longestStreak > 0 && (
-          <View style={{ paddingHorizontal: 16, paddingVertical: 8, backgroundColor: '#fff8f0', borderBottomWidth: 1, borderBottomColor: '#f5ebe0' }}>
-            <Text style={{ color: '#c97d52', textAlign: 'center' }}>
+          <View style={{ paddingHorizontal: 16, paddingVertical: 8, backgroundColor: '#F5F5F7', borderBottomWidth: 1, borderBottomColor: '#E8E9ED' }}>
+            <Text style={{ color: '#9FB3C8', textAlign: 'center' }}>
               Best streak: {longestStreak} days
             </Text>
           </View>
@@ -194,25 +213,25 @@ export default function ProfileScreen() {
 
         {/* Guest benefits prompt */}
         {!isSignedIn && (
-          <View style={{ margin: 16, padding: 16, backgroundColor: '#dcedde', borderRadius: 12 }}>
-            <Text style={{ color: '#3d654c', fontWeight: '600', marginBottom: 8 }}>
+          <View style={{ margin: 16, padding: 16, backgroundColor: '#E8E9ED', borderRadius: 12 }}>
+            <Text style={{ color: '#2E1020', fontWeight: '600', marginBottom: 8 }}>
               Create an account to unlock:
             </Text>
             <View style={{ gap: 6 }}>
-              <Text style={{ color: '#3d654c' }}>- AI chat conversations</Text>
-              <Text style={{ color: '#3d654c' }}>- Emotional analysis & insights</Text>
-              <Text style={{ color: '#3d654c' }}>- Cloud backup of your data</Text>
-              <Text style={{ color: '#3d654c' }}>- Sync across all devices</Text>
+              <Text style={{ color: '#2E1020' }}>- AI chat conversations</Text>
+              <Text style={{ color: '#2E1020' }}>- Emotional analysis & insights</Text>
+              <Text style={{ color: '#2E1020' }}>- Cloud backup of your data</Text>
+              <Text style={{ color: '#2E1020' }}>- Sync across all devices</Text>
             </View>
           </View>
         )}
 
         <View style={{ paddingHorizontal: 16, marginTop: 24, marginBottom: 8 }}>
-          <Text style={{ color: '#a69889', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Notifications</Text>
+          <Text style={{ color: '#9FB3C8', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Notifications</Text>
         </View>
         {!permissionGranted && (
-          <View style={{ backgroundColor: '#fff8f0', padding: 12, marginHorizontal: 16, borderRadius: 8, marginBottom: 8 }}>
-            <Text style={{ color: '#c97d52', fontSize: 13 }}>
+          <View style={{ backgroundColor: '#F5F5F7', padding: 12, marginHorizontal: 16, borderRadius: 8, marginBottom: 8 }}>
+            <Text style={{ color: '#9FB3C8', fontSize: 13 }}>
               Enable notifications in your device settings to receive reminders.
             </Text>
           </View>
@@ -225,7 +244,7 @@ export default function ProfileScreen() {
             <Switch
               value={notificationSettings?.enabled ?? false}
               onValueChange={toggleNotifications}
-              trackColor={{ false: '#e5ddd5', true: '#5a9470' }}
+              trackColor={{ false: '#E8E9ED', true: '#2E1020' }}
               thumbColor="white"
               disabled={!permissionGranted || notificationsLoading || notificationsSaving}
             />
@@ -239,7 +258,7 @@ export default function ProfileScreen() {
             <Switch
               value={notificationSettings?.streakWarningsEnabled ?? false}
               onValueChange={toggleStreakWarnings}
-              trackColor={{ false: '#e5ddd5', true: '#5a9470' }}
+              trackColor={{ false: '#E8E9ED', true: '#2E1020' }}
               thumbColor="white"
               disabled={!permissionGranted || !notificationSettings?.enabled || notificationsLoading || notificationsSaving}
             />
@@ -253,7 +272,7 @@ export default function ProfileScreen() {
             <Switch
               value={notificationSettings?.motivationalEnabled ?? false}
               onValueChange={toggleMotivational}
-              trackColor={{ false: '#e5ddd5', true: '#5a9470' }}
+              trackColor={{ false: '#E8E9ED', true: '#2E1020' }}
               thumbColor="white"
               disabled={!permissionGranted || !notificationSettings?.enabled || notificationsLoading || notificationsSaving}
             />
@@ -273,7 +292,7 @@ export default function ProfileScreen() {
         {isSignedIn && (
           <>
             <View style={{ paddingHorizontal: 16, marginTop: 24, marginBottom: 8 }}>
-              <Text style={{ color: '#a69889', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Account</Text>
+              <Text style={{ color: '#9FB3C8', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Account</Text>
             </View>
             {memberSince && (
               <SettingItem icon="person-outline" title="Member Since" subtitle={memberSince} />
@@ -283,29 +302,29 @@ export default function ProfileScreen() {
         )}
 
         <View style={{ paddingHorizontal: 16, marginTop: 24, marginBottom: 8 }}>
-          <Text style={{ color: '#a69889', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Support</Text>
+          <Text style={{ color: '#9FB3C8', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Support</Text>
         </View>
         <SettingItem icon="help-circle-outline" title="Help and FAQ" onPress={() => Alert.alert('Help', 'Help section coming soon!')} />
         <SettingItem icon="document-text-outline" title="Terms of Service" onPress={() => router.push('/terms')} />
         <SettingItem icon="shield-outline" title="Privacy Policy" onPress={() => router.push('/privacy')} />
 
         <View style={{ paddingHorizontal: 16, marginTop: 24, marginBottom: 8 }}>
-          <Text style={{ color: '#a69889', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Danger Zone</Text>
+          <Text style={{ color: '#9FB3C8', fontWeight: '500', fontSize: 12, textTransform: 'uppercase' }}>Danger Zone</Text>
         </View>
         <SettingItem icon="trash-outline" title="Reset Local Data" subtitle="Clear mood history and streaks" onPress={handleResetData} />
 
         {/* Sign out - only for authenticated users */}
         {isSignedIn && (
           <TouchableOpacity
-            style={{ margin: 16, padding: 16, backgroundColor: '#fef2f2', borderRadius: 12, alignItems: 'center' }}
+            style={{ margin: 16, padding: 16, backgroundColor: '#FAF5F7', borderRadius: 12, alignItems: 'center' }}
             onPress={handleSignOut}
           >
-            <Text style={{ color: '#dc2626', fontWeight: '600' }}>Sign Out</Text>
+            <Text style={{ color: '#2E1020', fontWeight: '600' }}>Sign Out</Text>
           </TouchableOpacity>
         )}
 
         <View style={{ alignItems: 'center', paddingVertical: 24 }}>
-          <Text style={{ color: '#d9d0c5' }}>Matcha v1.0.0</Text>
+          <Text style={{ color: '#C0C2D3' }}>21|Twenty One® v1.0.0</Text>
         </View>
       </ScrollView>
     </View>

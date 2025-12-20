@@ -17,21 +17,21 @@ interface OnboardingSlide {
 const SLIDES: OnboardingSlide[] = [
   {
     id: '1',
-    title: 'Welcome to Matcha',
+    title: 'Welcome to 21|Twenty One®',
     description: 'Your AI companion for mental wellness. Process thoughts, understand emotions, and build healthier thinking patterns.',
-    color: '#5a9470',
+    color: '#2E1020',
   },
   {
     id: '2',
     title: 'Talk Freely',
     description: 'Share what\'s on your mind without judgment. Our AI listens, understands, and helps you gain clarity.',
-    color: '#6b9ac4',
+    color: '#9FB3C8',
   },
   {
     id: '3',
     title: 'Track Your Journey',
     description: 'Monitor your mood, build healthy streaks, and see your emotional patterns over time.',
-    color: '#c97d52',
+    color: '#C0C2D3',
   },
 ];
 
@@ -73,7 +73,7 @@ function SlideItem({ item }: { item: OnboardingSlide }) {
       <Text style={{
         fontFamily: 'DMSerifDisplay_400Regular',
         fontSize: 28,
-        color: '#2d3a2e',
+        color: '#2E1020',
         textAlign: 'center',
         marginBottom: 16,
       }}>
@@ -81,7 +81,7 @@ function SlideItem({ item }: { item: OnboardingSlide }) {
       </Text>
       <Text style={{
         fontSize: 16,
-        color: '#5a5347',
+        color: '#9FB3C8',
         textAlign: 'center',
         lineHeight: 24,
       }}>
@@ -107,7 +107,7 @@ function GoalsScreen({ onComplete }: { onComplete: (goals: string[]) => void }) 
       <Text style={{
         fontFamily: 'DMSerifDisplay_400Regular',
         fontSize: 28,
-        color: '#2d3a2e',
+        color: '#2E1020',
         textAlign: 'center',
         marginBottom: 8,
       }}>
@@ -115,7 +115,7 @@ function GoalsScreen({ onComplete }: { onComplete: (goals: string[]) => void }) 
       </Text>
       <Text style={{
         fontSize: 16,
-        color: '#a69889',
+        color: '#9FB3C8',
         textAlign: 'center',
         marginBottom: 24,
       }}>
@@ -133,21 +133,21 @@ function GoalsScreen({ onComplete }: { onComplete: (goals: string[]) => void }) 
                 width: '47%',
                 padding: 16,
                 borderRadius: 12,
-                backgroundColor: isSelected ? '#5a9470' : 'white',
+                backgroundColor: isSelected ? '#2E1020' : 'white',
                 borderWidth: 1,
-                borderColor: isSelected ? '#5a9470' : '#f5ebe0',
+                borderColor: isSelected ? '#2E1020' : '#E8E9ED',
               }}
             >
               <Text style={{
                 fontWeight: '600',
-                color: isSelected ? 'white' : '#2d3a2e',
+                color: isSelected ? 'white' : '#2E1020',
                 marginBottom: 4,
               }}>
                 {goal.label}
               </Text>
               <Text style={{
                 fontSize: 12,
-                color: isSelected ? 'rgba(255,255,255,0.8)' : '#a69889',
+                color: isSelected ? 'rgba(255,255,255,0.8)' : '#9FB3C8',
               }}>
                 {goal.description}
               </Text>
@@ -162,14 +162,14 @@ function GoalsScreen({ onComplete }: { onComplete: (goals: string[]) => void }) 
         onPress={() => onComplete(selectedGoals)}
         disabled={selectedGoals.length === 0}
         style={{
-          backgroundColor: selectedGoals.length > 0 ? '#5a9470' : '#e5ddd5',
+          backgroundColor: selectedGoals.length > 0 ? '#2E1020' : '#E8E9ED',
           borderRadius: 12,
           paddingVertical: 16,
           alignItems: 'center',
         }}
       >
         <Text style={{
-          color: selectedGoals.length > 0 ? 'white' : '#a69889',
+          color: selectedGoals.length > 0 ? 'white' : '#9FB3C8',
           fontWeight: '600',
           fontSize: 16,
         }}>
@@ -208,18 +208,18 @@ export default function OnboardingScreen() {
 
   if (showGoals) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fefdfb' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
         <GoalsScreen onComplete={handleGoalsComplete} />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fefdfb' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       {/* Skip button */}
       <View style={{ alignItems: 'flex-end', paddingHorizontal: 16, paddingTop: 8 }}>
         <TouchableOpacity onPress={handleSkip} style={{ padding: 8 }}>
-          <Text style={{ color: '#a69889', fontSize: 16 }}>Skip</Text>
+          <Text style={{ color: '#9FB3C8', fontSize: 16 }}>Skip</Text>
         </TouchableOpacity>
       </View>
 
@@ -246,7 +246,7 @@ export default function OnboardingScreen() {
               width: currentIndex === index ? 24 : 8,
               height: 8,
               borderRadius: 4,
-              backgroundColor: currentIndex === index ? '#5a9470' : '#e5ddd5',
+              backgroundColor: currentIndex === index ? '#2E1020' : '#E8E9ED',
               marginHorizontal: 4,
             }}
           />
@@ -258,7 +258,7 @@ export default function OnboardingScreen() {
         <TouchableOpacity
           onPress={handleNext}
           style={{
-            backgroundColor: '#5a9470',
+            backgroundColor: '#2E1020',
             borderRadius: 12,
             paddingVertical: 16,
             alignItems: 'center',

@@ -11,22 +11,32 @@ import {
   Alert,
 } from 'react-native';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import { useAuth } from '@clerk/clerk-expo';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { createApiClient, Message, Analysis, Conversation } from '../../lib/api';
 import { useAppStore } from '../../stores/appStore';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { isTestMode } from '../../lib/auth';
+
+// Safe auth hook for test mode
+function useSafeAuth() {
+  if (isTestMode) {
+    return { getToken: async () => 'test-token' };
+  }
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { useAuth } = require('@clerk/clerk-expo');
+  return useAuth();
+}
 
 // Typing Indicator Component
 function TypingIndicator() {
   return (
     <View className="flex-row items-center px-4 py-3 self-start">
-      <View className="bg-warm-100 rounded-2xl rounded-tl-sm px-4 py-3 flex-row items-center">
-        <View className="w-2 h-2 bg-warm-400 rounded-full mx-0.5 animate-bounce" />
-        <View className="w-2 h-2 bg-warm-400 rounded-full mx-0.5 animate-bounce" style={{ animationDelay: '150ms' }} />
-        <View className="w-2 h-2 bg-warm-400 rounded-full mx-0.5 animate-bounce" style={{ animationDelay: '300ms' }} />
+      <View className="bg-neutral-200 rounded-2xl rounded-tl-sm px-4 py-3 flex-row items-center">
+        <View className="w-2 h-2 bg-lavender-400 rounded-full mx-0.5 animate-bounce" />
+        <View className="w-2 h-2 bg-lavender-400 rounded-full mx-0.5 animate-bounce" style={{ animationDelay: '150ms' }} />
+        <View className="w-2 h-2 bg-lavender-400 rounded-full mx-0.5 animate-bounce" style={{ animationDelay: '300ms' }} />
       </View>
     </View>
   );
@@ -43,17 +53,17 @@ const MessageBubble = memo(function MessageBubble({ message }: { message: Messag
           maxWidth: '85%',
           paddingHorizontal: 16,
           paddingVertical: 12,
-          backgroundColor: isUser ? '#5a9470' : '#f5ebe0',
+          backgroundColor: isUser ? '#2E1020' : '#E8E9ED',
           borderRadius: 16,
           borderTopRightRadius: isUser ? 4 : 16,
           borderTopLeftRadius: isUser ? 16 : 4,
         }}
       >
-        <Text style={{ color: isUser ? 'white' : '#2d3a2e', fontSize: 16 }}>
+        <Text style={{ color: isUser ? 'white' : '#2E1020', fontSize: 16 }}>
           {message.content}
         </Text>
       </View>
-      <Text style={{ color: '#a69889', fontSize: 12, marginTop: 4, paddingHorizontal: 4 }}>
+      <Text style={{ color: '#C0C2D3', fontSize: 12, marginTop: 4, paddingHorizontal: 4 }}>
         {new Date(message.createdAt).toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit',
@@ -68,8 +78,8 @@ function AnalysisPanel({ analysis }: { analysis: Analysis | null }) {
   if (!analysis) {
     return (
       <View className="p-4 items-center justify-center">
-        <Ionicons name="analytics-outline" size={48} color="#d9d0c5" />
-        <Text className="text-warm-500 mt-2">
+        <Ionicons name="analytics-outline" size={48} color="#C0C2D3" />
+        <Text className="text-steel-500 mt-2">
           Analysis will appear as you chat
         </Text>
       </View>
@@ -80,20 +90,20 @@ function AnalysisPanel({ analysis }: { analysis: Analysis | null }) {
     <View className="p-4">
       {/* Emotional State */}
       <View className="mb-4">
-        <Text className="text-warm-900 font-sans-semibold mb-2">Emotional State</Text>
+        <Text className="text-brand-800 font-sans-semibold mb-2">Emotional State</Text>
         <View className="flex-row flex-wrap gap-2">
-          <View className="bg-matcha-100 px-3 py-1 rounded-full">
-            <Text className="text-matcha-700 font-sans-medium">
+          <View className="bg-brand-100 px-3 py-1 rounded-full">
+            <Text className="text-brand-700 font-sans-medium">
               {analysis.emotionalState.primary}
             </Text>
           </View>
           {analysis.emotionalState.secondary && (
-            <View className="bg-warm-200 px-3 py-1 rounded-full">
-              <Text className="text-warm-700">{analysis.emotionalState.secondary}</Text>
+            <View className="bg-neutral-300 px-3 py-1 rounded-full">
+              <Text className="text-brand-700">{analysis.emotionalState.secondary}</Text>
             </View>
           )}
-          <View className="bg-terra-300/30 px-3 py-1 rounded-full">
-            <Text className="text-terra-600 text-sm">{analysis.emotionalState.intensity}</Text>
+          <View className="bg-steel-300/30 px-3 py-1 rounded-full">
+            <Text className="text-steel-600 text-sm">{analysis.emotionalState.intensity}</Text>
           </View>
         </View>
       </View>
@@ -101,19 +111,19 @@ function AnalysisPanel({ analysis }: { analysis: Analysis | null }) {
       {/* Thinking Patterns */}
       {analysis.patterns.length > 0 && (
         <View className="mb-4">
-          <Text className="text-warm-900 font-sans-semibold mb-2">Thinking Patterns</Text>
+          <Text className="text-brand-800 font-sans-semibold mb-2">Thinking Patterns</Text>
           <View className="gap-2">
             {analysis.patterns.map((pattern) => (
               <View key={pattern.name}>
                 <View className="flex-row justify-between mb-1">
-                  <Text className="text-warm-700">{pattern.name}</Text>
-                  <Text className="text-matcha-600 font-sans-medium">
+                  <Text className="text-brand-700">{pattern.name}</Text>
+                  <Text className="text-steel-400 font-sans-medium">
                     {Math.round(pattern.percentage)}%
                   </Text>
                 </View>
-                <View className="h-2 bg-warm-200 rounded-full">
+                <View className="h-2 bg-neutral-300 rounded-full">
                   <View
-                    className="h-full bg-matcha-500 rounded-full"
+                    className="h-full bg-brand-800 rounded-full"
                     style={{ width: `${pattern.percentage}%` }}
                   />
                 </View>
@@ -126,18 +136,18 @@ function AnalysisPanel({ analysis }: { analysis: Analysis | null }) {
       {/* Biases */}
       {analysis.biases.length > 0 && (
         <View className="mb-4">
-          <Text className="text-warm-900 font-sans-semibold mb-2">Detected Biases</Text>
+          <Text className="text-brand-800 font-sans-semibold mb-2">Detected Biases</Text>
           <View className="gap-2">
             {analysis.biases.slice(0, 3).map((bias) => (
-              <View key={bias.name} className="bg-warm-50 p-3 rounded-xl">
+              <View key={bias.name} className="bg-neutral-100 p-3 rounded-xl">
                 <View className="flex-row justify-between items-center">
-                  <Text className="text-warm-900 font-sans-medium">{bias.name}</Text>
-                  <Text className="text-terra-500 text-sm">
+                  <Text className="text-brand-800 font-sans-medium">{bias.name}</Text>
+                  <Text className="text-steel-500 text-sm">
                     {Math.round(bias.confidence * 100)}%
                   </Text>
                 </View>
                 {bias.description && (
-                  <Text className="text-warm-600 text-sm mt-1">{bias.description}</Text>
+                  <Text className="text-steel-400 text-sm mt-1">{bias.description}</Text>
                 )}
               </View>
             ))}
@@ -148,11 +158,11 @@ function AnalysisPanel({ analysis }: { analysis: Analysis | null }) {
       {/* Insights */}
       {analysis.insights.length > 0 && (
         <View>
-          <Text className="text-warm-900 font-sans-semibold mb-2">Key Insights</Text>
+          <Text className="text-brand-800 font-sans-semibold mb-2">Key Insights</Text>
           <View className="gap-2">
             {analysis.insights.map((insight, index) => (
-              <View key={index} className="border-l-2 border-matcha-400 pl-3 py-1">
-                <Text className="text-warm-700">{insight}</Text>
+              <View key={index} className="border-l-2 border-lavender-400 pl-3 py-1">
+                <Text className="text-brand-700">{insight}</Text>
               </View>
             ))}
           </View>
@@ -166,7 +176,7 @@ export default function ChatDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const navigation = useNavigation();
   const router = useRouter();
-  const { getToken } = useAuth();
+  const { getToken } = useSafeAuth();
   const { currentAnalysis, setCurrentAnalysis } = useAppStore();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const flatListRef = useRef<FlatList>(null);
@@ -299,22 +309,22 @@ export default function ChatDetailScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 bg-cream-50 items-center justify-center" edges={['bottom']}>
-        <ActivityIndicator size="large" color="#5a9470" />
+      <SafeAreaView className="flex-1 bg-neutral-50 items-center justify-center" edges={['bottom']}>
+        <ActivityIndicator size="large" color="#2E1020" />
       </SafeAreaView>
     );
   }
 
   if (error) {
     return (
-      <SafeAreaView className="flex-1 bg-cream-50 items-center justify-center px-8" edges={['bottom']}>
-        <Ionicons name="alert-circle-outline" size={64} color="#c97d52" />
-        <Text className="text-warm-900 font-sans-semibold text-xl mt-4">{error}</Text>
-        <Text className="text-warm-500 text-center mt-2">
+      <SafeAreaView className="flex-1 bg-neutral-50 items-center justify-center px-8" edges={['bottom']}>
+        <Ionicons name="alert-circle-outline" size={64} color="#9FB3C8" />
+        <Text className="text-brand-800 font-sans-semibold text-xl mt-4">{error}</Text>
+        <Text className="text-steel-500 text-center mt-2">
           This conversation may have been deleted or doesn't exist.
         </Text>
         <TouchableOpacity
-          className="mt-6 bg-matcha-600 px-6 py-3 rounded-xl"
+          className="mt-6 bg-brand-800 px-6 py-3 rounded-xl"
           onPress={() => router.back()}
         >
           <Text className="text-white font-sans-medium">Go Back</Text>
@@ -325,7 +335,7 @@ export default function ChatDetailScreen() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fefdfb' }} edges={['bottom']}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }} edges={['bottom']}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior="padding"
@@ -359,7 +369,7 @@ export default function ChatDetailScreen() {
               paddingBottom: Platform.OS === 'android' ? 12 : 8,
               backgroundColor: 'white',
               borderTopWidth: 1,
-              borderTopColor: '#f5ebe0',
+              borderTopColor: '#E8E9ED',
             }}
           >
             <TouchableOpacity
@@ -370,13 +380,13 @@ export default function ChatDetailScreen() {
               <Ionicons
                 name={showAnalysis ? 'analytics' : 'analytics-outline'}
                 size={24}
-                color={showAnalysis ? '#5a9470' : '#a69889'}
+                color={showAnalysis ? '#2E1020' : '#C0C2D3'}
               />
             </TouchableOpacity>
             <View
               style={{
                 flex: 1,
-                backgroundColor: '#faf8f5',
+                backgroundColor: '#F5F5F7',
                 borderRadius: 22,
                 paddingHorizontal: 16,
                 paddingVertical: Platform.OS === 'ios' ? 10 : 6,
@@ -388,7 +398,7 @@ export default function ChatDetailScreen() {
             >
               <TextInput
                 style={{
-                  color: '#2d3a2e',
+                  color: '#2E1020',
                   fontSize: 16,
                   lineHeight: 22,
                   maxHeight: 100,
@@ -398,7 +408,7 @@ export default function ChatDetailScreen() {
                   textAlignVertical: 'center',
                 }}
                 placeholder="Type a message..."
-                placeholderTextColor="#a69889"
+                placeholderTextColor="#C0C2D3"
                 value={inputText}
                 onChangeText={setInputText}
                 onFocus={() => scrollToBottom(true)}
@@ -415,7 +425,7 @@ export default function ChatDetailScreen() {
                 borderRadius: 22,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: inputText.trim() && !isSending ? '#5a9470' : '#e5ddd5',
+                backgroundColor: inputText.trim() && !isSending ? '#2E1020' : '#E8E9ED',
               }}
               onPress={handleSend}
               disabled={!inputText.trim() || isSending}
@@ -424,7 +434,7 @@ export default function ChatDetailScreen() {
               <Ionicons
                 name="send"
                 size={20}
-                color={inputText.trim() && !isSending ? 'white' : '#a69889'}
+                color={inputText.trim() && !isSending ? 'white' : '#C0C2D3'}
               />
             </TouchableOpacity>
           </View>
@@ -437,16 +447,16 @@ export default function ChatDetailScreen() {
           snapPoints={['50%', '75%']}
           enablePanDownToClose
           onClose={() => setShowAnalysis(false)}
-          backgroundStyle={{ backgroundColor: '#fefdfb' }}
-          handleIndicatorStyle={{ backgroundColor: '#d9d0c5' }}
+          backgroundStyle={{ backgroundColor: '#FFFFFF' }}
+          handleIndicatorStyle={{ backgroundColor: '#C0C2D3' }}
           keyboardBehavior="interactive"
           keyboardBlurBehavior="restore"
           android_keyboardInputMode="adjustResize"
         >
-          <View className="flex-row items-center justify-between px-4 pb-2 border-b border-warm-100">
-            <Text className="text-warm-900 font-sans-semibold text-lg">Analysis</Text>
+          <View className="flex-row items-center justify-between px-4 pb-2 border-b border-neutral-200">
+            <Text className="text-brand-800 font-sans-semibold text-lg">Analysis</Text>
             <TouchableOpacity onPress={() => bottomSheetRef.current?.close()}>
-              <Ionicons name="close" size={24} color="#5a5347" />
+              <Ionicons name="close" size={24} color="#9FB3C8" />
             </TouchableOpacity>
           </View>
           <BottomSheetScrollView>

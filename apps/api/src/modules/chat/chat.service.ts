@@ -9,7 +9,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { OpenRouterProvider, ChatMessage, AnalysisData } from '../../providers/ai/openrouter.provider';
 import { SendMessageDto, CreateConversationDto } from './dto/chat.dto';
 import { MessageRole } from '@prisma/client';
-import { getSystemPromptWithAnalysis } from './prompts/matcha-prompt';
+import { getSystemPromptWithAnalysis, CycleContext } from './prompts/matcha-prompt';
+import { CycleService } from '../cycle/cycle.service';
 
 // FREE tier limits
 const FREE_TIER_MONTHLY_MESSAGES = 50;
@@ -21,6 +22,7 @@ export class ChatService {
   constructor(
     private prisma: PrismaService,
     private openRouter: OpenRouterProvider,
+    private cycleService: CycleService,
   ) {}
 
   async createConversation(userId: string, data?: CreateConversationDto) {
@@ -140,11 +142,23 @@ export class ChatService {
     // Get previous emotions for context
     const previousEmotions = await this.getPreviousEmotions(conversationId);
 
+    // Get cycle context if user has tracking enabled
+    let cycleContext: CycleContext | undefined;
+    try {
+      const cycleData = await this.cycleService.getCycleContext(userId);
+      if (cycleData.isTracking) {
+        cycleContext = cycleData as CycleContext;
+      }
+    } catch (error) {
+      this.logger.warn('Failed to get cycle context:', error);
+    }
+
     // Build dynamic system prompt with context
     const systemPrompt = getSystemPromptWithAnalysis({
       messageCount,
       isDeepAnalysis: modelTier === 'deep',
       previousEmotions,
+      cycleContext,
     });
 
     // Build messages for OpenRouter

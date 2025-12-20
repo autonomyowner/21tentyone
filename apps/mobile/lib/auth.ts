@@ -24,3 +24,18 @@ const createTokenCache = (): TokenCache => {
 };
 
 export const tokenCache = createTokenCache();
+
+// Test mode check
+export const isTestMode = !process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+// Mock user for test mode
+export const testUser = {
+  id: 'test-user-123',
+  firstName: 'Test',
+  lastName: 'User',
+  fullName: 'Test User',
+  emailAddresses: [{ emailAddress: 'test@example.com' }],
+  primaryEmailAddress: { emailAddress: 'test@example.com' },
+  imageUrl: null,
+  createdAt: new Date().toISOString(),
+};

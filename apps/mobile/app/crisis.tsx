@@ -90,17 +90,17 @@ function ResourceCard({ resource }: { resource: Resource }) {
       padding: 16,
       marginBottom: 12,
       borderWidth: 1,
-      borderColor: '#f5ebe0',
+      borderColor: '#E8E9ED',
     }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontWeight: '600', color: '#2d3a2e', fontSize: 16 }}>
+          <Text style={{ fontWeight: '600', color: '#2E1020', fontSize: 16 }}>
             {resource.name}
           </Text>
-          <Text style={{ color: '#5a5347', fontSize: 14, marginTop: 4 }}>
+          <Text style={{ color: '#9FB3C8', fontSize: 14, marginTop: 4 }}>
             {resource.description}
           </Text>
-          <Text style={{ color: '#a69889', fontSize: 12, marginTop: 4 }}>
+          <Text style={{ color: '#C0C2D3', fontSize: 12, marginTop: 4 }}>
             {resource.available}
           </Text>
         </View>
@@ -115,7 +115,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#5a9470',
+              backgroundColor: '#2E1020',
               borderRadius: 8,
               paddingVertical: 10,
               gap: 6,
@@ -134,14 +134,14 @@ function ResourceCard({ resource }: { resource: Resource }) {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#dcedde',
+              backgroundColor: '#E8E9ED',
               borderRadius: 8,
               paddingVertical: 10,
               gap: 6,
             }}
           >
-            <Ionicons name="chatbubble-outline" size={18} color="#3d654c" />
-            <Text style={{ color: '#3d654c', fontWeight: '500' }}>Text</Text>
+            <Ionicons name="chatbubble-outline" size={18} color="#2E1020" />
+            <Text style={{ color: '#2E1020', fontWeight: '500' }}>Text</Text>
           </TouchableOpacity>
         )}
 
@@ -153,14 +153,14 @@ function ResourceCard({ resource }: { resource: Resource }) {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#f5ebe0',
+              backgroundColor: '#F5F5F7',
               borderRadius: 8,
               paddingVertical: 10,
               gap: 6,
             }}
           >
-            <Ionicons name="globe-outline" size={18} color="#5a5347" />
-            <Text style={{ color: '#5a5347', fontWeight: '500' }}>Web</Text>
+            <Ionicons name="globe-outline" size={18} color="#9FB3C8" />
+            <Text style={{ color: '#9FB3C8', fontWeight: '500' }}>Web</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -172,13 +172,13 @@ export default function CrisisScreen() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fefdfb' }} edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }} edges={['top']}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#f5ebe0' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#E8E9ED' }}>
         <TouchableOpacity onPress={() => router.back()} style={{ padding: 8 }}>
-          <Ionicons name="arrow-back" size={24} color="#2d3a2e" />
+          <Ionicons name="arrow-back" size={24} color="#2E1020" />
         </TouchableOpacity>
-        <Text style={{ flex: 1, fontFamily: 'DMSerifDisplay_400Regular', fontSize: 24, color: '#2d3a2e', marginLeft: 8 }}>
+        <Text style={{ flex: 1, fontFamily: 'DMSerifDisplay_400Regular', fontSize: 24, color: '#2E1020', marginLeft: 8 }}>
           Get Help
         </Text>
       </View>
@@ -186,26 +186,26 @@ export default function CrisisScreen() {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
         {/* Emergency Banner */}
         <View style={{
-          backgroundColor: '#ffebee',
+          backgroundColor: '#FAF5F7',
           borderRadius: 12,
           padding: 16,
           marginBottom: 20,
           borderWidth: 1,
-          borderColor: '#ffcdd2',
+          borderColor: '#E0C9D2',
         }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-            <Ionicons name="warning-outline" size={20} color="#c62828" />
-            <Text style={{ fontWeight: '600', color: '#c62828', marginLeft: 8, fontSize: 16 }}>
+            <Ionicons name="warning-outline" size={20} color="#2E1020" />
+            <Text style={{ fontWeight: '600', color: '#2E1020', marginLeft: 8, fontSize: 16 }}>
               If you're in immediate danger
             </Text>
           </View>
-          <Text style={{ color: '#5a5347', lineHeight: 20 }}>
+          <Text style={{ color: '#9FB3C8', lineHeight: 20 }}>
             Call <Text style={{ fontWeight: '600' }}>911</Text> or go to your nearest emergency room. Your safety is the priority.
           </Text>
           <TouchableOpacity
             onPress={() => Linking.openURL('tel:911')}
             style={{
-              backgroundColor: '#c62828',
+              backgroundColor: '#2E1020',
               borderRadius: 8,
               paddingVertical: 12,
               marginTop: 12,
@@ -220,30 +220,30 @@ export default function CrisisScreen() {
 
         {/* Coping Strategies */}
         <View style={{ marginBottom: 20 }}>
-          <Text style={{ fontWeight: '600', color: '#2d3a2e', fontSize: 18, marginBottom: 12 }}>
+          <Text style={{ fontWeight: '600', color: '#2E1020', fontSize: 18, marginBottom: 12 }}>
             Right now, try this:
           </Text>
           <View style={{
-            backgroundColor: '#fff8f0',
+            backgroundColor: '#F5F5F7',
             borderRadius: 12,
             padding: 16,
             borderWidth: 1,
-            borderColor: '#f5ebe0',
+            borderColor: '#E8E9ED',
           }}>
             {COPING_STRATEGIES.slice(0, 3).map((strategy, index) => (
               <View key={index} style={{ flexDirection: 'row', marginBottom: index < 2 ? 12 : 0 }}>
-                <Text style={{ color: '#c97d52', fontWeight: '600', marginRight: 8 }}>{index + 1}.</Text>
-                <Text style={{ color: '#5a5347', flex: 1, lineHeight: 20 }}>{strategy}</Text>
+                <Text style={{ color: '#9FB3C8', fontWeight: '600', marginRight: 8 }}>{index + 1}.</Text>
+                <Text style={{ color: '#9FB3C8', flex: 1, lineHeight: 20 }}>{strategy}</Text>
               </View>
             ))}
           </View>
         </View>
 
         {/* Crisis Resources */}
-        <Text style={{ fontWeight: '600', color: '#2d3a2e', fontSize: 18, marginBottom: 12 }}>
+        <Text style={{ fontWeight: '600', color: '#2E1020', fontSize: 18, marginBottom: 12 }}>
           Crisis Resources
         </Text>
-        <Text style={{ color: '#a69889', marginBottom: 16 }}>
+        <Text style={{ color: '#C0C2D3', marginBottom: 16 }}>
           Free, confidential support is available 24/7
         </Text>
 
@@ -253,14 +253,14 @@ export default function CrisisScreen() {
 
         {/* Disclaimer */}
         <View style={{
-          backgroundColor: '#f5f5f5',
+          backgroundColor: '#F5F5F7',
           borderRadius: 12,
           padding: 16,
           marginTop: 8,
           marginBottom: 32,
         }}>
-          <Text style={{ color: '#757575', fontSize: 12, lineHeight: 18 }}>
-            Matcha is not a replacement for professional mental health care. If you're experiencing a mental health emergency, please contact a crisis service or emergency services immediately.
+          <Text style={{ color: '#9FB3C8', fontSize: 12, lineHeight: 18 }}>
+            21|Twenty One® is not a replacement for professional mental health care. If you're experiencing a mental health emergency, please contact a crisis service or emergency services immediately.
           </Text>
         </View>
       </ScrollView>

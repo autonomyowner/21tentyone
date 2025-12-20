@@ -12,6 +12,7 @@ import { WebhooksModule } from './modules/webhooks/webhooks.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { TtsModule } from './modules/tts/tts.module';
 import { StripeModule } from './modules/stripe/stripe.module';
+import { CycleModule } from './modules/cycle/cycle.module';
 import { PrismaModule } from './prisma/prisma.module';
 import configuration from './config/configuration';
 
@@ -49,6 +50,7 @@ import configuration from './config/configuration';
     ChatModule,
     TtsModule,
     StripeModule,
+    CycleModule,
     HealthModule,
   ],
   controllers: [],

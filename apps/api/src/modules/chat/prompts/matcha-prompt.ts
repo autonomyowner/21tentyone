@@ -123,6 +123,32 @@ DETECTION RULES:
 - Consider context: some "biases" are actually realistic assessments
 - Patterns matter more than single instances`;
 
+export const CYCLE_AWARENESS_GUIDE = `CYCLE-AWARE EMOTIONAL INTELLIGENCE:
+
+When cycle tracking is enabled, incorporate awareness of how menstrual cycle phases can influence emotions and patterns:
+
+PHASE CHARACTERISTICS:
+- MENSTRUAL (Days 1-5): Lower energy, more introspective, physical discomfort possible. Emotions may feel heavier.
+- FOLLICULAR (Days 6-13): Rising energy, often more optimistic, good cognitive clarity. Great window for relationship work.
+- OVULATION (Days 14-16): Peak energy and confidence for many, social drive high. Communication skills enhanced.
+- LUTEAL (Days 17-28): Energy decreases, more sensitive to stress, triggers may feel amplified. PMS symptoms possible.
+
+GUIDELINES FOR CYCLE-AWARE RESPONSES:
+1. NEVER blame emotions solely on cycle phase - always validate feelings as legitimate and real
+2. Offer gentle awareness when relevant: "Some people notice their [pattern] peaks during this phase - you're not alone in experiencing this more intensely right now"
+3. Suggest phase-appropriate coping strategies when natural to do so
+4. Track patterns across cycles to provide personalized insights over time
+5. Acknowledge that cycle effects vary greatly person to person - some notice big shifts, others minimal
+6. If someone mentions severe symptoms, gently encourage consulting a healthcare provider
+
+INTEGRATION TIPS:
+- If anxiety is high during luteal phase: Validate first, then note that many people experience heightened sensitivity during this time
+- If energy is low during menstrual phase: Normalize rest and self-compassion
+- If social confidence is high during ovulation: Encourage them to use this window for challenging conversations
+- If attachment triggers are intense: Note that these can be biologically amplified, which doesn't make them less real
+
+IMPORTANT: This is supportive awareness, NOT medical advice. The cycle is ONE factor among many. Always prioritize validating the person's experience over explaining it away as "just hormones."`;
+
 export const THERAPEUTIC_QUESTION_GUIDE = `ASKING BETTER THERAPEUTIC QUESTIONS:
 
 AVOID:
@@ -176,11 +202,24 @@ Empowerment (building agency):
 
 ASK ONE THOUGHTFUL QUESTION PER RESPONSE (unless greeting/simple exchange).`;
 
+export interface CycleContext {
+  isTracking: boolean;
+  currentPhase?: 'MENSTRUAL' | 'FOLLICULAR' | 'OVULATION' | 'LUTEAL';
+  cycleDay?: number;
+  daysUntilNextPhase?: number;
+  recentSymptoms?: {
+    energy?: number;
+    mood?: number;
+    anxiety?: number;
+  };
+}
+
 export interface PromptContext {
   messageCount: number;
   isDeepAnalysis: boolean;
   previousEmotions?: string[];
   conversationThemes?: string[];
+  cycleContext?: CycleContext;
 }
 
 export function getSystemPromptWithAnalysis(context: PromptContext): string {
@@ -192,18 +231,39 @@ export function getSystemPromptWithAnalysis(context: PromptContext): string {
     ? `- Previously observed emotions: ${context.previousEmotions.join(', ')}`
     : '';
 
+  // Build cycle context section if tracking is enabled
+  let cycleSection = '';
+  let cycleGuide = '';
+  if (context.cycleContext?.isTracking && context.cycleContext.currentPhase) {
+    cycleGuide = `\n${CYCLE_AWARENESS_GUIDE}\n`;
+
+    const symptoms = context.cycleContext.recentSymptoms;
+    const symptomInfo = symptoms
+      ? `\n- Recent self-reported symptoms: Energy ${symptoms.energy || '?'}/5, Mood ${symptoms.mood || '?'}/5, Anxiety ${symptoms.anxiety || '?'}/5`
+      : '';
+
+    cycleSection = `
+CYCLE CONTEXT (integrate sensitively):
+- Current Phase: ${context.cycleContext.currentPhase}
+- Cycle Day: ${context.cycleContext.cycleDay}
+- Days until next phase: ${context.cycleContext.daysUntilNextPhase}${symptomInfo}
+
+Use this context to provide more personalized, cycle-aware insights when relevant. Remember: validate emotions first, then offer awareness.`;
+  }
+
   return `${MATCHA_IDENTITY}
 
 ${EMOTION_DETECTION_GUIDE}
 
 ${COGNITIVE_BIAS_DETECTION}
-
+${cycleGuide}
 ${THERAPEUTIC_QUESTION_GUIDE}
 
 CURRENT CONVERSATION CONTEXT:
 - Message number: ${context.messageCount}
 - Analysis depth: ${context.isDeepAnalysis ? 'DEEP (thorough analysis)' : 'STANDARD'}
 ${emotionContext}
+${cycleSection}
 
 RESPONSE GUIDELINES:
 1. ${analysisDepth}
@@ -241,7 +301,8 @@ RESPONSE FORMAT (JSON):
     "insights": [
       "Specific, actionable observation about their thinking",
       "Pattern noticed across conversation (if applicable)"
-    ]
+    ],
+    "cycleAwareInsight": "optional - only if cycle tracking is enabled and relevant. A gentle observation connecting their emotional experience to their cycle phase. Example: 'Many people notice heightened sensitivity during the luteal phase. What you're feeling is valid and also biologically amplified right now.'"
   }
 }
 

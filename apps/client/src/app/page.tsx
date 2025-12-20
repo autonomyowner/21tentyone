@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import InteractiveDemo from '@/components/InteractiveDemo';
-import WelcomeDemo from '@/components/WelcomeDemo';
 import { useLanguage } from '@/components/LanguageProvider';
 
 export default function LandingPage() {
@@ -15,40 +14,40 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-hidden" style={{ background: 'var(--cream-50)' }}>
-      {/* Decorative Background Elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {/* Large organic blob top right */}
-        <div
-          className="absolute -top-32 -right-32 w-[600px] h-[600px] opacity-30"
-          style={{
-            background: 'radial-gradient(circle, var(--matcha-200) 0%, transparent 70%)',
-            borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
-            animation: 'blob-float 20s ease-in-out infinite',
-          }}
-        />
-        {/* Medium blob left */}
-        <div
-          className="absolute top-1/3 -left-20 w-[400px] h-[400px] opacity-20"
-          style={{
-            background: 'radial-gradient(circle, var(--terra-300) 0%, transparent 70%)',
-            borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
-            animation: 'blob-float 15s ease-in-out infinite reverse',
-          }}
-        />
-        {/* Small accent blob */}
-        <div
-          className="absolute bottom-1/4 right-1/4 w-[200px] h-[200px] opacity-25"
-          style={{
-            background: 'radial-gradient(circle, var(--matcha-300) 0%, transparent 70%)',
-            borderRadius: '70% 30% 50% 50% / 50% 50% 50% 50%',
-            animation: 'blob-float 12s ease-in-out infinite',
-          }}
-        />
+    <div className="min-h-screen overflow-hidden relative">
+      {/* Animated Gradient Background */}
+      <div className="gradient-canvas">
+        {/* Flowing gradient mesh */}
+        <div className="gradient-mesh"></div>
+
+        {/* Aurora layers */}
+        <div className="aurora-layer aurora-1"></div>
+        <div className="aurora-layer aurora-2"></div>
+        <div className="aurora-layer aurora-3"></div>
+
+        {/* Morphing blobs */}
+        <div className="morph-blob morph-blob-1"></div>
+        <div className="morph-blob morph-blob-2"></div>
+        <div className="morph-blob morph-blob-3"></div>
+        <div className="morph-blob morph-blob-4"></div>
+
+        {/* Floating light particles */}
+        <div className="light-particle light-particle-1"></div>
+        <div className="light-particle light-particle-2"></div>
+        <div className="light-particle light-particle-3"></div>
+        <div className="light-particle light-particle-4"></div>
+        <div className="light-particle light-particle-5"></div>
+
+        {/* Glow spots */}
+        <div className="glow-spot glow-spot-1"></div>
+        <div className="glow-spot glow-spot-2"></div>
+
+        {/* Grain texture */}
+        <div className="grain-overlay"></div>
       </div>
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-32 px-4">
+      <section className="relative pt-20 pb-32 px-4 z-10">
         <div className="max-w-5xl mx-auto">
           {/* Eyebrow */}
           <div
@@ -97,21 +96,71 @@ export default function LandingPage() {
 
           {/* CTA Buttons */}
           <div
-            className={`flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 transition-all duration-700 delay-300 ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 transition-all duration-700 delay-300 ${
               mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
           >
             <Link
-              href="/signup"
+              href="/assessment"
               className="matcha-btn matcha-btn-primary text-base px-8 py-4"
             >
-              {t.landing.ctaStart}
+              {t.landing.ctaAssessment || 'Take Free Assessment'}
             </Link>
             <Link
               href="#how-it-works"
               className="matcha-btn matcha-btn-secondary text-base px-8 py-4"
             >
               {t.landing.ctaHow}
+            </Link>
+          </div>
+
+          {/* Assessment Highlight */}
+          <div
+            className={`max-w-2xl mx-auto mb-20 transition-all duration-700 delay-400 ${
+              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+          >
+            <Link
+              href="/assessment"
+              className="block p-6 rounded-2xl transition-all duration-300 hover:scale-[1.02] group"
+              style={{
+                background: 'linear-gradient(135deg, var(--brand-50) 0%, var(--cream-100) 100%)',
+                border: '2px solid var(--brand-200)',
+              }}
+            >
+              <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--brand-400), var(--brand-500))',
+                  }}
+                >
+                  <span className="text-2xl text-white font-bold">?</span>
+                </div>
+                <div className="flex-1">
+                  <h3
+                    className="text-lg font-semibold mb-1"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
+                    {t.landing.assessmentTitle || 'Discover Your Emotional Profile'}
+                  </h3>
+                  <p
+                    className="text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {t.landing.assessmentDesc || 'Take our free 2-minute assessment and get personalized insights for your journey'}
+                  </p>
+                </div>
+                <div
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all group-hover:translate-x-1"
+                  style={{
+                    background: '#2E1020',
+                    color: '#FFFFFF',
+                  }}
+                >
+                  {t.landing.assessmentCta || 'Start Now'}
+                </div>
+              </div>
             </Link>
           </div>
 
@@ -137,8 +186,8 @@ export default function LandingPage() {
                   <div
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full"
                     style={{
-                      background: 'linear-gradient(135deg, var(--matcha-400) 0%, var(--matcha-600) 100%)',
-                      boxShadow: '0 0 60px rgba(104, 166, 125, 0.4)',
+                      background: 'linear-gradient(135deg, #9FB3C8 0%, #2E1020 100%)',
+                      boxShadow: '0 0 60px rgba(46, 16, 32, 0.4)',
                     }}
                   />
                   {/* Orbiting elements */}
@@ -151,7 +200,7 @@ export default function LandingPage() {
                         height: `${180 + i * 60}px`,
                         marginLeft: `-${(180 + i * 60) / 2}px`,
                         marginTop: `-${(180 + i * 60) / 2}px`,
-                        border: `1px solid rgba(104, 166, 125, ${0.3 - i * 0.04})`,
+                        border: `1px solid rgba(46, 16, 32, ${0.3 - i * 0.04})`,
                         borderRadius: '50%',
                         animation: `spin ${20 + i * 5}s linear infinite ${i % 2 === 0 ? '' : 'reverse'}`,
                       }}
@@ -159,7 +208,7 @@ export default function LandingPage() {
                       <div
                         className="absolute w-3 h-3 rounded-full"
                         style={{
-                          background: i % 2 === 0 ? 'var(--matcha-500)' : 'var(--terra-400)',
+                          background: i % 2 === 0 ? '#2E1020' : '#9FB3C8',
                           top: '0',
                           left: '50%',
                           marginLeft: '-6px',
@@ -172,8 +221,8 @@ export default function LandingPage() {
                   <div
                     className="absolute top-1/4 left-1/4 px-3 py-1.5 rounded-full text-xs font-medium"
                     style={{
-                      background: 'var(--bg-card)',
-                      color: 'var(--matcha-700)',
+                      background: '#FFFFFF',
+                      color: '#2E1020',
                       boxShadow: 'var(--shadow-md)',
                       animation: 'float 4s ease-in-out infinite',
                     }}
@@ -183,8 +232,8 @@ export default function LandingPage() {
                   <div
                     className="absolute top-1/3 right-1/4 px-3 py-1.5 rounded-full text-xs font-medium"
                     style={{
-                      background: 'var(--bg-card)',
-                      color: 'var(--terra-500)',
+                      background: '#FFFFFF',
+                      color: '#2E1020',
                       boxShadow: 'var(--shadow-md)',
                       animation: 'float 5s ease-in-out infinite 1s',
                     }}
@@ -194,8 +243,8 @@ export default function LandingPage() {
                   <div
                     className="absolute bottom-1/3 left-1/3 px-3 py-1.5 rounded-full text-xs font-medium"
                     style={{
-                      background: 'var(--bg-card)',
-                      color: 'var(--matcha-600)',
+                      background: '#FFFFFF',
+                      color: '#2E1020',
                       boxShadow: 'var(--shadow-md)',
                       animation: 'float 4.5s ease-in-out infinite 0.5s',
                     }}
@@ -209,11 +258,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Welcome Demo - Video Explainer */}
-      <WelcomeDemo />
-
       {/* How It Works */}
-      <section id="how-it-works" className="py-24 px-4">
+      <section id="how-it-works" className="relative py-24 px-4 z-10">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <h2
@@ -301,8 +347,8 @@ export default function LandingPage() {
 
       {/* Features Section */}
       <section
-        className="py-24 px-4"
-        style={{ background: 'var(--cream-100)' }}
+        className="relative py-24 px-4 z-10"
+        style={{ background: 'rgba(250, 245, 247, 0.9)', backdropFilter: 'blur(8px)' }}
       >
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -376,8 +422,8 @@ export default function LandingPage() {
 
       {/* Pricing Preview */}
       <section
-        className="py-24 px-4"
-        style={{ background: 'var(--cream-100)' }}
+        className="relative py-24 px-4 z-10"
+        style={{ background: 'rgba(250, 245, 247, 0.85)', backdropFilter: 'blur(8px)' }}
       >
         <div className="max-w-3xl mx-auto text-center">
           <h2
@@ -409,197 +455,35 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-24 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div
-            className="rounded-3xl p-12 md:p-16 text-center relative overflow-hidden"
-            style={{
-              background: 'linear-gradient(135deg, var(--matcha-500) 0%, var(--matcha-700) 100%)',
-            }}
-          >
-            {/* Decorative elements */}
-            <div
-              className="absolute top-0 right-0 w-64 h-64 opacity-10"
-              style={{
-                background: 'radial-gradient(circle, white 0%, transparent 70%)',
-                borderRadius: '50%',
-                transform: 'translate(30%, -30%)',
-              }}
-            />
-            <div
-              className="absolute bottom-0 left-0 w-48 h-48 opacity-10"
-              style={{
-                background: 'radial-gradient(circle, white 0%, transparent 70%)',
-                borderRadius: '50%',
-                transform: 'translate(-30%, 30%)',
-              }}
-            />
-
-            <h2
-              className="text-3xl md:text-4xl mb-4 relative z-10"
-              style={{
-                fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                color: 'white',
-              }}
-            >
-              {t.landing.readyToUnderstand}
-            </h2>
-            <p
-              className="mb-8 max-w-xl mx-auto relative z-10"
-              style={{ color: 'rgba(255, 255, 255, 0.9)' }}
-            >
-              {t.landing.joinThousands}
-            </p>
-            <Link
-              href="/signup"
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-medium rounded-xl transition-all relative z-10"
-              style={{
-                background: 'white',
-                color: 'var(--matcha-700)',
-                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
-              }}
-            >
-              {t.landing.startNow}
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer
-        className="py-12 px-4 border-t"
+        className="relative z-10 py-12"
         style={{
-          background: 'var(--cream-50)',
-          borderColor: 'var(--border-soft)',
+          background: 'linear-gradient(180deg, transparent 0%, var(--brand-50) 100%)',
         }}
       >
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-              <p
-                className="text-xl font-semibold mb-1"
-                style={{
-                  fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                  color: 'var(--matcha-600)',
-                }}
-              >
-                Matcha
-              </p>
-              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                {t.landing.footerTagline}
-              </p>
-            </div>
-            <div className="flex gap-8">
-              <Link
-                href="/pricing"
-                className="text-sm hover:text-[var(--matcha-600)] transition-colors"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.header.pricing}
-              </Link>
-              <Link
-                href="/login"
-                className="text-sm hover:text-[var(--matcha-600)] transition-colors"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.header.login}
-              </Link>
-              <Link
-                href="/signup"
-                className="text-sm hover:text-[var(--matcha-600)] transition-colors"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.common.signup}
-              </Link>
-            </div>
-          </div>
-
-          {/* Investor CTA */}
-          <div
-            className="mt-10 pt-8 border-t"
-            style={{ borderColor: 'var(--border-soft)' }}
-          >
-            <div
-              className="max-w-md mx-auto text-center p-6 rounded-2xl"
-              style={{
-                background: 'linear-gradient(135deg, var(--cream-100) 0%, var(--cream-200) 100%)',
-                border: '1px solid var(--matcha-200)',
-              }}
-            >
-              <p
-                className="text-sm font-medium mb-2"
-                style={{ color: 'var(--matcha-700)' }}
-              >
-                {t.landing.investorCta}
-              </p>
-              <p
-                className="text-sm mb-4"
-                style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}
-              >
-                {t.landing.investorMsg}
-              </p>
-              <a
-                href="https://wa.me/213797339451"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block text-sm font-medium px-5 py-2 rounded-lg transition-all hover:opacity-90"
-                style={{
-                  background: 'var(--matcha-600)',
-                  color: 'white',
-                }}
-              >
-                {t.landing.investorContact}
-              </a>
-            </div>
-          </div>
-
-          <div
-            className="mt-8 pt-8 border-t text-center text-sm"
+        <div className="flex flex-col items-center justify-center">
+          <p
+            className="text-4xl md:text-5xl font-semibold tracking-tight"
             style={{
-              borderColor: 'var(--border-soft)',
-              color: 'var(--text-muted)',
+              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              background: 'linear-gradient(135deg, #2E1020 0%, #9FB3C8 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
             }}
           >
-            © 2024 Matcha. {t.landing.allRightsReserved}
-          </div>
+            21|Twenty One®
+          </p>
+          <div
+            className="mt-3 w-16 h-0.5 rounded-full"
+            style={{
+              background: 'linear-gradient(90deg, transparent, #9FB3C8, transparent)',
+            }}
+          />
         </div>
       </footer>
 
-      {/* Animations */}
-      <style jsx>{`
-        @keyframes blob-float {
-          0%,
-          100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(20px, -20px) scale(1.05);
-          }
-          66% {
-            transform: translate(-10px, 10px) scale(0.95);
-          }
-        }
-
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-      `}</style>
     </div>
   );
 }

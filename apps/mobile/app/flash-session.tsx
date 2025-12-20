@@ -9,7 +9,6 @@ import {
   Vibration,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuth } from '@clerk/clerk-expo';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
@@ -23,6 +22,17 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Audio } from 'expo-av';
 import { createApiClient } from '../lib/api';
+import { isTestMode } from '../lib/auth';
+
+// Safe auth hook for test mode
+function useSafeAuth() {
+  if (isTestMode) {
+    return { getToken: async () => 'test-token' };
+  }
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { useAuth } = require('@clerk/clerk-expo');
+  return useAuth();
+}
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -39,16 +49,16 @@ function DistressSlider({
   return (
     <View className="w-full">
       <View className="flex-row justify-between mb-2">
-        <Text className="text-matcha-600 text-sm">0 - Calm</Text>
-        <Text className="text-terra-500 text-sm">10 - Extreme</Text>
+        <Text className="text-steel-400 text-sm">0 - Calm</Text>
+        <Text className="text-brand-500 text-sm">10 - Extreme</Text>
       </View>
-      <View className="h-4 bg-warm-200 rounded-full overflow-hidden">
+      <View className="h-4 bg-neutral-300 rounded-full overflow-hidden">
         <View
           className="h-full rounded-full"
           style={{
             width: `${value * 10}%`,
             backgroundColor:
-              value <= 3 ? '#8fc49a' : value <= 6 ? '#e8d9c5' : '#c97d52',
+              value <= 3 ? '#9FB3C8' : value <= 6 ? '#C0C2D3' : '#2E1020',
           }}
         />
       </View>
@@ -56,12 +66,12 @@ function DistressSlider({
         {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
           <TouchableOpacity
             key={num}
-            className={`flex-1 py-2 items-center ${value === num ? 'bg-matcha-100 rounded' : ''}`}
+            className={`flex-1 py-2 items-center ${value === num ? 'bg-brand-100 rounded' : ''}`}
             onPress={() => onChange(num)}
           >
             <Text
               className={`text-sm ${
-                value === num ? 'text-matcha-700 font-sans-semibold' : 'text-warm-500'
+                value === num ? 'text-brand-800 font-sans-semibold' : 'text-steel-500'
               }`}
             >
               {num}
@@ -109,7 +119,7 @@ function BilateralCircles({ activeSide }: { activeSide: 'left' | 'right' }) {
       <View className="items-center">
         <Animated.View
           style={[leftStyle]}
-          className="w-32 h-32 rounded-full bg-matcha-500 items-center justify-center"
+          className="w-32 h-32 rounded-full bg-brand-800 items-center justify-center"
         >
           <Text className="text-white font-sans-semibold text-lg">Left</Text>
         </Animated.View>
@@ -117,7 +127,7 @@ function BilateralCircles({ activeSide }: { activeSide: 'left' | 'right' }) {
       <View className="items-center">
         <Animated.View
           style={[rightStyle]}
-          className="w-32 h-32 rounded-full bg-matcha-500 items-center justify-center"
+          className="w-32 h-32 rounded-full bg-brand-800 items-center justify-center"
         >
           <Text className="text-white font-sans-semibold text-lg">Right</Text>
         </Animated.View>
@@ -163,15 +173,15 @@ function BlinkOverlay({
   return (
     <Animated.View
       style={[overlayStyle]}
-      className="absolute inset-0 bg-matcha-900/80 items-center justify-center"
+      className="absolute inset-0 bg-brand-900/80 items-center justify-center"
     >
       <Animated.View
         style={[rippleStyle]}
-        className="w-40 h-40 rounded-full bg-matcha-400/30"
+        className="w-40 h-40 rounded-full bg-lavender-400/30"
       />
       <View className="absolute items-center">
         <Text className="text-white font-serif text-4xl mb-2">FLASH</Text>
-        <Text className="text-matcha-200 text-xl">{blinkCount}</Text>
+        <Text className="text-lavender-300 text-xl">{blinkCount}</Text>
       </View>
     </Animated.View>
   );
@@ -227,16 +237,16 @@ function SpeakingIndicator({ isActive }: { isActive: boolean }) {
 
   return (
     <View className="flex-row items-end gap-1 h-6">
-      <Animated.View style={[bar1Style]} className="w-1 bg-matcha-400 rounded-full" />
-      <Animated.View style={[bar2Style]} className="w-1 bg-matcha-400 rounded-full" />
-      <Animated.View style={[bar3Style]} className="w-1 bg-matcha-400 rounded-full" />
+      <Animated.View style={[bar1Style]} className="w-1 bg-lavender-400 rounded-full" />
+      <Animated.View style={[bar2Style]} className="w-1 bg-lavender-400 rounded-full" />
+      <Animated.View style={[bar3Style]} className="w-1 bg-lavender-400 rounded-full" />
     </View>
   );
 }
 
 export default function FlashSessionScreen() {
   const router = useRouter();
-  const { getToken } = useAuth();
+  const { getToken } = useSafeAuth();
 
   const [state, setState] = useState<SessionState>('INTRO');
   const [topic, setTopic] = useState('');
@@ -359,26 +369,26 @@ export default function FlashSessionScreen() {
   // INTRO Screen
   if (state === 'INTRO') {
     return (
-      <SafeAreaView className="flex-1 bg-cream-50">
+      <SafeAreaView className="flex-1 bg-neutral-50">
         <ScrollView className="flex-1" contentContainerStyle={{ padding: 24 }}>
           {/* Header */}
           <View className="flex-row items-center justify-between mb-8">
             <TouchableOpacity onPress={() => router.back()}>
-              <Ionicons name="close" size={28} color="#5a5347" />
+              <Ionicons name="close" size={28} color="#9FB3C8" />
             </TouchableOpacity>
-            <Text className="font-serif text-2xl text-warm-900">Flash Session</Text>
+            <Text className="font-serif text-2xl text-brand-800">Flash Session</Text>
             <View style={{ width: 28 }} />
           </View>
 
           {/* Topic Input */}
           <View className="mb-6">
-            <Text className="text-warm-900 font-sans-semibold mb-2">
+            <Text className="text-brand-800 font-sans-semibold mb-2">
               What would you like to work on?
             </Text>
             <TextInput
-              className="bg-white border border-warm-200 rounded-xl px-4 py-3 text-warm-900"
+              className="bg-white border border-neutral-300 rounded-xl px-4 py-3 text-brand-800"
               placeholder="Describe the memory or feeling..."
-              placeholderTextColor="#a69889"
+              placeholderTextColor="#C0C2D3"
               value={topic}
               onChangeText={setTopic}
               multiline
@@ -389,7 +399,7 @@ export default function FlashSessionScreen() {
 
           {/* Distress Slider */}
           <View className="mb-6">
-            <Text className="text-warm-900 font-sans-semibold mb-4">
+            <Text className="text-brand-800 font-sans-semibold mb-4">
               Current distress level (0-10)
             </Text>
             <DistressSlider value={distressStart} onChange={setDistressStart} />
@@ -397,13 +407,13 @@ export default function FlashSessionScreen() {
 
           {/* Positive Memory */}
           <View className="mb-6">
-            <Text className="text-warm-900 font-sans-semibold mb-2">
+            <Text className="text-brand-800 font-sans-semibold mb-2">
               Think of a positive, calming memory
             </Text>
             <TextInput
-              className="bg-white border border-warm-200 rounded-xl px-4 py-3 text-warm-900"
+              className="bg-white border border-neutral-300 rounded-xl px-4 py-3 text-brand-800"
               placeholder="A safe place, happy moment..."
-              placeholderTextColor="#a69889"
+              placeholderTextColor="#C0C2D3"
               value={positiveMemory}
               onChangeText={setPositiveMemory}
               multiline
@@ -413,18 +423,18 @@ export default function FlashSessionScreen() {
           </View>
 
           {/* Instructions */}
-          <View className="bg-matcha-50 rounded-xl p-4 mb-8">
-            <Text className="text-matcha-800 font-sans-semibold mb-2">How it works:</Text>
-            <Text className="text-matcha-700 mb-1">
+          <View className="bg-brand-50 rounded-xl p-4 mb-8">
+            <Text className="text-brand-800 font-sans-semibold mb-2">How it works:</Text>
+            <Text className="text-brand-700 mb-1">
               1. Focus on the alternating circles
             </Text>
-            <Text className="text-matcha-700 mb-1">
+            <Text className="text-brand-700 mb-1">
               2. When you see "FLASH", blink rapidly
             </Text>
-            <Text className="text-matcha-700 mb-1">
+            <Text className="text-brand-700 mb-1">
               3. Hold your positive memory in mind
             </Text>
-            <Text className="text-matcha-700">
+            <Text className="text-brand-700">
               4. Take breaks when prompted
             </Text>
           </View>
@@ -433,8 +443,8 @@ export default function FlashSessionScreen() {
           <TouchableOpacity
             className={`py-4 rounded-xl ${
               topic.trim() && positiveMemory.trim()
-                ? 'bg-matcha-600'
-                : 'bg-warm-300'
+                ? 'bg-brand-800'
+                : 'bg-neutral-300'
             }`}
             onPress={startSession}
             disabled={!topic.trim() || !positiveMemory.trim()}
@@ -443,7 +453,7 @@ export default function FlashSessionScreen() {
               className={`text-center font-sans-semibold text-lg ${
                 topic.trim() && positiveMemory.trim()
                   ? 'text-white'
-                  : 'text-warm-500'
+                  : 'text-steel-500'
               }`}
             >
               Begin Session
@@ -457,11 +467,11 @@ export default function FlashSessionScreen() {
   // SET_ACTIVE Screen (Immersive)
   if (state === 'SET_ACTIVE') {
     return (
-      <View className="flex-1 bg-warm-900">
+      <View className="flex-1 bg-brand-900">
         <SafeAreaView className="flex-1">
           {/* Timer */}
           <View className="items-center pt-8">
-            <Text className="text-warm-400 text-sm">Session Time</Text>
+            <Text className="text-lavender-400 text-sm">Session Time</Text>
             <Text className="text-white font-sans-bold text-3xl">
               {formatTime(elapsedTime)}
             </Text>
@@ -475,17 +485,17 @@ export default function FlashSessionScreen() {
 
           {/* Progress */}
           <View className="px-8 pb-4">
-            <View className="h-1 bg-warm-700 rounded-full">
+            <View className="h-1 bg-brand-700 rounded-full">
               <View
-                className="h-full bg-matcha-500 rounded-full"
+                className="h-full bg-lavender-400 rounded-full"
                 style={{ width: `${Math.min((elapsedTime / 300) * 100, 100)}%` }}
               />
             </View>
             <View className="flex-row justify-between mt-2">
-              <Text className="text-warm-500 text-sm">
+              <Text className="text-steel-500 text-sm">
                 Blinks: {blinkCount}
               </Text>
-              <Text className="text-warm-500 text-sm">
+              <Text className="text-steel-500 text-sm">
                 Sets: {setsCompleted}
               </Text>
             </View>
@@ -494,7 +504,7 @@ export default function FlashSessionScreen() {
           {/* Stop Button */}
           <View className="px-8 pb-8">
             <TouchableOpacity
-              className="py-4 rounded-xl bg-terra-500"
+              className="py-4 rounded-xl bg-steel-400"
               onPress={pauseSession}
             >
               <Text className="text-white text-center font-sans-semibold">
@@ -513,21 +523,21 @@ export default function FlashSessionScreen() {
   // SET_PAUSE Screen
   if (state === 'SET_PAUSE') {
     return (
-      <SafeAreaView className="flex-1 bg-cream-50 items-center justify-center px-8">
-        <Ionicons name="pause-circle-outline" size={80} color="#5a9470" />
-        <Text className="font-serif text-3xl text-warm-900 mt-6 text-center">
+      <SafeAreaView className="flex-1 bg-neutral-50 items-center justify-center px-8">
+        <Ionicons name="pause-circle-outline" size={80} color="#2E1020" />
+        <Text className="font-serif text-3xl text-brand-800 mt-6 text-center">
           Take a breath
         </Text>
-        <Text className="text-warm-600 mt-2 text-center">
+        <Text className="text-steel-400 mt-2 text-center">
           Set {setsCompleted} complete
         </Text>
-        <Text className="text-warm-500 mt-4 text-center">
+        <Text className="text-steel-500 mt-4 text-center">
           How are you feeling? Take a moment to notice any changes.
         </Text>
 
         <View className="w-full mt-8 gap-3">
           <TouchableOpacity
-            className="py-4 rounded-xl bg-matcha-600"
+            className="py-4 rounded-xl bg-brand-800"
             onPress={resumeSession}
           >
             <Text className="text-white text-center font-sans-semibold">
@@ -535,10 +545,10 @@ export default function FlashSessionScreen() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="py-4 rounded-xl bg-warm-200"
+            className="py-4 rounded-xl bg-neutral-300"
             onPress={endSession}
           >
-            <Text className="text-warm-700 text-center font-sans-semibold">
+            <Text className="text-brand-700 text-center font-sans-semibold">
               End Session
             </Text>
           </TouchableOpacity>
@@ -550,17 +560,17 @@ export default function FlashSessionScreen() {
   // CLOSING Screen
   if (state === 'CLOSING') {
     return (
-      <SafeAreaView className="flex-1 bg-cream-50 px-8">
+      <SafeAreaView className="flex-1 bg-neutral-50 px-8">
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-          <Text className="font-serif text-2xl text-warm-900 text-center mb-2">
+          <Text className="font-serif text-2xl text-brand-800 text-center mb-2">
             Final Check-in
           </Text>
-          <Text className="text-warm-600 text-center mb-8">
+          <Text className="text-steel-400 text-center mb-8">
             "{topic}"
           </Text>
 
           <View className="bg-white rounded-xl p-4 mb-6">
-            <Text className="text-warm-900 font-sans-semibold mb-4 text-center">
+            <Text className="text-brand-800 font-sans-semibold mb-4 text-center">
               How do you feel now? (0-10)
             </Text>
             <DistressSlider value={distressEnd} onChange={setDistressEnd} />
@@ -568,22 +578,22 @@ export default function FlashSessionScreen() {
 
           <View className="flex-row justify-center gap-6 mb-8">
             <View className="items-center">
-              <Text className="text-warm-500 text-sm">Before</Text>
-              <Text className="text-2xl font-sans-bold text-terra-500">
+              <Text className="text-steel-500 text-sm">Before</Text>
+              <Text className="text-2xl font-sans-bold text-brand-500">
                 {distressStart}
               </Text>
             </View>
-            <Ionicons name="arrow-forward" size={24} color="#d9d0c5" />
+            <Ionicons name="arrow-forward" size={24} color="#C0C2D3" />
             <View className="items-center">
-              <Text className="text-warm-500 text-sm">After</Text>
-              <Text className="text-2xl font-sans-bold text-matcha-600">
+              <Text className="text-steel-500 text-sm">After</Text>
+              <Text className="text-2xl font-sans-bold text-steel-400">
                 {distressEnd}
               </Text>
             </View>
           </View>
 
           <TouchableOpacity
-            className="py-4 rounded-xl bg-matcha-600"
+            className="py-4 rounded-xl bg-brand-800"
             onPress={completeSession}
           >
             <Text className="text-white text-center font-sans-semibold text-lg">
@@ -600,13 +610,13 @@ export default function FlashSessionScreen() {
     const distressChange = distressStart - distressEnd;
 
     return (
-      <SafeAreaView className="flex-1 bg-cream-50 px-8">
+      <SafeAreaView className="flex-1 bg-neutral-50 px-8">
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
           <View className="items-center mb-8">
-            <View className="w-20 h-20 rounded-full bg-matcha-100 items-center justify-center mb-4">
-              <Ionicons name="checkmark" size={40} color="#5a9470" />
+            <View className="w-20 h-20 rounded-full bg-brand-100 items-center justify-center mb-4">
+              <Ionicons name="checkmark" size={40} color="#2E1020" />
             </View>
-            <Text className="font-serif text-3xl text-warm-900">
+            <Text className="font-serif text-3xl text-brand-800">
               Session Complete
             </Text>
           </View>
@@ -614,10 +624,10 @@ export default function FlashSessionScreen() {
           {/* Stats */}
           <View className="flex-row gap-3 mb-6">
             <View className="flex-1 bg-white rounded-xl p-4 items-center">
-              <Text className="text-warm-500 text-sm">Distress</Text>
+              <Text className="text-steel-500 text-sm">Distress</Text>
               <Text
                 className={`text-2xl font-sans-bold ${
-                  distressChange > 0 ? 'text-matcha-600' : 'text-terra-500'
+                  distressChange > 0 ? 'text-steel-400' : 'text-brand-500'
                 }`}
               >
                 {distressChange > 0 ? '-' : '+'}
@@ -625,27 +635,27 @@ export default function FlashSessionScreen() {
               </Text>
             </View>
             <View className="flex-1 bg-white rounded-xl p-4 items-center">
-              <Text className="text-warm-500 text-sm">Duration</Text>
-              <Text className="text-2xl font-sans-bold text-warm-900">
+              <Text className="text-steel-500 text-sm">Duration</Text>
+              <Text className="text-2xl font-sans-bold text-brand-800">
                 {formatTime(elapsedTime)}
               </Text>
             </View>
             <View className="flex-1 bg-white rounded-xl p-4 items-center">
-              <Text className="text-warm-500 text-sm">Sets</Text>
-              <Text className="text-2xl font-sans-bold text-warm-900">
+              <Text className="text-steel-500 text-sm">Sets</Text>
+              <Text className="text-2xl font-sans-bold text-brand-800">
                 {setsCompleted}
               </Text>
             </View>
           </View>
 
-          <View className="bg-matcha-50 rounded-xl p-4 mb-8">
-            <Text className="text-matcha-700 text-center">
+          <View className="bg-brand-50 rounded-xl p-4 mb-8">
+            <Text className="text-brand-700 text-center">
               Remember: healing takes time. Each session builds on the last.
             </Text>
           </View>
 
           <TouchableOpacity
-            className="py-4 rounded-xl bg-matcha-600"
+            className="py-4 rounded-xl bg-brand-800"
             onPress={() => router.back()}
           >
             <Text className="text-white text-center font-sans-semibold text-lg">

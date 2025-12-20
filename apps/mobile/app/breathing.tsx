@@ -72,11 +72,11 @@ export default function BreathingScreen() {
 
   const getPhaseColor = () => {
     switch (phase) {
-      case 'inhale': return '#5a9470';
-      case 'hold1': return '#c97d52';
-      case 'exhale': return '#6b9ac4';
-      case 'hold2': return '#c97d52';
-      default: return '#5a9470';
+      case 'inhale': return '#2E1020';
+      case 'hold1': return '#C0C2D3';
+      case 'exhale': return '#9FB3C8';
+      case 'hold2': return '#C0C2D3';
+      default: return '#2E1020';
     }
   };
 
@@ -160,13 +160,13 @@ export default function BreathingScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fefdfb' }} edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }} edges={['top']}>
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12 }}>
         <TouchableOpacity onPress={() => router.back()} style={{ padding: 8 }}>
-          <Ionicons name="arrow-back" size={24} color="#2d3a2e" />
+          <Ionicons name="arrow-back" size={24} color="#2E1020" />
         </TouchableOpacity>
-        <Text style={{ flex: 1, fontFamily: 'DMSerifDisplay_400Regular', fontSize: 24, color: '#2d3a2e', marginLeft: 8 }}>
+        <Text style={{ flex: 1, fontFamily: 'DMSerifDisplay_400Regular', fontSize: 24, color: '#2E1020', marginLeft: 8 }}>
           Breathing
         </Text>
       </View>
@@ -174,7 +174,7 @@ export default function BreathingScreen() {
       {/* Pattern Selection */}
       {!isActive && phase !== 'complete' && (
         <View style={{ paddingHorizontal: 16, marginBottom: 24 }}>
-          <Text style={{ color: '#5a5347', marginBottom: 12, fontWeight: '500' }}>Choose a pattern:</Text>
+          <Text style={{ color: '#9FB3C8', marginBottom: 12, fontWeight: '500' }}>Choose a pattern:</Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             {PATTERNS.map((pattern) => (
               <TouchableOpacity
@@ -184,21 +184,21 @@ export default function BreathingScreen() {
                   flex: 1,
                   padding: 12,
                   borderRadius: 12,
-                  backgroundColor: selectedPattern.name === pattern.name ? '#5a9470' : 'white',
+                  backgroundColor: selectedPattern.name === pattern.name ? '#2E1020' : 'white',
                   borderWidth: 1,
-                  borderColor: selectedPattern.name === pattern.name ? '#5a9470' : '#f5ebe0',
+                  borderColor: selectedPattern.name === pattern.name ? '#2E1020' : '#E8E9ED',
                 }}
               >
                 <Text style={{
                   fontWeight: '600',
-                  color: selectedPattern.name === pattern.name ? 'white' : '#2d3a2e',
+                  color: selectedPattern.name === pattern.name ? 'white' : '#2E1020',
                   textAlign: 'center',
                 }}>
                   {pattern.name}
                 </Text>
                 <Text style={{
                   fontSize: 11,
-                  color: selectedPattern.name === pattern.name ? 'rgba(255,255,255,0.8)' : '#a69889',
+                  color: selectedPattern.name === pattern.name ? 'rgba(255,255,255,0.8)' : '#9FB3C8',
                   textAlign: 'center',
                   marginTop: 4,
                 }}>
@@ -250,7 +250,7 @@ export default function BreathingScreen() {
         <Text style={{
           fontSize: 28,
           fontWeight: '600',
-          color: '#2d3a2e',
+          color: '#2E1020',
           marginTop: 32,
         }}>
           {getPhaseText()}
@@ -258,7 +258,7 @@ export default function BreathingScreen() {
 
         {/* Cycle Counter */}
         {isActive && (
-          <Text style={{ color: '#a69889', marginTop: 8 }}>
+          <Text style={{ color: '#9FB3C8', marginTop: 8 }}>
             Cycle {currentCycle} of {selectedPattern.cycles}
           </Text>
         )}
@@ -266,13 +266,13 @@ export default function BreathingScreen() {
         {/* Pattern Info */}
         {!isActive && phase !== 'complete' && (
           <View style={{ marginTop: 16, alignItems: 'center' }}>
-            <Text style={{ color: '#a69889', fontSize: 14 }}>
+            <Text style={{ color: '#9FB3C8', fontSize: 14 }}>
               {selectedPattern.inhale}s in
               {selectedPattern.hold1 > 0 && ` • ${selectedPattern.hold1}s hold`}
               {` • ${selectedPattern.exhale}s out`}
               {selectedPattern.hold2 > 0 && ` • ${selectedPattern.hold2}s hold`}
             </Text>
-            <Text style={{ color: '#a69889', fontSize: 14, marginTop: 4 }}>
+            <Text style={{ color: '#9FB3C8', fontSize: 14, marginTop: 4 }}>
               {selectedPattern.cycles} cycles
             </Text>
           </View>
@@ -283,18 +283,18 @@ export default function BreathingScreen() {
       <View style={{ padding: 16, paddingBottom: 32 }}>
         {phase === 'complete' ? (
           <View style={{ gap: 12 }}>
-            <View style={{ backgroundColor: '#dcedde', borderRadius: 12, padding: 16, alignItems: 'center' }}>
-              <Text style={{ color: '#3d654c', fontWeight: '600', fontSize: 16 }}>
+            <View style={{ backgroundColor: '#E8E9ED', borderRadius: 12, padding: 16, alignItems: 'center' }}>
+              <Text style={{ color: '#2E1020', fontWeight: '600', fontSize: 16 }}>
                 Session Complete
               </Text>
-              <Text style={{ color: '#5a9470', marginTop: 4 }}>
+              <Text style={{ color: '#9FB3C8', marginTop: 4 }}>
                 Great job taking time for yourself
               </Text>
             </View>
             <TouchableOpacity
               onPress={resetSession}
               style={{
-                backgroundColor: '#5a9470',
+                backgroundColor: '#2E1020',
                 borderRadius: 12,
                 paddingVertical: 16,
                 alignItems: 'center',
@@ -309,13 +309,13 @@ export default function BreathingScreen() {
           <TouchableOpacity
             onPress={stopBreathing}
             style={{
-              backgroundColor: '#f5ebe0',
+              backgroundColor: '#E8E9ED',
               borderRadius: 12,
               paddingVertical: 16,
               alignItems: 'center',
             }}
           >
-            <Text style={{ color: '#5a5347', fontWeight: '600', fontSize: 16 }}>
+            <Text style={{ color: '#9FB3C8', fontWeight: '600', fontSize: 16 }}>
               Stop
             </Text>
           </TouchableOpacity>
@@ -323,7 +323,7 @@ export default function BreathingScreen() {
           <TouchableOpacity
             onPress={startBreathing}
             style={{
-              backgroundColor: '#5a9470',
+              backgroundColor: '#2E1020',
               borderRadius: 12,
               paddingVertical: 16,
               alignItems: 'center',

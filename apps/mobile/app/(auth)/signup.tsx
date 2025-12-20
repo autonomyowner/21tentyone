@@ -1,5 +1,5 @@
 import { useSignUp, useOAuth } from '@clerk/clerk-expo';
-import { Link, useRouter } from 'expo-router';
+import { Link, useRouter, Redirect } from 'expo-router';
 import { useState, useCallback } from 'react';
 import {
   View,
@@ -14,10 +14,19 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
+import { isTestMode } from '../../lib/auth';
 
 WebBrowser.maybeCompleteAuthSession();
 
+// In test mode, just redirect to tabs
 export default function SignUpScreen() {
+  if (isTestMode) {
+    return <Redirect href="/(tabs)" />;
+  }
+  return <SignUpScreenContent />;
+}
+
+function SignUpScreenContent() {
   const { signUp, setActive, isLoaded } = useSignUp();
   const router = useRouter();
 
@@ -39,7 +48,7 @@ export default function SignUpScreen() {
       setError('');
       const startOAuth = provider === 'google' ? startGoogleOAuth : startFacebookOAuth;
       const { createdSessionId, setActive: setOAuthActive } = await startOAuth({
-        redirectUrl: Linking.createURL('/(tabs)', { scheme: 'matcha' }),
+        redirectUrl: Linking.createURL('/(tabs)', { scheme: 'twentyone' }),
       });
       if (createdSessionId && setOAuthActive) {
         await setOAuthActive({ session: createdSessionId });
@@ -96,7 +105,7 @@ export default function SignUpScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-cream-50">
+    <SafeAreaView className="flex-1 bg-neutral-50">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -108,19 +117,19 @@ export default function SignUpScreen() {
           <View className="flex-1 px-6 pt-12 pb-8">
             {/* Logo */}
             <View className="items-center mb-12">
-              <Text className="font-serif text-4xl text-matcha-600">Matcha</Text>
-              <Text className="text-warm-600 mt-2">AI at the service of your mind</Text>
+              <Text className="font-serif text-4xl text-brand-800">21|Twenty One®</Text>
+              <Text className="text-steel-400 mt-2">AI at the service of your mind</Text>
             </View>
 
             {/* Form */}
             <View className="space-y-4">
-              <Text className="font-sans-semibold text-2xl text-warm-900 mb-6">
+              <Text className="font-sans-semibold text-2xl text-brand-800 mb-6">
                 {pendingVerification ? 'Verify your email' : 'Create account'}
               </Text>
 
               {error ? (
-                <View className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
-                  <Text className="text-red-600">{error}</Text>
+                <View className="bg-brand-50 border border-brand-200 rounded-xl p-4 mb-4">
+                  <Text className="text-brand-800">{error}</Text>
                 </View>
               ) : null}
 
@@ -133,9 +142,9 @@ export default function SignUpScreen() {
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: 'white',
+                        backgroundColor: '#FFFFFF',
                         borderWidth: 1,
-                        borderColor: '#e5ddd5',
+                        borderColor: '#E8E9ED',
                         borderRadius: 12,
                         paddingVertical: 14,
                         marginBottom: 12,
@@ -144,11 +153,11 @@ export default function SignUpScreen() {
                       disabled={isOAuthLoading !== null || isLoading}
                     >
                       {isOAuthLoading === 'google' ? (
-                        <ActivityIndicator color="#5a9470" />
+                        <ActivityIndicator color="#2E1020" />
                       ) : (
                         <>
                           <Text style={{ fontSize: 18, marginRight: 12, fontWeight: 'bold', color: '#4285F4' }}>G</Text>
-                          <Text style={{ color: '#2d3a2e', fontWeight: '500', fontSize: 16 }}>Continue with Google</Text>
+                          <Text style={{ color: '#2E1020', fontWeight: '500', fontSize: 16 }}>Continue with Google</Text>
                         </>
                       )}
                     </TouchableOpacity>
@@ -177,17 +186,17 @@ export default function SignUpScreen() {
 
                   {/* Divider */}
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
-                    <View style={{ flex: 1, height: 1, backgroundColor: '#e5ddd5' }} />
-                    <Text style={{ marginHorizontal: 16, color: '#a69889' }}>or</Text>
-                    <View style={{ flex: 1, height: 1, backgroundColor: '#e5ddd5' }} />
+                    <View style={{ flex: 1, height: 1, backgroundColor: '#E8E9ED' }} />
+                    <Text style={{ marginHorizontal: 16, color: '#9FB3C8' }}>or</Text>
+                    <View style={{ flex: 1, height: 1, backgroundColor: '#E8E9ED' }} />
                   </View>
 
                   <View>
-                    <Text className="text-warm-700 mb-2 font-sans-medium">First Name</Text>
+                    <Text className="text-steel-400 mb-2 font-sans-medium">First Name</Text>
                     <TextInput
-                      className="bg-white border border-warm-200 rounded-xl px-4 py-3 text-warm-900"
+                      className="bg-neutral-50 border border-neutral-300 rounded-xl px-4 py-3 text-brand-800"
                       placeholder="Your name"
-                      placeholderTextColor="#a69889"
+                      placeholderTextColor="#C0C2D3"
                       value={firstName}
                       onChangeText={setFirstName}
                       autoCapitalize="words"
@@ -195,11 +204,11 @@ export default function SignUpScreen() {
                   </View>
 
                   <View>
-                    <Text className="text-warm-700 mb-2 font-sans-medium">Email</Text>
+                    <Text className="text-steel-400 mb-2 font-sans-medium">Email</Text>
                     <TextInput
-                      className="bg-white border border-warm-200 rounded-xl px-4 py-3 text-warm-900"
+                      className="bg-neutral-50 border border-neutral-300 rounded-xl px-4 py-3 text-brand-800"
                       placeholder="your@email.com"
-                      placeholderTextColor="#a69889"
+                      placeholderTextColor="#C0C2D3"
                       value={email}
                       onChangeText={setEmail}
                       keyboardType="email-address"
@@ -209,11 +218,11 @@ export default function SignUpScreen() {
                   </View>
 
                   <View>
-                    <Text className="text-warm-700 mb-2 font-sans-medium">Password</Text>
+                    <Text className="text-steel-400 mb-2 font-sans-medium">Password</Text>
                     <TextInput
-                      className="bg-white border border-warm-200 rounded-xl px-4 py-3 text-warm-900"
+                      className="bg-neutral-50 border border-neutral-300 rounded-xl px-4 py-3 text-brand-800"
                       placeholder="Create a password"
-                      placeholderTextColor="#a69889"
+                      placeholderTextColor="#C0C2D3"
                       value={password}
                       onChangeText={setPassword}
                       secureTextEntry
@@ -222,7 +231,7 @@ export default function SignUpScreen() {
                   </View>
 
                   <TouchableOpacity
-                    className={`bg-matcha-600 rounded-xl py-4 mt-6 ${isLoading || isOAuthLoading ? 'opacity-70' : ''}`}
+                    className={`bg-brand-800 rounded-xl py-4 mt-6 ${isLoading || isOAuthLoading ? 'opacity-70' : ''}`}
                     onPress={handleSignUp}
                     disabled={isLoading || isOAuthLoading !== null}
                   >
@@ -237,18 +246,18 @@ export default function SignUpScreen() {
                 </>
               ) : (
                 <>
-                  <Text className="text-warm-600 mb-4">
+                  <Text className="text-steel-400 mb-4">
                     We sent a verification code to {email}
                   </Text>
 
                   <View>
-                    <Text className="text-warm-700 mb-2 font-sans-medium">
+                    <Text className="text-steel-400 mb-2 font-sans-medium">
                       Verification Code
                     </Text>
                     <TextInput
-                      className="bg-white border border-warm-200 rounded-xl px-4 py-3 text-warm-900 text-center text-2xl tracking-widest"
+                      className="bg-neutral-50 border border-neutral-300 rounded-xl px-4 py-3 text-brand-800 text-center text-2xl tracking-widest"
                       placeholder="000000"
-                      placeholderTextColor="#a69889"
+                      placeholderTextColor="#C0C2D3"
                       value={code}
                       onChangeText={setCode}
                       keyboardType="number-pad"
@@ -257,7 +266,7 @@ export default function SignUpScreen() {
                   </View>
 
                   <TouchableOpacity
-                    className={`bg-matcha-600 rounded-xl py-4 mt-6 ${isLoading ? 'opacity-70' : ''}`}
+                    className={`bg-brand-800 rounded-xl py-4 mt-6 ${isLoading ? 'opacity-70' : ''}`}
                     onPress={handleVerify}
                     disabled={isLoading}
                   >
@@ -275,10 +284,10 @@ export default function SignUpScreen() {
 
             {/* Footer */}
             <View className="flex-row justify-center mt-8">
-              <Text className="text-warm-600">Already have an account? </Text>
+              <Text className="text-steel-400">Already have an account? </Text>
               <Link href="/(auth)/login" asChild>
                 <TouchableOpacity>
-                  <Text className="text-matcha-600 font-sans-semibold">Sign In</Text>
+                  <Text className="text-brand-800 font-sans-semibold">Sign In</Text>
                 </TouchableOpacity>
               </Link>
             </View>

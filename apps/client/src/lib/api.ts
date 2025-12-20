@@ -68,6 +68,82 @@ export interface Analysis {
   completedAt: string | null;
 }
 
+// Cycle Tracking Types
+export type CyclePhase = 'MENSTRUAL' | 'FOLLICULAR' | 'OVULATION' | 'LUTEAL';
+
+export const CYCLE_PHASE_INFO: Record<CyclePhase, { label: string; color: string; description: string }> = {
+  MENSTRUAL: { label: 'Menstrual', color: '#E57373', description: 'Rest & Reflect' },
+  FOLLICULAR: { label: 'Follicular', color: '#81C784', description: 'Rising Energy' },
+  OVULATION: { label: 'Ovulation', color: '#4CAF50', description: 'Peak Energy' },
+  LUTEAL: { label: 'Luteal', color: '#FFB74D', description: 'Wind Down' },
+};
+
+export interface CycleSettings {
+  id: string;
+  userId: string;
+  isTrackingEnabled: boolean;
+  averageCycleLength: number;
+  averagePeriodLength: number;
+  sendPhaseNotifications: boolean;
+  lastPeriodStart: string | null;
+}
+
+export interface CyclePhaseData {
+  phase: CyclePhase;
+  cycleDay: number;
+  daysUntilNextPhase: number;
+  predictedNextPeriod: string;
+  confidence: number;
+  isTracking: boolean;
+  recommendations?: {
+    phase: string;
+    title: string;
+    description: string;
+    tips: string[];
+  };
+}
+
+export interface CycleEntry {
+  id: string;
+  userId: string;
+  periodStart: string;
+  periodEnd: string | null;
+  cycleLength: number | null;
+  notes: string | null;
+}
+
+export interface CycleLog {
+  id: string;
+  userId: string;
+  date: string;
+  phase: CyclePhase;
+  cycleDay: number;
+  energy: number | null;
+  mood: number | null;
+  anxiety: number | null;
+  cramps: number | null;
+  bloating: number | null;
+  headache: number | null;
+  notes: string | null;
+}
+
+export interface CycleInsight {
+  id: string;
+  phase: CyclePhase;
+  insightType: string;
+  title: string;
+  description: string;
+  confidence: number;
+}
+
+export interface CalendarDay {
+  date: string;
+  phase: CyclePhase | null;
+  cycleDay: number | null;
+  isPeriod: boolean;
+  isPrediction: boolean;
+}
+
 export interface DashboardData {
   profile: {
     id: string;
@@ -93,6 +169,20 @@ export interface DashboardData {
     emotionalTrends: Array<{ emotion: string; count: number; avgIntensity: number }>;
   };
   recentInsights: string[];
+  cycle?: {
+    isTracking: boolean;
+    currentPhase?: CyclePhase;
+    cycleDay?: number;
+    daysUntilNextPhase?: number;
+    predictedNextPeriod?: string;
+    recommendations?: {
+      phase: string;
+      title: string;
+      description: string;
+      tips: string[];
+    };
+    insights?: CycleInsight[];
+  };
 }
 
 export interface Plan {
@@ -365,4 +455,72 @@ export const api = {
       method: 'POST',
       token,
     }),
+
+  // Cycle Tracking
+  getCycleSettings: (token: string) =>
+    apiClient<CycleSettings>('/cycle/settings', { token }),
+
+  updateCycleSettings: (token: string, data: Partial<CycleSettings>) =>
+    apiClient<CycleSettings>('/cycle/settings', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      token,
+    }),
+
+  getCurrentCyclePhase: (token: string) =>
+    apiClient<CyclePhaseData | { isTracking: false; message: string }>('/cycle/current', { token }),
+
+  startPeriod: (token: string, date?: string) =>
+    apiClient<CycleEntry>('/cycle/period/start', {
+      method: 'POST',
+      body: JSON.stringify({ date }),
+      token,
+    }),
+
+  endPeriod: (token: string, date?: string) =>
+    apiClient<CycleEntry>('/cycle/period/end', {
+      method: 'POST',
+      body: JSON.stringify({ date }),
+      token,
+    }),
+
+  getPeriodHistory: (token: string, limit = 12) =>
+    apiClient<CycleEntry[]>(`/cycle/periods?limit=${limit}`, { token }),
+
+  logCycleDay: (
+    token: string,
+    data: {
+      date: string;
+      energy?: number;
+      mood?: number;
+      anxiety?: number;
+      cramps?: number;
+      bloating?: number;
+      headache?: number;
+      notes?: string;
+    }
+  ) =>
+    apiClient<CycleLog>('/cycle/log', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      token,
+    }),
+
+  getCycleLog: (token: string, date: string) =>
+    apiClient<CycleLog | null>(`/cycle/log/${date}`, { token }),
+
+  getCycleLogs: (token: string, startDate: string, endDate: string) =>
+    apiClient<CycleLog[]>(`/cycle/logs?startDate=${startDate}&endDate=${endDate}`, { token }),
+
+  getCycleCalendar: (token: string, year: number, month: number) =>
+    apiClient<{ days: CalendarDay[] }>(`/cycle/calendar/${year}/${month}`, { token }),
+
+  getCycleInsights: (token: string) =>
+    apiClient<CycleInsight[]>('/cycle/insights', { token }),
+
+  getPhaseRecommendations: (token: string, phase: CyclePhase) =>
+    apiClient<{ phase: string; title: string; description: string; tips: string[] }>(
+      `/cycle/recommendations/${phase}`,
+      { token }
+    ),
 };

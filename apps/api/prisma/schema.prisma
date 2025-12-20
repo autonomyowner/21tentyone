@@ -34,6 +34,13 @@ enum EmdrPhase {
   COMPLETED
 }
 
+enum CyclePhase {
+  MENSTRUAL
+  FOLLICULAR
+  OVULATION
+  LUTEAL
+}
+
 model User {
   id        String   @id // Clerk user ID
   email     String   @unique
@@ -45,6 +52,12 @@ model User {
   analyses      Analysis[]
   usageLimit    UsageLimit?
   conversations Conversation[]
+
+  // Cycle tracking
+  cycleEntries  CycleEntry[]
+  cycleSettings CycleSettings?
+  cycleLogs     CycleLog[]
+  cycleInsights CycleInsight[]
 
   @@map("users")
 }
@@ -148,4 +161,82 @@ model EmdrSession {
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   @@map("emdr_sessions")
+}
+
+// ==========================================
+// CYCLE TRACKING MODELS
+// ==========================================
+
+model CycleEntry {
+  id          String    @id @default(cuid())
+  userId      String    @map("user_id")
+  periodStart DateTime  @map("period_start")
+  periodEnd   DateTime? @map("period_end")
+  cycleLength Int?      @map("cycle_length") // Calculated after next period starts
+  notes       String?   @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, periodStart(sort: Desc)])
+  @@map("cycle_entries")
+}
+
+model CycleSettings {
+  id                     String    @id @default(cuid())
+  userId                 String    @unique @map("user_id")
+  isTrackingEnabled      Boolean   @default(true) @map("is_tracking_enabled")
+  averageCycleLength     Int       @default(28) @map("average_cycle_length")
+  averagePeriodLength    Int       @default(5) @map("average_period_length")
+  sendPhaseNotifications Boolean   @default(true) @map("send_phase_notifications")
+  lastPeriodStart        DateTime? @map("last_period_start")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("cycle_settings")
+}
+
+model CycleLog {
+  id       String     @id @default(cuid())
+  userId   String     @map("user_id")
+  date     DateTime   @db.Date
+  phase    CyclePhase
+  cycleDay Int        @map("cycle_day")
+  // Symptoms (1-5 scale)
+  energy   Int?
+  mood     Int?
+  anxiety  Int?
+  cramps   Int?
+  bloating Int?
+  headache Int?
+  notes    String?    @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId, date(sort: Desc)])
+  @@index([userId, phase])
+  @@map("cycle_logs")
+}
+
+model CycleInsight {
+  id          String     @id @default(cuid())
+  userId      String     @map("user_id")
+  phase       CyclePhase
+  insightType String     @map("insight_type") // e.g., "emotion_correlation", "pattern", "recommendation"
+  title       String
+  description String     @db.Text
+  dataPoints  Int        @default(0) @map("data_points") // Number of cycles analyzed
+  confidence  Float      @default(0) // 0-1 confidence score
+  metadata    Json?      // Additional data for visualization
+  generatedAt DateTime   @default(now()) @map("generated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, phase])
+  @@map("cycle_insights")
 }

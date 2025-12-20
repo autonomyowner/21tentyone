@@ -1,23 +1,23 @@
 {
   "expo": {
-    "name": "Matcha",
-    "slug": "matcha",
+    "name": "21|Twenty One®",
+    "slug": "twentyone",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "matcha",
+    "scheme": "twentyone",
     "userInterfaceStyle": "light",
     "splash": {
-      "backgroundColor": "#5a9470"
+      "backgroundColor": "#FFFFFF"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.matcha.app"
+      "bundleIdentifier": "com.twentyone.app"
     },
     "android": {
-      "package": "com.matcha.app",
+      "package": "com.twentyone.app",
       "softwareKeyboardLayoutMode": "pan",
       "useNextNotificationsApi": true
     },
@@ -33,7 +33,7 @@
         "expo-notifications",
         {
           "icon": "./assets/icon.png",
-          "color": "#5a9470",
+          "color": "#2E1020",
           "sounds": []
         }
       ]
@@ -43,9 +43,9 @@
     },
     "notification": {
       "icon": "./assets/icon.png",
-      "color": "#5a9470",
+      "color": "#2E1020",
       "androidMode": "default",
-      "androidCollapsedTitle": "Matcha"
+      "androidCollapsedTitle": "21|Twenty One®"
     }
   }
 }

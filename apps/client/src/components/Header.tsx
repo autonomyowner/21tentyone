@@ -18,7 +18,7 @@ export default function Header() {
     <header
       className="w-full border-b"
       style={{
-        background: 'rgba(254, 253, 251, 0.95)',
+        background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(8px)',
         borderColor: 'var(--border-soft)',
       }}
@@ -31,49 +31,56 @@ export default function Header() {
             className="text-xl font-semibold select-none"
             style={{
               fontFamily: 'var(--font-dm-serif), Georgia, serif',
-              color: 'var(--matcha-600)',
+              color: 'var(--brand-600)',
             }}
           >
-            Matcha
+            21|Twenty One®
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <Link
-              href="/"
-              className="text-sm font-medium transition-colors hover:text-[var(--matcha-600)]"
-              style={{ color: 'var(--text-secondary)' }}
+              href="/assessment"
+              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
+              style={{ color: 'var(--brand-600)' }}
             >
-              {t.header.home}
+              Free Assessment
             </Link>
             <Link
-              href="/pricing"
-              className="text-sm font-medium transition-colors hover:text-[var(--matcha-600)]"
+              href="/app"
+              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
               style={{ color: 'var(--text-secondary)' }}
             >
-              {t.header.pricing}
+              Our App
             </Link>
             <Link
-              href="/breathing"
-              className="text-sm font-medium transition-colors hover:text-[var(--matcha-600)]"
+              href="/shop"
+              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
               style={{ color: 'var(--text-secondary)' }}
             >
-              Breathe
+              Shop
+            </Link>
+            <Link
+              href="/blog"
+              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              Blog
+            </Link>
+            <Link
+              href="/reels"
+              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              Reels
             </Link>
             <SignedIn>
               <Link
                 href="/dashboard"
-                className="text-sm font-medium transition-colors hover:text-[var(--matcha-600)]"
+                className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
                 style={{ color: 'var(--text-secondary)' }}
               >
                 {t.header.dashboard}
-              </Link>
-              <Link
-                href="/chat"
-                className="text-sm font-medium transition-colors hover:text-[var(--matcha-600)]"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.header.chat || 'Chat'}
               </Link>
             </SignedIn>
           </nav>
@@ -115,7 +122,7 @@ export default function Header() {
             <SignedOut>
               <Link
                 href="/login"
-                className="text-sm font-medium transition-colors hover:text-[var(--matcha-600)]"
+                className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
                 style={{ color: 'var(--text-secondary)' }}
               >
                 {t.header.login}
@@ -157,28 +164,44 @@ export default function Header() {
           <div className="md:hidden py-4 border-t border-[var(--border-soft)]">
             <nav className="flex flex-col gap-3">
               <Link
-                href="/"
-                className="text-sm font-medium py-2"
-                style={{ color: 'var(--text-secondary)' }}
+                href="/assessment"
+                className="text-sm font-semibold py-2"
+                style={{ color: 'var(--brand-600)' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {t.header.home}
+                Free Assessment
               </Link>
               <Link
-                href="/pricing"
+                href="/app"
                 className="text-sm font-medium py-2"
                 style={{ color: 'var(--text-secondary)' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {t.header.pricing}
+                Our App
               </Link>
               <Link
-                href="/breathing"
+                href="/shop"
                 className="text-sm font-medium py-2"
                 style={{ color: 'var(--text-secondary)' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Breathe
+                Shop
+              </Link>
+              <Link
+                href="/blog"
+                className="text-sm font-medium py-2"
+                style={{ color: 'var(--text-secondary)' }}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link
+                href="/reels"
+                className="text-sm font-medium py-2"
+                style={{ color: 'var(--text-secondary)' }}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Reels
               </Link>
               <SignedIn>
                 <Link
@@ -188,14 +211,6 @@ export default function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t.header.dashboard}
-                </Link>
-                <Link
-                  href="/chat"
-                  className="text-sm font-medium py-2"
-                  style={{ color: 'var(--text-secondary)' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t.header.chat || 'Chat'}
                 </Link>
               </SignedIn>
 

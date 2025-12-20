@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CycleService } from '../cycle/cycle.service';
 
 export interface BiasStats {
   name: string;
@@ -20,7 +21,10 @@ export interface EmotionalTrend {
 
 @Injectable()
 export class DashboardService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cycleService: CycleService,
+  ) {}
 
   async getDashboard(userId: string) {
     // Fetch user with analyses, usage limits, and conversations
@@ -100,6 +104,56 @@ export class DashboardService {
     // Aggregate emotional trends from chat conversations
     const emotionalTrends = this.aggregateEmotionalTrends(conversations);
 
+    // Get cycle tracking data
+    let cycleData: {
+      isTracking: boolean;
+      currentPhase?: string;
+      cycleDay?: number;
+      daysUntilNextPhase?: number;
+      predictedNextPeriod?: string;
+      recommendations?: {
+        phase: string;
+        title: string;
+        description: string;
+        tips: string[];
+      };
+      insights?: Array<{
+        id: string;
+        phase: string;
+        insightType: string;
+        title: string;
+        description: string;
+        confidence: number;
+      }>;
+    } = { isTracking: false };
+
+    try {
+      const currentPhase = await this.cycleService.getCurrentPhase(userId);
+      if (currentPhase) {
+        const recommendations = this.cycleService.getPhaseRecommendations(currentPhase.phase);
+        const insights = await this.cycleService.getInsights(userId);
+
+        cycleData = {
+          isTracking: true,
+          currentPhase: currentPhase.phase,
+          cycleDay: currentPhase.cycleDay,
+          daysUntilNextPhase: currentPhase.daysUntilNextPhase,
+          predictedNextPeriod: currentPhase.predictedNextPeriod.toISOString(),
+          recommendations,
+          insights: insights.slice(0, 5).map((i) => ({
+            id: i.id,
+            phase: i.phase,
+            insightType: i.insightType,
+            title: i.title,
+            description: i.description,
+            confidence: i.confidence,
+          })),
+        };
+      }
+    } catch (error) {
+      // Cycle tracking not enabled or error - continue without cycle data
+    }
+
     return {
       profile: {
         id: user.id,
@@ -125,6 +179,7 @@ export class DashboardService {
         emotionalTrends: emotionalTrends.slice(0, 5),
       },
       recentInsights,
+      cycle: cycleData,
     };
   }
 

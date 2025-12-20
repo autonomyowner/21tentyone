@@ -6,6 +6,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 // Import tab screens
 import DashboardScreen from './index';
+import ProtocolScreen from './protocol';
 import ChatListScreen from './chat';
 import ProfileScreen from './profile';
 
@@ -14,18 +15,21 @@ const initialLayout = { width: Dimensions.get('window').width };
 // Define routes
 const routes = [
   { key: 'index', title: 'Dashboard', icon: 'home-outline' as const },
-  { key: 'chat', title: 'Chat', icon: 'chatbubbles-outline' as const },
+  { key: 'protocol', title: 'Protocol', icon: 'calendar-outline' as const },
+  { key: 'chat', title: 'Ebook', icon: 'book-outline' as const },
   { key: 'profile', title: 'Profile', icon: 'person-outline' as const },
 ];
 
 // Memoize screen components to prevent re-renders
 const MemoizedDashboard = memo(DashboardScreen);
+const MemoizedProtocol = memo(ProtocolScreen);
 const MemoizedChatList = memo(ChatListScreen);
 const MemoizedProfile = memo(ProfileScreen);
 
 // Use SceneMap for proper memoization
 const renderScene = SceneMap({
   index: MemoizedDashboard,
+  protocol: MemoizedProtocol,
   chat: MemoizedChatList,
   profile: MemoizedProfile,
 });
@@ -47,13 +51,13 @@ function CustomTabBar({ navigationState, jumpTo }: { navigationState: any; jumpT
           >
             <Ionicons
               name={route.icon}
-              size={24}
-              color={isActive ? '#5a9470' : '#a69889'}
+              size={20}
+              color={isActive ? '#2E1020' : '#9FB3C8'}
             />
             <Text
               style={[
                 styles.tabLabel,
-                { color: isActive ? '#5a9470' : '#a69889' },
+                { color: isActive ? '#2E1020' : '#9FB3C8' },
               ]}
             >
               {route.title}
@@ -81,13 +85,15 @@ export default function TabsLayout() {
   const getHeaderTitle = () => {
     switch (index) {
       case 0:
-        return 'Matcha';
+        return 'Twenty One';
       case 1:
-        return 'Chat';
+        return 'Protocol';
       case 2:
+        return 'Ebook';
+      case 3:
         return 'Profile';
       default:
-        return 'Matcha';
+        return 'Twenty One';
     }
   };
 
@@ -114,19 +120,19 @@ export default function TabsLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fefdfb',
+    backgroundColor: '#FFFFFF',
   },
   header: {
-    backgroundColor: '#fefdfb',
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(104, 166, 125, 0.15)',
+    borderBottomColor: 'rgba(46, 16, 32, 0.12)',
   },
   headerTitle: {
     fontFamily: 'DMSerifDisplay_400Regular',
     fontSize: 20,
-    color: '#2d3a2e',
+    color: '#2E1020',
     textAlign: 'center',
   },
   tabView: {
@@ -134,20 +140,20 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: '#fefdfb',
+    backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(104, 166, 125, 0.15)',
-    paddingTop: 8,
+    borderTopColor: 'rgba(46, 16, 32, 0.12)',
+    paddingTop: 6,
   },
   tabItem: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 4,
+    paddingVertical: 2,
   },
   tabLabel: {
     fontFamily: 'DMSans_500Medium',
-    fontSize: 12,
+    fontSize: 10,
     marginTop: 2,
   },
 });

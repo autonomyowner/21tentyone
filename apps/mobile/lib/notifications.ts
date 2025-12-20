@@ -35,7 +35,7 @@ const MOTIVATIONAL_MESSAGES = [
   { title: 'Small steps count', body: 'Every moment of self-reflection is progress.' },
   { title: 'Be kind to yourself', body: 'You\'re doing better than you think.' },
   { title: 'Breathe', body: 'A moment of calm can change your whole day.' },
-  { title: 'You\'re not alone', body: 'Matcha is here whenever you need support.' },
+  { title: 'You\'re not alone', body: 'Twenty One is here whenever you need support.' },
   { title: 'Celebrate yourself', body: 'You showed up today. That matters.' },
   { title: 'Growth takes time', body: 'Be patient with yourself on this journey.' },
   { title: 'Your feelings are valid', body: 'It\'s okay to feel what you\'re feeling.' },

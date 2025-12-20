@@ -68,14 +68,15 @@ export default function RootLayout() {
 
   if (!fontsLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fefdfb' }}>
-        <ActivityIndicator size="large" color="#5a9470" />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }}>
+        <ActivityIndicator size="large" color="#2E1020" />
       </View>
     );
   }
 
+  // Test mode: run without Clerk if no publishable key
   if (!publishableKey) {
-    throw new Error('Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY');
+    return <AppContent />;
   }
 
   return (
