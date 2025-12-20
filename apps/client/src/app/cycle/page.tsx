@@ -375,7 +375,7 @@ export default function CyclePage() {
                           : phaseInfo
                           ? `${phaseInfo.color}15`
                           : 'transparent',
-                        ringColor: isToday ? 'var(--matcha-500)' : undefined,
+                        boxShadow: isToday ? '0 0 0 2px var(--matcha-500)' : undefined,
                         opacity: day.isPrediction ? 0.6 : 1,
                       }}
                     >
