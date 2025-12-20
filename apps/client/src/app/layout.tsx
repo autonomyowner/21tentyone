@@ -18,44 +18,46 @@ const dmSerif = DM_Serif_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "Matcha - AI-Powered Psychological Insights",
-    template: "%s | Matcha",
+    default: "21|Twenty One - Heal Your Attachment, Build Healthy Relationships",
+    template: "%s | 21|Twenty One",
   },
   description:
-    "Discover your cognitive biases, understand your emotional patterns, and unlock personal growth with Matcha's AI-powered psychological analysis. Get real-time insights during conversations.",
+    "A 21-day program designed to help you understand your attachment style, heal emotional wounds, and build secure, fulfilling relationships. Start your healing journey today.",
   keywords: [
-    "psychology AI",
-    "cognitive bias detection",
-    "emotional intelligence",
-    "personal development",
-    "psychological analysis",
-    "mental wellness",
-    "self-awareness",
-    "AI therapy assistant",
-    "thought pattern analysis",
-    "mindfulness AI",
+    "attachment healing",
+    "attachment style",
+    "relationship healing",
+    "secure attachment",
+    "anxious attachment",
+    "avoidant attachment",
+    "emotional healing",
+    "21 day program",
+    "relationship therapy",
+    "inner child healing",
+    "self-love",
+    "healthy relationships",
   ],
-  authors: [{ name: "Matcha" }],
-  creator: "Matcha",
-  publisher: "Matcha",
-  metadataBase: new URL("https://vematcha.xyz"),
+  authors: [{ name: "21|Twenty One" }],
+  creator: "21|Twenty One",
+  publisher: "21|Twenty One",
+  metadataBase: new URL("https://21twentyone.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Matcha - AI-Powered Psychological Insights",
+    title: "21|Twenty One - Heal Your Attachment, Build Healthy Relationships",
     description:
-      "Understand your mind with AI. Detect cognitive biases, track emotional patterns, and get personalized insights for personal growth.",
+      "A 21-day program to understand your attachment style, heal emotional wounds, and build secure, fulfilling relationships.",
     type: "website",
     locale: "en_US",
-    url: "https://vematcha.xyz",
-    siteName: "Matcha",
+    url: "https://21twentyone.com",
+    siteName: "21|Twenty One",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Matcha - AI-Powered Psychological Insights",
+    title: "21|Twenty One - Heal Your Attachment",
     description:
-      "Understand your mind with AI. Detect cognitive biases and get personalized insights.",
+      "A 21-day healing journey to build secure, fulfilling relationships.",
   },
   robots: {
     index: true,
@@ -71,11 +73,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/logo1.png", sizes: "96x96", type: "image/png" },
     ],
-    apple: "/apple-touch-icon.png",
+    apple: "/logo1.png",
   },
-  manifest: "/favicon/site.webmanifest",
 };
 
 export default function RootLayout({
