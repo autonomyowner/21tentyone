@@ -14,37 +14,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-hidden relative">
-      {/* Animated Gradient Background */}
-      <div className="gradient-canvas">
-        {/* Flowing gradient mesh */}
-        <div className="gradient-mesh"></div>
-
-        {/* Aurora layers */}
-        <div className="aurora-layer aurora-1"></div>
-        <div className="aurora-layer aurora-2"></div>
-        <div className="aurora-layer aurora-3"></div>
-
-        {/* Morphing blobs */}
-        <div className="morph-blob morph-blob-1"></div>
-        <div className="morph-blob morph-blob-2"></div>
-        <div className="morph-blob morph-blob-3"></div>
-        <div className="morph-blob morph-blob-4"></div>
-
-        {/* Floating light particles */}
-        <div className="light-particle light-particle-1"></div>
-        <div className="light-particle light-particle-2"></div>
-        <div className="light-particle light-particle-3"></div>
-        <div className="light-particle light-particle-4"></div>
-        <div className="light-particle light-particle-5"></div>
-
-        {/* Glow spots */}
-        <div className="glow-spot glow-spot-1"></div>
-        <div className="glow-spot glow-spot-2"></div>
-
-        {/* Grain texture */}
-        <div className="grain-overlay"></div>
-      </div>
+    <div className="min-h-screen overflow-hidden relative" style={{ backgroundColor: '#fafafa' }}>
 
       {/* Hero Section */}
       <section className="relative pt-20 pb-32 px-4 z-10">
