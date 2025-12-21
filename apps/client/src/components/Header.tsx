@@ -28,7 +28,7 @@ export default function Header() {
             href="/"
             className="text-xl font-semibold select-none"
             style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
               color: 'var(--brand-600)',
             }}
           >

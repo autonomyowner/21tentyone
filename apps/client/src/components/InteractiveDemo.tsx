@@ -175,7 +175,7 @@ export default function InteractiveDemo() {
           <h2
             className="mb-6"
             style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
               fontSize: 'clamp(2rem, 5vw, 3.5rem)',
               color: 'var(--text-primary)',
               lineHeight: 1.1,
@@ -464,7 +464,7 @@ export default function InteractiveDemo() {
                       </p>
                       <p
                         className="text-lg font-semibold text-white"
-                        style={{ fontFamily: 'var(--font-dm-serif), Georgia, serif' }}
+                        style={{ fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700 }}
                       >
                         {t.demo.performanceAnxiety}
                       </p>
@@ -485,7 +485,7 @@ export default function InteractiveDemo() {
                       </p>
                       <p
                         className="text-base font-semibold"
-                        style={{ color: 'var(--brand-600)', fontFamily: 'var(--font-dm-serif), Georgia, serif' }}
+                        style={{ color: 'var(--brand-600)', fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700 }}
                       >
                         {t.demo.paralyzingPerfectionism}
                       </p>

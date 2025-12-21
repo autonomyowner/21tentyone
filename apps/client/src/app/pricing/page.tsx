@@ -42,7 +42,7 @@ export default function PricingPage() {
           <h1
             className="text-4xl md:text-5xl mb-4"
             style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
               color: 'var(--text-primary)',
             }}
           >
@@ -122,7 +122,7 @@ export default function PricingPage() {
                 <h2
                   className="text-2xl mb-2"
                   style={{
-                    fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                    fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
                     color: 'var(--text-primary)',
                   }}
                 >
@@ -206,7 +206,7 @@ export default function PricingPage() {
                 <h2
                   className="text-2xl mb-2"
                   style={{
-                    fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                    fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
                     color: 'white',
                   }}
                 >
@@ -279,7 +279,7 @@ export default function PricingPage() {
           <h2
             className="text-3xl text-center mb-12"
             style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
               color: 'var(--text-primary)',
             }}
           >
@@ -374,7 +374,7 @@ export default function PricingPage() {
             <h2
               className="text-2xl mb-4"
               style={{
-                fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
                 color: 'var(--text-primary)',
               }}
             >
@@ -414,7 +414,7 @@ export default function PricingPage() {
           <h2
             className="text-3xl text-center mb-12"
             style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
               color: 'var(--text-primary)',
             }}
           >
@@ -467,7 +467,7 @@ export default function PricingPage() {
           <h2
             className="text-3xl mb-4"
             style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
               color: 'var(--text-primary)',
             }}
           >
@@ -507,7 +507,7 @@ export default function PricingPage() {
               <p
                 className="text-xl font-semibold mb-1"
                 style={{
-                  fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                  fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
                   color: 'var(--matcha-600)',
                 }}
               >

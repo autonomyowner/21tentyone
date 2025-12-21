@@ -1,19 +1,28 @@
 import type { Metadata } from "next";
-import { DM_Sans, DM_Serif_Display } from "next/font/google";
+import { Poppins, Inter, Cairo } from "next/font/google";
 import Header from "../components/Header";
 import { LanguageProvider } from "../components/LanguageProvider";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
-const dmSerif = DM_Serif_Display({
-  variable: "--font-dm-serif",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const cairo = Cairo({
+  variable: "--font-cairo",
+  subsets: ["arabic", "latin"],
+  weight: ["400", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -87,11 +96,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${dmSans.variable} ${dmSerif.variable} antialiased min-h-screen`}
+        className={`${poppins.variable} ${inter.variable} ${cairo.variable} antialiased min-h-screen`}
         style={{
           background: "var(--bg-page)",
           color: "var(--text-primary)",
-          fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
+          fontFamily: "var(--font-inter), var(--font-cairo), system-ui, sans-serif",
         }}
       >
         <LanguageProvider>

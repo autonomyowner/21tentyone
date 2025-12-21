@@ -43,7 +43,7 @@ export default function LandingPage() {
               mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
             style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
               fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
               lineHeight: 1.1,
               color: 'var(--text-primary)',
@@ -235,7 +235,7 @@ export default function LandingPage() {
             <h2
               className="text-3xl md:text-4xl mb-4"
               style={{
-                fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
                 color: 'var(--text-primary)',
               }}
             >
@@ -274,7 +274,7 @@ export default function LandingPage() {
                 <span
                   className="absolute -top-4 -right-4 text-8xl font-bold opacity-5 group-hover:opacity-10 transition-opacity"
                   style={{
-                    fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                    fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
                     color: 'var(--matcha-600)',
                   }}
                 >
@@ -289,7 +289,7 @@ export default function LandingPage() {
                 >
                   <span
                     className="text-lg font-semibold"
-                    style={{ fontFamily: 'var(--font-dm-serif), Georgia, serif' }}
+                    style={{ fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700 }}
                   >
                     {item.step}
                   </span>
@@ -297,7 +297,7 @@ export default function LandingPage() {
                 <h3
                   className="text-xl mb-3"
                   style={{
-                    fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                    fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
                     color: 'var(--text-primary)',
                   }}
                 >
@@ -325,7 +325,7 @@ export default function LandingPage() {
             <h2
               className="text-3xl md:text-4xl mb-4"
               style={{
-                fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
                 color: 'var(--text-primary)',
               }}
             >
@@ -374,7 +374,7 @@ export default function LandingPage() {
                   <h3
                     className="text-xl mb-2"
                     style={{
-                      fontFamily: 'var(--font-dm-serif), Georgia, serif',
+                      fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
                       color: 'var(--text-primary)',
                     }}
                   >
@@ -399,7 +399,7 @@ export default function LandingPage() {
           <h2
             className="text-3xl md:text-4xl mb-4"
             style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
               color: 'var(--text-primary)',
             }}
           >
@@ -436,7 +436,7 @@ export default function LandingPage() {
           <p
             className="text-4xl md:text-5xl font-semibold tracking-tight"
             style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
+              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
               background: 'linear-gradient(135deg, #2E1020 0%, #9FB3C8 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',

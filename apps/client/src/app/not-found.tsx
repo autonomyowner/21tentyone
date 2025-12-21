@@ -14,7 +14,7 @@ export default function NotFound() {
       <h1
         className="text-6xl mb-4"
         style={{
-          fontFamily: 'var(--font-dm-serif), Georgia, serif',
+          fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
           color: 'var(--matcha-600)',
         }}
       >
@@ -23,7 +23,7 @@ export default function NotFound() {
       <h2
         className="text-2xl mb-2"
         style={{
-          fontFamily: 'var(--font-dm-serif), Georgia, serif',
+          fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
           color: 'var(--text-primary)',
         }}
       >

@@ -79,8 +79,8 @@
 @theme inline {
   --color-background: var(--bg-page);
   --color-foreground: var(--text-primary);
-  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
-  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-sans: var(--font-inter), var(--font-cairo), system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-poppins), var(--font-cairo), system-ui, sans-serif;
 }
 
 /* Base styles */
@@ -91,15 +91,31 @@ html {
 body {
   background: var(--bg-page);
   color: var(--text-primary);
-  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-inter), var(--font-cairo), system-ui, -apple-system, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Headings - Poppins Bold (Cairo Bold for Arabic) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-poppins), var(--font-cairo), system-ui, sans-serif;
+  font-weight: 700;
+}
+
+/* CTA Buttons - Poppins SemiBold */
+.matcha-btn,
+button[type="submit"],
+.cta-button {
+  font-family: var(--font-poppins), var(--font-cairo), system-ui, sans-serif;
+  font-weight: 600;
+}
+
 /* Typography utilities */
-.font-serif {
-  font-family: "DM Serif Display", Georgia, serif;
+.font-serif,
+.font-heading {
+  font-family: var(--font-poppins), var(--font-cairo), system-ui, sans-serif;
+  font-weight: 700;
 }
 
 .text-gradient {
