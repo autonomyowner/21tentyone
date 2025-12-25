@@ -53,9 +53,9 @@ export function ProgressRing({
         {/* Gradient definition */}
         <defs>
           <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#7d4560" />
-            <stop offset="50%" stopColor="#9a6b7d" />
-            <stop offset="100%" stopColor="#7d98af" />
+            <stop offset="0%" stopColor="#1a2e4a" />
+            <stop offset="50%" stopColor="#2d5a8a" />
+            <stop offset="100%" stopColor="#d4a039" />
           </linearGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur" />
@@ -72,7 +72,7 @@ export function ProgressRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(125, 69, 96, 0.12)"
+          stroke="rgba(26, 46, 74, 0.12)"
           strokeWidth={strokeWidth}
         />
 
@@ -103,7 +103,7 @@ export function ProgressRing({
               cx={x}
               cy={y}
               r={day === 21 ? 8 : 6}
-              fill={isReached ? '#7d4560' : 'rgba(125, 69, 96, 0.2)'}
+              fill={isReached ? '#d4a039' : 'rgba(26, 46, 74, 0.2)'}
               stroke={isReached ? '#fff' : 'transparent'}
               strokeWidth={2}
               style={{
@@ -122,14 +122,14 @@ export function ProgressRing({
         style={{ transform: 'translateY(-4px)' }}
       >
         <span
-          className="font-serif text-6xl font-medium"
-          style={{ color: '#7d4560', lineHeight: 1 }}
+          className="heading-serif text-6xl font-medium"
+          style={{ color: '#1a2e4a', lineHeight: 1 }}
         >
           {currentDay}
         </span>
         <span
           className="text-sm tracking-widest uppercase mt-1"
-          style={{ color: '#9a6b7d' }}
+          style={{ color: '#2d5a8a' }}
         >
           of {totalDays}
         </span>
@@ -139,7 +139,7 @@ export function ProgressRing({
       <div
         className="absolute inset-0 rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, transparent 60%, rgba(125, 69, 96, 0.03) 100%)',
+          background: 'radial-gradient(circle, transparent 60%, rgba(26, 46, 74, 0.03) 100%)',
         }}
       />
     </div>

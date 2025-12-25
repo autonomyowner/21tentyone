@@ -48,13 +48,15 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
 
   return (
     <div
-      className="relative rounded-xl p-4 transition-all duration-300 group"
+      className="relative p-4 transition-all duration-300 group"
       style={{
         backgroundColor: isComplete
-          ? 'rgba(125, 152, 175, 0.08)'
-          : 'rgba(255, 255, 255, 0.9)',
+          ? 'rgba(212, 160, 57, 0.06)'
+          : 'var(--white)',
         borderLeft: `4px solid ${categoryColor}`,
-        boxShadow: isComplete ? 'none' : '0 2px 12px rgba(125, 69, 96, 0.06)',
+        border: '1px solid rgba(26, 46, 74, 0.08)',
+        borderLeftWidth: '4px',
+        borderLeftColor: categoryColor,
       }}
       onMouseEnter={() => setShowDelete(true)}
       onMouseLeave={() => setShowDelete(false)}
@@ -62,7 +64,7 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
       {/* Delete button */}
       <button
         onClick={onDelete}
-        className={`absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center
+        className={`absolute top-2 right-2 w-6 h-6 flex items-center justify-center
           transition-all duration-200 hover:bg-red-100 ${
             showDelete ? 'opacity-100' : 'opacity-0'
           }`}
@@ -76,13 +78,13 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
         <div>
           <h4
             className={`text-sm font-medium ${isComplete ? 'line-through' : ''}`}
-            style={{ color: isComplete ? '#a8aabe' : '#4a3a42' }}
+            style={{ color: isComplete ? 'rgba(26, 46, 74, 0.4)' : 'var(--navy)' }}
           >
             {goal.title}
           </h4>
           <p
             className="text-xs mt-0.5"
-            style={{ color: isComplete ? '#c8cad5' : '#8a7a82' }}
+            style={{ color: isComplete ? 'rgba(26, 46, 74, 0.3)' : 'var(--navy)', opacity: isComplete ? 1 : 0.5 }}
           >
             {goal.description}
           </p>
@@ -90,7 +92,7 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
 
         {/* Category badge */}
         <span
-          className="text-xs px-2 py-0.5 rounded-full flex-shrink-0"
+          className="text-xs px-2 py-0.5 flex-shrink-0"
           style={{
             backgroundColor: `${categoryColor}15`,
             color: categoryColor,
@@ -103,15 +105,15 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
       {/* Progress bar */}
       <div className="mt-3 mb-2">
         <div
-          className="h-2.5 rounded-full overflow-hidden"
-          style={{ backgroundColor: 'rgba(125, 69, 96, 0.08)' }}
+          className="h-2.5 overflow-hidden"
+          style={{ backgroundColor: 'rgba(26, 46, 74, 0.06)' }}
         >
           <div
-            className="h-full rounded-full transition-all duration-500 ease-out"
+            className="h-full transition-all duration-500 ease-out"
             style={{
               width: `${percentage}%`,
               background: isComplete
-                ? 'linear-gradient(90deg, #7d98af 0%, #9ab5c8 100%)'
+                ? 'var(--gold)'
                 : `linear-gradient(90deg, ${categoryColor}80 0%, ${categoryColor} 100%)`,
             }}
           />
@@ -131,22 +133,22 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
               min={0}
               max={goal.targetValue}
               autoFocus
-              className="w-16 px-2 py-1 text-sm rounded-lg border"
+              className="w-16 px-2 py-1 text-sm border"
               style={{
                 borderColor: categoryColor,
-                color: '#4a3a42',
+                color: 'var(--navy)',
                 outline: 'none',
               }}
             />
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="flex items-center gap-1 px-2 py-1 rounded-lg transition-colors hover:bg-gray-100"
+              className="flex items-center gap-1 px-2 py-1 transition-colors hover:bg-gray-100"
             >
               <span className="text-sm font-medium" style={{ color: categoryColor }}>
                 {goal.currentValue}
               </span>
-              <span className="text-xs" style={{ color: '#a8aabe' }}>
+              <span className="text-xs" style={{ color: 'var(--navy)', opacity: 0.4 }}>
                 / {goal.targetValue} {goal.unit}
               </span>
             </button>
@@ -155,7 +157,7 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
           {!isComplete && !isEditing && (
             <button
               onClick={handleIncrement}
-              className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all hover:scale-110"
+              className="w-7 h-7 flex items-center justify-center text-sm font-bold transition-all hover:scale-110"
               style={{
                 backgroundColor: `${categoryColor}20`,
                 color: categoryColor,
@@ -168,7 +170,7 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
 
         <span
           className="text-xs font-medium"
-          style={{ color: isComplete ? '#7d98af' : categoryColor }}
+          style={{ color: isComplete ? 'var(--gold)' : categoryColor }}
         >
           {percentage}%
         </span>
@@ -177,8 +179,8 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
       {/* Completion indicator */}
       {isComplete && (
         <div
-          className="absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: '#7d98af' }}
+          className="absolute top-4 right-4 w-6 h-6 flex items-center justify-center"
+          style={{ backgroundColor: 'var(--gold)' }}
         >
           <svg
             width="12"
@@ -240,24 +242,24 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(74, 58, 66, 0.4)', backdropFilter: 'blur(4px)' }}
+      style={{ backgroundColor: 'rgba(26, 46, 74, 0.4)', backdropFilter: 'blur(4px)' }}
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-2xl p-6"
+        className="w-full max-w-md p-6"
         style={{
-          backgroundColor: '#fafafa',
-          boxShadow: '0 24px 48px rgba(125, 69, 96, 0.2)',
+          backgroundColor: 'var(--cream)',
+          boxShadow: '0 24px 48px rgba(26, 46, 74, 0.2)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-lg font-serif mb-4" style={{ color: '#7d4560' }}>
+        <h3 className="heading-serif text-lg font-light mb-4" style={{ color: 'var(--navy)' }}>
           Add New Goal
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: '#4a3a42' }}>
+            <label className="block text-sm font-medium mb-1" style={{ color: 'var(--navy)' }}>
               Goal Title
             </label>
             <input
@@ -265,18 +267,18 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Practice boundaries"
-              className="w-full px-4 py-2.5 rounded-xl text-sm"
+              className="w-full px-4 py-2.5 text-sm"
               style={{
-                backgroundColor: '#fff',
-                border: '1px solid rgba(125, 69, 96, 0.15)',
-                color: '#4a3a42',
+                backgroundColor: 'var(--white)',
+                border: '1px solid rgba(26, 46, 74, 0.12)',
+                color: 'var(--navy)',
                 outline: 'none',
               }}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: '#4a3a42' }}>
+            <label className="block text-sm font-medium mb-1" style={{ color: 'var(--navy)' }}>
               Description
             </label>
             <input
@@ -284,11 +286,11 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description"
-              className="w-full px-4 py-2.5 rounded-xl text-sm"
+              className="w-full px-4 py-2.5 text-sm"
               style={{
-                backgroundColor: '#fff',
-                border: '1px solid rgba(125, 69, 96, 0.15)',
-                color: '#4a3a42',
+                backgroundColor: 'var(--white)',
+                border: '1px solid rgba(26, 46, 74, 0.12)',
+                color: 'var(--navy)',
                 outline: 'none',
               }}
             />
@@ -296,7 +298,7 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: '#4a3a42' }}>
+              <label className="block text-sm font-medium mb-1" style={{ color: 'var(--navy)' }}>
                 Target
               </label>
               <input
@@ -304,17 +306,17 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
                 value={targetValue}
                 onChange={(e) => setTargetValue(e.target.value)}
                 min={1}
-                className="w-full px-4 py-2.5 rounded-xl text-sm"
+                className="w-full px-4 py-2.5 text-sm"
                 style={{
-                  backgroundColor: '#fff',
-                  border: '1px solid rgba(125, 69, 96, 0.15)',
-                  color: '#4a3a42',
+                  backgroundColor: 'var(--white)',
+                  border: '1px solid rgba(26, 46, 74, 0.12)',
+                  color: 'var(--navy)',
                   outline: 'none',
                 }}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: '#4a3a42' }}>
+              <label className="block text-sm font-medium mb-1" style={{ color: 'var(--navy)' }}>
                 Unit
               </label>
               <input
@@ -322,11 +324,11 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
                 placeholder="times, days, etc."
-                className="w-full px-4 py-2.5 rounded-xl text-sm"
+                className="w-full px-4 py-2.5 text-sm"
                 style={{
-                  backgroundColor: '#fff',
-                  border: '1px solid rgba(125, 69, 96, 0.15)',
-                  color: '#4a3a42',
+                  backgroundColor: 'var(--white)',
+                  border: '1px solid rgba(26, 46, 74, 0.12)',
+                  color: 'var(--navy)',
                   outline: 'none',
                 }}
               />
@@ -334,7 +336,7 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#4a3a42' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--navy)' }}>
               Category
             </label>
             <div className="flex flex-wrap gap-2">
@@ -343,7 +345,7 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
                   key={cat}
                   type="button"
                   onClick={() => setCategory(cat)}
-                  className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+                  className="px-3 py-1.5 text-xs font-medium transition-all"
                   style={{
                     backgroundColor:
                       category === cat ? CATEGORY_COLORS[cat] : `${CATEGORY_COLORS[cat]}15`,
@@ -360,20 +362,20 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-colors"
+              className="flex-1 py-2.5 text-sm font-medium transition-colors"
               style={{
-                backgroundColor: 'rgba(125, 69, 96, 0.1)',
-                color: '#7d4560',
+                backgroundColor: 'rgba(26, 46, 74, 0.08)',
+                color: 'var(--navy)',
               }}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-colors"
+              className="flex-1 py-2.5 text-sm font-medium transition-colors"
               style={{
-                background: 'linear-gradient(135deg, #7d4560 0%, #9a6b7d 100%)',
-                color: '#fff',
+                background: 'var(--gold)',
+                color: 'var(--navy)',
               }}
             >
               Add Goal
@@ -398,30 +400,29 @@ export function GoalTracker({
 
   return (
     <div
-      className="rounded-2xl p-6"
+      className="p-6"
       style={{
-        background: 'linear-gradient(180deg, #fff 0%, rgba(250, 250, 250, 0.9) 100%)',
-        boxShadow: '0 4px 24px rgba(125, 69, 96, 0.06)',
-        border: '1px solid rgba(125, 69, 96, 0.08)',
+        background: 'var(--white)',
+        border: '1px solid rgba(26, 46, 74, 0.08)',
       }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-lg font-serif" style={{ color: '#7d4560' }}>
+          <h3 className="heading-serif text-lg font-light" style={{ color: 'var(--navy)' }}>
             Healing Goals
           </h3>
-          <p className="text-xs mt-0.5" style={{ color: '#9a6b7d' }}>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--blue)' }}>
             {completedGoals} of {totalGoals} completed
           </p>
         </div>
 
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:opacity-90"
+          className="px-4 py-2 text-sm font-medium transition-all hover:opacity-90"
           style={{
-            background: 'linear-gradient(135deg, #7d4560 0%, #9a6b7d 100%)',
-            color: '#fff',
+            background: 'var(--gold)',
+            color: 'var(--navy)',
           }}
         >
           + Add Goal
@@ -442,7 +443,7 @@ export function GoalTracker({
 
       {goals.length === 0 && (
         <div className="py-12 text-center">
-          <p className="text-sm" style={{ color: '#a8aabe' }}>
+          <p className="text-sm" style={{ color: 'var(--navy)', opacity: 0.4 }}>
             No goals yet. Add your first healing goal!
           </p>
         </div>

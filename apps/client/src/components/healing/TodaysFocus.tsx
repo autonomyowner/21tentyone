@@ -37,9 +37,10 @@ export function TodaysFocus({
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-6"
+      className="relative overflow-hidden p-6"
       style={{
-        background: 'linear-gradient(135deg, rgba(125, 69, 96, 0.04) 0%, rgba(250, 250, 250, 0.8) 100%)',
+        background: 'var(--white)',
+        border: '1px solid rgba(26, 46, 74, 0.08)',
         borderLeft: `4px solid ${phase.color}`,
       }}
     >
@@ -55,7 +56,7 @@ export function TodaysFocus({
       {/* Week phase badge */}
       <div className="flex items-center gap-2 mb-4">
         <span
-          className="px-3 py-1 rounded-full text-xs font-medium tracking-wider uppercase"
+          className="px-3 py-1 text-xs font-medium tracking-wider uppercase"
           style={{
             backgroundColor: `${phase.color}15`,
             color: phase.color,
@@ -63,7 +64,7 @@ export function TodaysFocus({
         >
           {phase.label}
         </span>
-        <span className="text-xs" style={{ color: '#a8aabe' }}>
+        <span className="text-xs" style={{ color: 'var(--navy)', opacity: 0.4 }}>
           Day {content.day}
         </span>
       </div>
@@ -71,15 +72,15 @@ export function TodaysFocus({
       {/* Theme */}
       <h3
         className="text-sm font-medium mb-3 tracking-wide"
-        style={{ color: '#7d4560' }}
+        style={{ color: 'var(--navy)' }}
       >
         {content.theme}
       </h3>
 
       {/* Affirmation */}
       <blockquote
-        className="font-serif text-xl md:text-2xl leading-relaxed mb-6"
-        style={{ color: '#4a3a42' }}
+        className="heading-serif text-xl md:text-2xl font-light leading-relaxed mb-6"
+        style={{ color: 'var(--navy)' }}
       >
         "{content.affirmation}"
       </blockquote>
@@ -87,7 +88,7 @@ export function TodaysFocus({
       {/* Today's focus description */}
       <p
         className="text-sm mb-6 leading-relaxed"
-        style={{ color: '#6b5a62' }}
+        style={{ color: 'var(--navy)', opacity: 0.6 }}
       >
         {content.attachmentFocus}
       </p>
@@ -96,7 +97,7 @@ export function TodaysFocus({
       <div
         className="h-px mb-6"
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(125, 69, 96, 0.15) 50%, transparent 100%)',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(26, 46, 74, 0.15) 50%, transparent 100%)',
         }}
       />
 
@@ -104,7 +105,7 @@ export function TodaysFocus({
       <div>
         <label
           className="block text-xs font-medium tracking-wider uppercase mb-3"
-          style={{ color: '#9a6b7d' }}
+          style={{ color: 'var(--gold)' }}
         >
           Your Intention for Today
         </label>
@@ -119,21 +120,21 @@ export function TodaysFocus({
               onFocus={() => setIsEditing(true)}
               placeholder="What do you want to focus on today?"
               rows={2}
-              className="w-full px-4 py-3 rounded-xl text-sm resize-none transition-all duration-200"
+              className="w-full px-4 py-3 text-sm resize-none transition-all duration-200"
               style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.6)',
-                border: '1px solid rgba(125, 69, 96, 0.15)',
-                color: '#4a3a42',
+                backgroundColor: 'rgba(26, 46, 74, 0.02)',
+                border: '1px solid rgba(26, 46, 74, 0.12)',
+                color: 'var(--navy)',
                 outline: 'none',
               }}
               autoFocus={isEditing}
             />
             <button
               onClick={handleSave}
-              className="absolute bottom-3 right-3 px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200 hover:opacity-80"
+              className="absolute bottom-3 right-3 px-3 py-1 text-xs font-medium transition-all duration-200 hover:opacity-80"
               style={{
-                backgroundColor: phase.color,
-                color: '#fff',
+                backgroundColor: 'var(--gold)',
+                color: 'var(--navy)',
               }}
             >
               Save
@@ -142,18 +143,18 @@ export function TodaysFocus({
         ) : (
           <button
             onClick={() => setIsEditing(true)}
-            className="w-full text-left px-4 py-3 rounded-xl transition-all duration-200 hover:bg-white/50 group"
+            className="w-full text-left px-4 py-3 transition-all duration-200 hover:bg-white/50 group"
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.4)',
-              border: '1px solid rgba(125, 69, 96, 0.1)',
+              backgroundColor: 'rgba(26, 46, 74, 0.02)',
+              border: '1px solid rgba(26, 46, 74, 0.08)',
             }}
           >
-            <p className="text-sm" style={{ color: '#4a3a42' }}>
+            <p className="text-sm" style={{ color: 'var(--navy)' }}>
               {localIntention}
             </p>
             <span
               className="text-xs mt-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              style={{ color: '#9a6b7d' }}
+              style={{ color: 'var(--blue)' }}
             >
               Click to edit
             </span>
@@ -164,7 +165,7 @@ export function TodaysFocus({
         {isSaved && (
           <p
             className="text-xs mt-2 transition-opacity duration-300"
-            style={{ color: '#7d98af' }}
+            style={{ color: 'var(--gold)' }}
           >
             Intention saved
           </p>
@@ -172,14 +173,14 @@ export function TodaysFocus({
       </div>
 
       {/* Journal prompt */}
-      <div className="mt-6 p-4 rounded-xl" style={{ backgroundColor: 'rgba(125, 152, 175, 0.08)' }}>
+      <div className="mt-6 p-4" style={{ backgroundColor: 'rgba(45, 90, 138, 0.06)' }}>
         <span
           className="text-xs font-medium tracking-wider uppercase"
-          style={{ color: '#7d98af' }}
+          style={{ color: 'var(--blue)' }}
         >
           Journal Prompt
         </span>
-        <p className="mt-2 text-sm italic" style={{ color: '#5a6a75' }}>
+        <p className="mt-2 text-sm italic" style={{ color: 'var(--navy)', opacity: 0.7 }}>
           {content.journalPrompt}
         </p>
       </div>

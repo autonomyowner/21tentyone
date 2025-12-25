@@ -57,16 +57,16 @@ export function MilestoneCelebration({
 
   if (!isVisible || !milestoneData) return null;
 
-  const colors = ['#7d4560', '#9a6b7d', '#7d98af', '#c8b8c0', '#a8aabe'];
+  const colors = ['#1a2e4a', '#2d5a8a', '#d4a039', '#6b9cc4', '#f5f0e8'];
 
   const getMilestoneGradient = () => {
     switch (milestone) {
       case 7:
-        return 'linear-gradient(135deg, #7d4560 0%, #9a6b7d 100%)';
+        return 'linear-gradient(135deg, #1a2e4a 0%, #2d5a8a 100%)';
       case 14:
-        return 'linear-gradient(135deg, #9a6b7d 0%, #7d98af 100%)';
+        return 'linear-gradient(135deg, #2d5a8a 0%, #6b9cc4 100%)';
       case 21:
-        return 'linear-gradient(135deg, #7d4560 0%, #7d98af 50%, #9a6b7d 100%)';
+        return 'linear-gradient(135deg, #1a2e4a 0%, #2d5a8a 50%, #d4a039 100%)';
     }
   };
 
@@ -76,7 +76,7 @@ export function MilestoneCelebration({
         showContent ? 'opacity-100' : 'opacity-0'
       }`}
       style={{
-        backgroundColor: 'rgba(74, 58, 66, 0.6)',
+        backgroundColor: 'rgba(26, 46, 74, 0.6)',
         backdropFilter: 'blur(8px)',
       }}
       onClick={onClose}
@@ -94,12 +94,12 @@ export function MilestoneCelebration({
 
       {/* Modal */}
       <div
-        className={`relative w-full max-w-md rounded-3xl overflow-hidden transition-all duration-500 ${
+        className={`relative w-full max-w-md overflow-hidden transition-all duration-500 ${
           showContent ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
         }`}
         style={{
-          backgroundColor: '#fafafa',
-          boxShadow: '0 32px 64px rgba(125, 69, 96, 0.3)',
+          backgroundColor: 'var(--cream)',
+          boxShadow: '0 32px 64px rgba(26, 46, 74, 0.3)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -126,16 +126,16 @@ export function MilestoneCelebration({
 
           {/* Milestone number */}
           <div
-            className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
+            className="inline-flex items-center justify-center w-20 h-20 mb-4"
             style={{
               backgroundColor: 'rgba(255, 255, 255, 0.2)',
               backdropFilter: 'blur(10px)',
             }}
           >
-            <span className="text-4xl font-serif text-white">{milestone}</span>
+            <span className="heading-serif text-4xl text-white">{milestone}</span>
           </div>
 
-          <h2 className="text-2xl font-serif text-white mb-2">
+          <h2 className="heading-serif text-2xl font-light text-white mb-2">
             {milestoneData.title}
           </h2>
           <p className="text-white/80 text-sm tracking-wide">
@@ -146,8 +146,8 @@ export function MilestoneCelebration({
         {/* Content */}
         <div className="px-8 py-8 text-center">
           <p
-            className="font-serif text-lg leading-relaxed mb-8"
-            style={{ color: '#4a3a42' }}
+            className="heading-serif text-lg font-light leading-relaxed mb-8"
+            style={{ color: 'var(--navy)' }}
           >
             {milestoneData.message}
           </p>
@@ -156,27 +156,27 @@ export function MilestoneCelebration({
           <div className="flex justify-center gap-8 mb-8">
             <div className="text-center">
               <span
-                className="block text-3xl font-serif"
-                style={{ color: '#7d4560' }}
+                className="block heading-serif text-3xl"
+                style={{ color: 'var(--navy)' }}
               >
                 {completedDaysCount}
               </span>
-              <span className="text-xs" style={{ color: '#9a6b7d' }}>
+              <span className="text-xs" style={{ color: 'var(--blue)' }}>
                 Days Completed
               </span>
             </div>
             <div
               className="w-px"
-              style={{ backgroundColor: 'rgba(125, 69, 96, 0.1)' }}
+              style={{ backgroundColor: 'rgba(26, 46, 74, 0.1)' }}
             />
             <div className="text-center">
               <span
-                className="block text-3xl font-serif"
-                style={{ color: '#7d4560' }}
+                className="block heading-serif text-3xl"
+                style={{ color: 'var(--navy)' }}
               >
                 {completedTasksCount}
               </span>
-              <span className="text-xs" style={{ color: '#9a6b7d' }}>
+              <span className="text-xs" style={{ color: 'var(--blue)' }}>
                 Exercises Done
               </span>
             </div>
@@ -184,12 +184,12 @@ export function MilestoneCelebration({
 
           {/* Achievement badge */}
           <div
-            className="inline-block px-6 py-3 rounded-full mb-8"
+            className="inline-block px-6 py-3 mb-8"
             style={{
-              backgroundColor: 'rgba(125, 69, 96, 0.08)',
+              backgroundColor: 'rgba(212, 160, 57, 0.12)',
             }}
           >
-            <p className="text-sm" style={{ color: '#7d4560' }}>
+            <p className="text-sm" style={{ color: 'var(--gold)' }}>
               {milestoneData.achievement}
             </p>
           </div>
@@ -197,11 +197,11 @@ export function MilestoneCelebration({
           {/* Continue button */}
           <button
             onClick={onClose}
-            className="w-full py-4 rounded-2xl font-medium text-sm transition-all duration-300 hover:opacity-90 active:scale-[0.98]"
+            className="w-full py-4 font-medium text-sm transition-all duration-300 hover:opacity-90 active:scale-[0.98]"
             style={{
-              background: getMilestoneGradient(),
-              color: '#fff',
-              boxShadow: '0 8px 24px rgba(125, 69, 96, 0.3)',
+              background: 'var(--gold)',
+              color: 'var(--navy)',
+              boxShadow: '0 8px 24px rgba(212, 160, 57, 0.3)',
             }}
           >
             Continue Your Journey

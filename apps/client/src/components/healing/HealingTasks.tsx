@@ -23,15 +23,15 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
 
   return (
     <div
-      className="relative rounded-xl overflow-hidden transition-all duration-300"
+      className="relative overflow-hidden transition-all duration-300"
       style={{
         backgroundColor: isCompleted
-          ? 'rgba(125, 152, 175, 0.08)'
-          : 'rgba(255, 255, 255, 0.9)',
+          ? 'rgba(212, 160, 57, 0.06)'
+          : 'var(--white)',
         borderLeft: `4px solid ${categoryColor}`,
-        boxShadow: isCompleted
-          ? 'none'
-          : '0 2px 12px rgba(125, 69, 96, 0.06)',
+        border: '1px solid rgba(26, 46, 74, 0.08)',
+        borderLeftWidth: '4px',
+        borderLeftColor: categoryColor,
         animationDelay: `${index * 100}ms`,
       }}
     >
@@ -41,9 +41,9 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
           {/* Custom checkbox */}
           <button
             onClick={onToggle}
-            className="relative flex-shrink-0 w-6 h-6 rounded-lg border-2 transition-all duration-300 mt-0.5"
+            className="relative flex-shrink-0 w-6 h-6 border-2 transition-all duration-300 mt-0.5"
             style={{
-              borderColor: isCompleted ? categoryColor : 'rgba(125, 69, 96, 0.2)',
+              borderColor: isCompleted ? categoryColor : 'rgba(26, 46, 74, 0.2)',
               backgroundColor: isCompleted ? categoryColor : 'transparent',
             }}
           >
@@ -77,7 +77,7 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
                   isCompleted ? 'line-through' : ''
                 }`}
                 style={{
-                  color: isCompleted ? '#a8aabe' : '#4a3a42',
+                  color: isCompleted ? 'rgba(26, 46, 74, 0.4)' : 'var(--navy)',
                 }}
               >
                 {task.title}
@@ -85,7 +85,7 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
 
               {/* Category badge */}
               <span
-                className="text-xs px-2 py-0.5 rounded-full"
+                className="text-xs px-2 py-0.5"
                 style={{
                   backgroundColor: `${categoryColor}15`,
                   color: categoryColor,
@@ -96,10 +96,11 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
 
               {/* Duration badge */}
               <span
-                className="text-xs px-2 py-0.5 rounded-full"
+                className="text-xs px-2 py-0.5"
                 style={{
-                  backgroundColor: 'rgba(168, 170, 190, 0.15)',
-                  color: '#7a7c8a',
+                  backgroundColor: 'rgba(26, 46, 74, 0.06)',
+                  color: 'var(--navy)',
+                  opacity: 0.6,
                 }}
               >
                 {task.duration}
@@ -109,7 +110,8 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
             <p
               className="text-sm leading-relaxed"
               style={{
-                color: isCompleted ? '#b8bac5' : '#6b5a62',
+                color: isCompleted ? 'rgba(26, 46, 74, 0.4)' : 'var(--navy)',
+                opacity: isCompleted ? 1 : 0.6,
               }}
             >
               {task.description}
@@ -135,10 +137,11 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
           }}
         >
           <div
-            className="mt-4 ml-9 p-4 rounded-lg text-sm leading-relaxed"
+            className="mt-4 ml-9 p-4 text-sm leading-relaxed"
             style={{
-              backgroundColor: 'rgba(125, 69, 96, 0.04)',
-              color: '#5a4a52',
+              backgroundColor: 'rgba(26, 46, 74, 0.03)',
+              color: 'var(--navy)',
+              opacity: 0.7,
             }}
           >
             {task.detailedInstructions}
@@ -162,21 +165,20 @@ export function HealingTasks({
 
   return (
     <div
-      className="rounded-2xl p-6"
+      className="p-6"
       style={{
-        background: 'linear-gradient(180deg, #fff 0%, rgba(250, 250, 250, 0.9) 100%)',
-        boxShadow: '0 4px 24px rgba(125, 69, 96, 0.06)',
-        border: '1px solid rgba(125, 69, 96, 0.08)',
+        background: 'var(--white)',
+        border: '1px solid rgba(26, 46, 74, 0.08)',
       }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-serif" style={{ color: '#7d4560' }}>
+        <h3 className="heading-serif text-lg font-light" style={{ color: 'var(--navy)' }}>
           Today's Exercises
         </h3>
         <span
           className="text-sm font-medium"
-          style={{ color: completedCount === totalCount ? '#7d98af' : '#9a6b7d' }}
+          style={{ color: completedCount === totalCount ? 'var(--gold)' : 'var(--blue)' }}
         >
           {completedCount} of {totalCount}
         </span>
@@ -185,17 +187,17 @@ export function HealingTasks({
       {/* Progress bar */}
       <div className="mb-6">
         <div
-          className="h-2 rounded-full overflow-hidden"
-          style={{ backgroundColor: 'rgba(125, 69, 96, 0.1)' }}
+          className="h-2 overflow-hidden"
+          style={{ backgroundColor: 'rgba(26, 46, 74, 0.08)' }}
         >
           <div
-            className="h-full rounded-full transition-all duration-500 ease-out"
+            className="h-full transition-all duration-500 ease-out"
             style={{
               width: `${progress}%`,
               background:
                 progress === 100
-                  ? 'linear-gradient(90deg, #7d98af 0%, #9ab5c8 100%)'
-                  : 'linear-gradient(90deg, #7d4560 0%, #9a6b7d 100%)',
+                  ? 'var(--gold)'
+                  : 'linear-gradient(90deg, #1a2e4a 0%, #2d5a8a 100%)',
             }}
           />
         </div>
@@ -204,7 +206,7 @@ export function HealingTasks({
         {progress === 100 && (
           <p
             className="text-sm mt-3 text-center animate-fadeIn"
-            style={{ color: '#7d98af' }}
+            style={{ color: 'var(--gold)' }}
           >
             All exercises complete! You showed up for yourself today.
           </p>

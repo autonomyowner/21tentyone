@@ -54,11 +54,11 @@ function Slider({ label, value, onChange, labels, color }: SliderProps) {
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-medium" style={{ color: '#4a3a42' }}>
+        <span className="text-sm font-medium" style={{ color: 'var(--navy)' }}>
           {label}
         </span>
         <span
-          className="text-xs px-2 py-0.5 rounded-full font-medium"
+          className="text-xs px-2 py-0.5 font-medium"
           style={{
             backgroundColor: `${color}15`,
             color: color,
@@ -72,7 +72,7 @@ function Slider({ label, value, onChange, labels, color }: SliderProps) {
         {/* Track background */}
         <div
           className="absolute w-full h-2 rounded-full"
-          style={{ backgroundColor: 'rgba(125, 69, 96, 0.1)' }}
+          style={{ backgroundColor: 'rgba(26, 46, 74, 0.1)' }}
         />
 
         {/* Filled track */}
@@ -108,10 +108,10 @@ function Slider({ label, value, onChange, labels, color }: SliderProps) {
 
       {/* Labels */}
       <div className="flex justify-between mt-1">
-        <span className="text-xs" style={{ color: '#a8aabe' }}>
+        <span className="text-xs" style={{ color: 'var(--navy)', opacity: 0.4 }}>
           {labels[0].label}
         </span>
-        <span className="text-xs" style={{ color: '#a8aabe' }}>
+        <span className="text-xs" style={{ color: 'var(--navy)', opacity: 0.4 }}>
           {labels[labels.length - 1].label}
         </span>
       </div>
@@ -170,23 +170,22 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
 
   return (
     <div
-      className="rounded-2xl p-6"
+      className="p-6"
       style={{
-        background: 'linear-gradient(180deg, #fff 0%, rgba(250, 250, 250, 0.9) 100%)',
-        boxShadow: '0 4px 24px rgba(125, 69, 96, 0.06)',
-        border: '1px solid rgba(125, 69, 96, 0.08)',
+        background: 'var(--white)',
+        border: '1px solid rgba(26, 46, 74, 0.08)',
       }}
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-serif" style={{ color: '#7d4560' }}>
+        <h3 className="heading-serif text-lg font-light" style={{ color: 'var(--navy)' }}>
           Daily Check-in
         </h3>
         {existingEntry && (
           <span
-            className="text-xs px-2 py-1 rounded-full"
+            className="text-xs px-2 py-1"
             style={{
-              backgroundColor: 'rgba(125, 152, 175, 0.15)',
-              color: '#7d98af',
+              backgroundColor: 'rgba(212, 160, 57, 0.15)',
+              color: 'var(--gold)',
             }}
           >
             Completed
@@ -200,7 +199,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         value={formData.mood}
         onChange={(mood) => setFormData((prev) => ({ ...prev, mood }))}
         labels={MOOD_LABELS}
-        color="#7d4560"
+        color="#1a2e4a"
       />
 
       <Slider
@@ -208,7 +207,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         value={formData.energy}
         onChange={(energy) => setFormData((prev) => ({ ...prev, energy }))}
         labels={ENERGY_LABELS}
-        color="#9a6b7d"
+        color="#2d5a8a"
       />
 
       <Slider
@@ -218,7 +217,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
           setFormData((prev) => ({ ...prev, attachmentAwareness }))
         }
         labels={AWARENESS_LABELS}
-        color="#7d98af"
+        color="#d4a039"
       />
 
       {/* Divider */}
@@ -226,7 +225,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         className="h-px my-6"
         style={{
           background:
-            'linear-gradient(90deg, transparent 0%, rgba(125, 69, 96, 0.1) 50%, transparent 100%)',
+            'linear-gradient(90deg, transparent 0%, rgba(26, 46, 74, 0.1) 50%, transparent 100%)',
         }}
       />
 
@@ -235,7 +234,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         <div>
           <label
             className="block text-sm font-medium mb-2"
-            style={{ color: '#4a3a42' }}
+            style={{ color: 'var(--navy)' }}
           >
             Reflection
           </label>
@@ -246,11 +245,11 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
             }
             placeholder="What came up for you today?"
             rows={3}
-            className="w-full px-4 py-3 rounded-xl text-sm resize-none transition-all duration-200 focus:ring-2"
+            className="w-full px-4 py-3 text-sm resize-none transition-all duration-200 focus:ring-2"
             style={{
-              backgroundColor: 'rgba(250, 250, 250, 0.8)',
-              border: '1px solid rgba(125, 69, 96, 0.12)',
-              color: '#4a3a42',
+              backgroundColor: 'rgba(26, 46, 74, 0.02)',
+              border: '1px solid rgba(26, 46, 74, 0.1)',
+              color: 'var(--navy)',
               outline: 'none',
             }}
           />
@@ -259,7 +258,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         <div>
           <label
             className="block text-sm font-medium mb-2"
-            style={{ color: '#4a3a42' }}
+            style={{ color: 'var(--navy)' }}
           >
             Gratitude
           </label>
@@ -270,11 +269,11 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
             }
             placeholder="What are you grateful for today?"
             rows={2}
-            className="w-full px-4 py-3 rounded-xl text-sm resize-none transition-all duration-200"
+            className="w-full px-4 py-3 text-sm resize-none transition-all duration-200"
             style={{
-              backgroundColor: 'rgba(250, 250, 250, 0.8)',
-              border: '1px solid rgba(125, 69, 96, 0.12)',
-              color: '#4a3a42',
+              backgroundColor: 'rgba(26, 46, 74, 0.02)',
+              border: '1px solid rgba(26, 46, 74, 0.1)',
+              color: 'var(--navy)',
               outline: 'none',
             }}
           />
@@ -283,7 +282,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         <div>
           <label
             className="block text-sm font-medium mb-2"
-            style={{ color: '#4a3a42' }}
+            style={{ color: 'var(--navy)' }}
           >
             Attachment Insight
           </label>
@@ -294,11 +293,11 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
             }
             placeholder="What did you notice about your attachment patterns?"
             rows={2}
-            className="w-full px-4 py-3 rounded-xl text-sm resize-none transition-all duration-200"
+            className="w-full px-4 py-3 text-sm resize-none transition-all duration-200"
             style={{
-              backgroundColor: 'rgba(250, 250, 250, 0.8)',
-              border: '1px solid rgba(125, 69, 96, 0.12)',
-              color: '#4a3a42',
+              backgroundColor: 'rgba(26, 46, 74, 0.02)',
+              border: '1px solid rgba(26, 46, 74, 0.1)',
+              color: 'var(--navy)',
               outline: 'none',
             }}
           />
@@ -309,13 +308,13 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
       <button
         onClick={handleSave}
         disabled={isSaving}
-        className="mt-6 w-full py-3 rounded-xl font-medium text-sm transition-all duration-300 hover:opacity-90 active:scale-[0.98]"
+        className="mt-6 w-full py-3 font-medium text-sm transition-all duration-300 hover:opacity-90 active:scale-[0.98]"
         style={{
           background: isComplete
-            ? 'linear-gradient(135deg, #7d4560 0%, #9a6b7d 100%)'
-            : 'rgba(125, 69, 96, 0.3)',
-          color: '#fff',
-          boxShadow: isComplete ? '0 4px 16px rgba(125, 69, 96, 0.3)' : 'none',
+            ? 'var(--gold)'
+            : 'rgba(26, 46, 74, 0.2)',
+          color: isComplete ? 'var(--navy)' : 'var(--navy)',
+          boxShadow: isComplete ? '0 4px 16px rgba(212, 160, 57, 0.3)' : 'none',
         }}
       >
         {isSaving ? (

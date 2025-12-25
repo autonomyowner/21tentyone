@@ -5,17 +5,17 @@ export const WEEK_PHASES = {
   awareness: {
     label: 'Awareness',
     description: 'Understanding your attachment patterns',
-    color: '#7d4560',
+    color: '#1a2e4a', // Navy
   },
   healing: {
     label: 'Healing',
     description: 'Processing and releasing old wounds',
-    color: '#9a6b7d',
+    color: '#2d5a8a', // Blue
   },
   integration: {
     label: 'Integration',
     description: 'Building secure attachment',
-    color: '#7d98af',
+    color: '#d4a039', // Gold
   },
 };
 
@@ -377,14 +377,14 @@ export const DEFAULT_GOALS: Omit<HealingGoal, 'id' | 'createdAt' | 'updatedAt'>[
 ];
 
 export const CATEGORY_COLORS: Record<string, string> = {
-  reflection: '#7d4560',
-  exercise: '#9a6b7d',
-  journaling: '#7d98af',
-  breathing: '#a8aabe',
-  attachment: '#7d4560',
-  relationship: '#9a6b7d',
-  'self-care': '#7d98af',
-  mindfulness: '#a8aabe',
+  reflection: '#1a2e4a', // Navy
+  exercise: '#2d5a8a', // Blue
+  journaling: '#d4a039', // Gold
+  breathing: '#6b9cc4', // Light Blue
+  attachment: '#1a2e4a', // Navy
+  relationship: '#2d5a8a', // Blue
+  'self-care': '#d4a039', // Gold
+  mindfulness: '#6b9cc4', // Light Blue
 };
 
 export const CATEGORY_LABELS: Record<string, string> = {

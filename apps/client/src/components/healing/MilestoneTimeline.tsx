@@ -102,7 +102,7 @@ export function MilestoneTimeline({
                       width: '4px',
                       backgroundColor: isCompleted || isCurrent
                         ? WEEK_PHASES[phase].color
-                        : 'rgba(125, 69, 96, 0.15)',
+                        : 'rgba(26, 46, 74, 0.15)',
                       transition: 'background-color 0.3s ease',
                     }}
                   />
@@ -125,17 +125,17 @@ export function MilestoneTimeline({
                     backgroundColor: isCompleted
                       ? WEEK_PHASES[phase].color
                       : isCurrent
-                        ? 'rgba(125, 69, 96, 0.15)'
-                        : 'rgba(125, 69, 96, 0.06)',
+                        ? 'rgba(26, 46, 74, 0.1)'
+                        : 'rgba(26, 46, 74, 0.04)',
                     border: isCurrent
                       ? `2px solid ${WEEK_PHASES[phase].color}`
                       : isCompleted
                         ? '2px solid transparent'
-                        : '2px solid rgba(125, 69, 96, 0.1)',
+                        : '2px solid rgba(26, 46, 74, 0.1)',
                     boxShadow: isCurrent
-                      ? `0 0 0 4px rgba(125, 69, 96, 0.1), 0 4px 12px rgba(125, 69, 96, 0.2)`
+                      ? `0 0 0 4px rgba(26, 46, 74, 0.1), 0 4px 12px rgba(26, 46, 74, 0.2)`
                       : isCompleted
-                        ? '0 2px 8px rgba(125, 69, 96, 0.2)'
+                        ? '0 2px 8px rgba(26, 46, 74, 0.2)'
                         : 'none',
                   }}
                 >
@@ -149,7 +149,7 @@ export function MilestoneTimeline({
                         ? '#fff'
                         : isCurrent
                           ? WEEK_PHASES[phase].color
-                          : 'rgba(125, 69, 96, 0.4)',
+                          : 'rgba(26, 46, 74, 0.4)',
                     }}
                   >
                     {day}
@@ -181,7 +181,7 @@ export function MilestoneTimeline({
                   <span
                     className="mt-2 text-xs font-medium"
                     style={{
-                      color: isCompleted ? WEEK_PHASES[phase].color : 'rgba(125, 69, 96, 0.3)',
+                      color: isCompleted ? WEEK_PHASES[phase].color : 'rgba(26, 46, 74, 0.3)',
                     }}
                   >
                     {day === 7 && 'Week 1'}
@@ -201,18 +201,18 @@ export function MilestoneTimeline({
           className="h-1 rounded-full"
           style={{
             width: '120px',
-            backgroundColor: 'rgba(125, 69, 96, 0.1)',
+            backgroundColor: 'rgba(26, 46, 74, 0.1)',
           }}
         >
           <div
             className="h-full rounded-full transition-all duration-500 ease-out"
             style={{
               width: `${(currentDay / 21) * 100}%`,
-              background: 'linear-gradient(90deg, #7d4560 0%, #9a6b7d 50%, #7d98af 100%)',
+              background: 'linear-gradient(90deg, #1a2e4a 0%, #2d5a8a 50%, #d4a039 100%)',
             }}
           />
         </div>
-        <span className="text-xs" style={{ color: '#9a6b7d' }}>
+        <span className="text-xs" style={{ color: 'var(--blue)' }}>
           {Math.round((currentDay / 21) * 100)}%
         </span>
       </div>
