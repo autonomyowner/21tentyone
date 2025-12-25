@@ -1,557 +1,544 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../../components/LanguageProvider';
+import {
+  PaintSplatter,
+  GoldRect,
+  GrainOverlay,
+  ArtisticFooter,
+  artisticStyles,
+} from '@/components/ui/ArtisticElements';
 
 export default function PricingPage() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
+  const [mounted, setMounted] = useState(false);
   const { t, language } = useLanguage();
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const currency = language === 'en' ? '$' : '€';
-  const monthlyPrice = language === 'en' ? '15' : '15';
-  const yearlyPrice = language === 'en' ? '12' : '12';
-  const yearlyTotal = language === 'en' ? '144' : '144';
-  const yearlySavings = language === 'en' ? '36' : '36';
+  const monthlyPrice = '15';
+  const yearlyPrice = '12';
+  const yearlyTotal = '144';
+  const yearlySavings = '36';
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--cream-50)' }}>
-      {/* Decorative Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div
-          className="absolute top-0 right-0 w-[500px] h-[500px] opacity-20"
-          style={{
-            background: 'radial-gradient(circle, var(--matcha-200) 0%, transparent 70%)',
-            borderRadius: '50%',
-            transform: 'translate(20%, -30%)',
-          }}
-        />
-        <div
-          className="absolute bottom-0 left-0 w-[400px] h-[400px] opacity-15"
-          style={{
-            background: 'radial-gradient(circle, var(--terra-300) 0%, transparent 70%)',
-            borderRadius: '50%',
-            transform: 'translate(-20%, 30%)',
-          }}
-        />
-      </div>
+    <>
+      <style jsx global>{artisticStyles}</style>
 
-      {/* Hero Section */}
-      <section className="relative pt-16 pb-12 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1
-            className="text-4xl md:text-5xl mb-4"
-            style={{
-              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
-              color: 'var(--text-primary)',
-            }}
-          >
-            {t.pricing.title}
-          </h1>
-          <p
-            className="text-lg max-w-2xl mx-auto mb-8"
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            {t.pricing.subtitle}
-          </p>
+      <div className="artistic-page min-h-screen" style={{ background: 'var(--cream)' }}>
+        <GrainOverlay />
 
-          {/* Billing Toggle */}
-          <div className="inline-flex items-center gap-4 p-1.5 rounded-full" style={{ background: 'var(--cream-200)' }}>
-            <button
-              onClick={() => setBillingPeriod('monthly')}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                billingPeriod === 'monthly'
-                  ? 'bg-white shadow-sm'
-                  : 'hover:bg-white/50'
-              }`}
+        {/* Background Decorations */}
+        <PaintSplatter
+          className="w-[400px] h-[400px] -top-20 -right-32 opacity-10"
+          color="var(--blue)"
+          delay={200}
+          scale={0.8}
+        />
+        <PaintSplatter
+          className="w-[300px] h-[300px] bottom-1/4 -left-20 opacity-10"
+          color="var(--navy)"
+          delay={400}
+          scale={0.6}
+        />
+
+        <GoldRect className="top-[20%] right-[5%] opacity-40" size="md" delay={0.5} />
+        <GoldRect className="bottom-[30%] left-[8%] opacity-30" size="sm" delay={1} />
+
+        {/* Hero Section */}
+        <section className="relative pt-32 pb-16 px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <span
+              className={`text-xs uppercase tracking-[0.4em] block mb-4 ${mounted ? 'reveal-up' : 'opacity-0'}`}
+              style={{ color: 'var(--gold)', animationDelay: '0.1s' }}
+            >
+              Pricing
+            </span>
+
+            <h1
+              className={`heading-serif text-4xl md:text-5xl lg:text-6xl font-light mb-6 ${mounted ? 'reveal-up' : 'opacity-0'}`}
+              style={{ color: 'var(--navy)', lineHeight: 1.1, animationDelay: '0.2s' }}
+            >
+              {t.pricing.title.split(' ').slice(0, -1).join(' ')}{' '}
+              <span className="italic" style={{ color: 'var(--blue)' }}>
+                {t.pricing.title.split(' ').slice(-1)[0]}
+              </span>
+            </h1>
+
+            <p
+              className={`text-lg max-w-2xl mx-auto mb-12 ${mounted ? 'reveal-up' : 'opacity-0'}`}
+              style={{ color: 'var(--navy)', opacity: 0.6, animationDelay: '0.3s' }}
+            >
+              {t.pricing.subtitle}
+            </p>
+
+            {/* Billing Toggle */}
+            <div
+              className={`inline-flex items-center gap-1 p-1 ${mounted ? 'reveal-up' : 'opacity-0'}`}
               style={{
-                color: billingPeriod === 'monthly' ? 'var(--matcha-700)' : 'var(--text-secondary)',
+                background: 'var(--white)',
+                border: '1px solid rgba(26, 46, 74, 0.1)',
+                animationDelay: '0.4s'
               }}
             >
-              {t.pricing.monthly}
-            </button>
-            <button
-              onClick={() => setBillingPeriod('yearly')}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all relative ${
-                billingPeriod === 'yearly'
-                  ? 'bg-white shadow-sm'
-                  : 'hover:bg-white/50'
-              }`}
-              style={{
-                color: billingPeriod === 'yearly' ? 'var(--matcha-700)' : 'var(--text-secondary)',
-              }}
-            >
-              {t.pricing.yearly}
-              <span
-                className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full text-xs font-semibold"
+              <button
+                onClick={() => setBillingPeriod('monthly')}
+                className="px-6 py-3 text-xs uppercase tracking-[0.15em] font-medium transition-all"
                 style={{
-                  background: 'var(--terra-400)',
-                  color: 'white',
+                  background: billingPeriod === 'monthly' ? 'var(--navy)' : 'transparent',
+                  color: billingPeriod === 'monthly' ? 'var(--cream)' : 'var(--navy)',
                 }}
               >
-                -20%
-              </span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Cards */}
-      <section className="relative pb-24 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            {/* Free Plan */}
-            <div
-              className="rounded-3xl p-8 relative"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border-soft)',
-                boxShadow: 'var(--shadow-md)',
-              }}
-            >
-              <div className="mb-6">
+                {t.pricing.monthly}
+              </button>
+              <button
+                onClick={() => setBillingPeriod('yearly')}
+                className="px-6 py-3 text-xs uppercase tracking-[0.15em] font-medium transition-all relative"
+                style={{
+                  background: billingPeriod === 'yearly' ? 'var(--navy)' : 'transparent',
+                  color: billingPeriod === 'yearly' ? 'var(--cream)' : 'var(--navy)',
+                }}
+              >
+                {t.pricing.yearly}
                 <span
-                  className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4"
-                  style={{
-                    background: 'var(--matcha-100)',
-                    color: 'var(--matcha-700)',
-                  }}
+                  className="absolute -top-3 -right-3 px-2 py-1 text-[10px] font-medium"
+                  style={{ background: 'var(--gold)', color: 'var(--navy)' }}
                 >
-                  {t.pricing.free}
+                  -20%
                 </span>
-                <h2
-                  className="text-2xl mb-2"
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing Cards */}
+        <section className="relative pb-32 px-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Free Plan */}
+              <div
+                className={`p-10 relative ${mounted ? 'reveal-up' : 'opacity-0'}`}
+                style={{
+                  background: 'var(--white)',
+                  border: '1px solid rgba(26, 46, 74, 0.1)',
+                  animationDelay: '0.5s'
+                }}
+              >
+                <div className="mb-8">
+                  <span
+                    className="text-xs uppercase tracking-[0.3em] block mb-4"
+                    style={{ color: 'var(--gold)' }}
+                  >
+                    {t.pricing.free}
+                  </span>
+                  <h2
+                    className="heading-serif text-2xl font-light mb-3"
+                    style={{ color: 'var(--navy)' }}
+                  >
+                    {t.pricing.discovery}
+                  </h2>
+                  <div className="flex items-baseline gap-2">
+                    <span
+                      className="heading-serif text-5xl font-light"
+                      style={{ color: 'var(--navy)' }}
+                    >
+                      0{currency}
+                    </span>
+                    <span style={{ color: 'var(--navy)', opacity: 0.4 }}>
+                      {t.pricing.perMonth}
+                    </span>
+                  </div>
+                  <p
+                    className="mt-4 text-sm"
+                    style={{ color: 'var(--navy)', opacity: 0.6 }}
+                  >
+                    {t.pricing.freeDesc}
+                  </p>
+                </div>
+
+                <ul className="space-y-4 mb-10">
+                  {[
+                    t.pricing.freeFeature1,
+                    t.pricing.freeFeature2,
+                    t.pricing.freeFeature3,
+                    t.pricing.freeFeature4,
+                    t.pricing.freeFeature5,
+                  ].map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <span
+                        className="mt-2 w-1.5 h-1.5 flex-shrink-0"
+                        style={{ background: 'var(--gold)' }}
+                      />
+                      <span style={{ color: 'var(--navy)', opacity: 0.7 }}>
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href="/signup?plan=gratuit"
+                  className="block w-full py-4 text-center text-xs uppercase tracking-[0.15em] font-medium transition-all duration-300 hover:bg-[var(--navy)] hover:text-[var(--cream)]"
                   style={{
-                    fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
-                    color: 'var(--text-primary)',
+                    border: '1px solid var(--navy)',
+                    color: 'var(--navy)',
                   }}
                 >
-                  {t.pricing.discovery}
-                </h2>
-                <div className="flex items-baseline gap-1">
-                  <span
-                    className="text-4xl font-bold"
-                    style={{ color: 'var(--text-primary)' }}
-                  >
-                    0{currency}
-                  </span>
-                  <span style={{ color: 'var(--text-muted)' }}>{t.pricing.perMonth}</span>
-                </div>
-                <p
-                  className="mt-2 text-sm"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {t.pricing.freeDesc}
-                </p>
+                  {t.pricing.startFree}
+                </Link>
               </div>
 
-              <ul className="space-y-4 mb-8">
-                {[
-                  t.pricing.freeFeature1,
-                  t.pricing.freeFeature2,
-                  t.pricing.freeFeature3,
-                  t.pricing.freeFeature4,
-                  t.pricing.freeFeature5,
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span
-                      className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ background: 'var(--matcha-500)' }}
-                    />
-                    <span style={{ color: 'var(--text-secondary)' }}>
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href="/signup?plan=gratuit"
-                className="matcha-btn matcha-btn-secondary w-full justify-center"
+              {/* Pro Plan */}
+              <div
+                className={`p-10 relative ${mounted ? 'reveal-up' : 'opacity-0'}`}
+                style={{
+                  background: 'var(--navy)',
+                  animationDelay: '0.6s'
+                }}
               >
-                {t.pricing.startFree}
-              </Link>
+                {/* Popular badge */}
+                <div
+                  className="absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-2 text-xs uppercase tracking-[0.15em] font-medium"
+                  style={{ background: 'var(--gold)', color: 'var(--navy)' }}
+                >
+                  {t.pricing.mostPopular}
+                </div>
+
+                <div className="mb-8">
+                  <span
+                    className="text-xs uppercase tracking-[0.3em] block mb-4"
+                    style={{ color: 'var(--gold)' }}
+                  >
+                    {t.pricing.pro}
+                  </span>
+                  <h2
+                    className="heading-serif text-2xl font-light mb-3"
+                    style={{ color: 'var(--cream)' }}
+                  >
+                    {t.pricing.transformation}
+                  </h2>
+                  <div className="flex items-baseline gap-2">
+                    <span
+                      className="heading-serif text-5xl font-light"
+                      style={{ color: 'var(--cream)' }}
+                    >
+                      {billingPeriod === 'monthly' ? monthlyPrice : yearlyPrice}{currency}
+                    </span>
+                    <span style={{ color: 'var(--cream)', opacity: 0.5 }}>
+                      {t.pricing.perMonth}
+                    </span>
+                  </div>
+                  {billingPeriod === 'yearly' && (
+                    <p className="text-sm mt-2" style={{ color: 'var(--cream)', opacity: 0.5 }}>
+                      {t.pricing.billedYearly.replace('{amount}', yearlyTotal + currency).replace('{savings}', yearlySavings + currency)}
+                    </p>
+                  )}
+                  <p
+                    className="mt-4 text-sm"
+                    style={{ color: 'var(--cream)', opacity: 0.6 }}
+                  >
+                    {t.pricing.proDesc}
+                  </p>
+                </div>
+
+                <ul className="space-y-4 mb-10">
+                  {[
+                    t.pricing.proFeature1,
+                    t.pricing.proFeature2,
+                    t.pricing.proFeature3,
+                    t.pricing.proFeature4,
+                    t.pricing.proFeature5,
+                    t.pricing.proFeature6,
+                    t.pricing.proFeature7,
+                    t.pricing.proFeature8,
+                  ].map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <span
+                        className="mt-2 w-1.5 h-1.5 flex-shrink-0"
+                        style={{ background: 'var(--gold)' }}
+                      />
+                      <span style={{ color: 'var(--cream)', opacity: 0.8 }}>
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href={`/checkout?plan=pro&billing=${billingPeriod}`}
+                  className="group block w-full py-4 text-center text-xs uppercase tracking-[0.15em] font-medium transition-all duration-300 relative overflow-hidden"
+                  style={{ background: 'var(--gold)', color: 'var(--navy)' }}
+                >
+                  <span className="relative z-10">{t.pricing.tryPro}</span>
+                  <div
+                    className="absolute inset-0 transition-transform duration-500 group-hover:translate-x-0 -translate-x-full"
+                    style={{ background: 'var(--amber)' }}
+                  />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Comparison */}
+        <section className="py-24 px-6" style={{ background: 'var(--white)' }}>
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <span
+                className="text-xs uppercase tracking-[0.4em] block mb-4"
+                style={{ color: 'var(--gold)' }}
+              >
+                Compare
+              </span>
+              <h2
+                className="heading-serif text-3xl md:text-4xl font-light"
+                style={{ color: 'var(--navy)' }}
+              >
+                {t.pricing.compareTitle}
+              </h2>
+              <div className="w-16 h-px mx-auto mt-6" style={{ background: 'var(--gold)' }} />
             </div>
 
-            {/* Pro Plan */}
+            <div style={{ border: '1px solid rgba(26, 46, 74, 0.1)' }}>
+              <table className="w-full">
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(26, 46, 74, 0.1)' }}>
+                    <th
+                      className="text-left py-5 px-6 text-xs uppercase tracking-[0.15em] font-medium"
+                      style={{ color: 'var(--navy)', opacity: 0.5 }}
+                    >
+                      {t.pricing.feature}
+                    </th>
+                    <th
+                      className="text-center py-5 px-6 text-xs uppercase tracking-[0.15em] font-medium"
+                      style={{ color: 'var(--navy)', opacity: 0.5 }}
+                    >
+                      {t.pricing.free}
+                    </th>
+                    <th
+                      className="text-center py-5 px-6 text-xs uppercase tracking-[0.15em] font-medium"
+                      style={{ color: 'var(--gold)' }}
+                    >
+                      {t.pricing.pro}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { feature: t.pricing.analysesPerMonth, free: '3', pro: t.pricing.unlimited },
+                    { feature: t.pricing.psychProfile, free: t.pricing.basic, pro: t.pricing.complete },
+                    { feature: t.pricing.biasesDetected, free: t.pricing.mainOnly, pro: t.pricing.all20Plus },
+                    { feature: t.pricing.progressTracking, free: t.pricing.no, pro: t.pricing.yes },
+                    { feature: t.pricing.personalizedReports, free: t.pricing.no, pro: t.pricing.weekly },
+                    { feature: t.pricing.deepAIChat, free: t.pricing.no, pro: t.pricing.yes },
+                    { feature: t.pricing.pdfExport, free: t.pricing.yes, pro: t.pricing.yes },
+                    { feature: t.pricing.support, free: t.pricing.community, pro: t.pricing.priority },
+                  ].map((row, i, arr) => (
+                    <tr
+                      key={i}
+                      style={{
+                        borderBottom: i < arr.length - 1 ? '1px solid rgba(26, 46, 74, 0.05)' : 'none',
+                      }}
+                    >
+                      <td className="py-4 px-6" style={{ color: 'var(--navy)' }}>
+                        {row.feature}
+                      </td>
+                      <td
+                        className="text-center py-4 px-6"
+                        style={{ color: 'var(--navy)', opacity: 0.5 }}
+                      >
+                        {row.free}
+                      </td>
+                      <td
+                        className="text-center py-4 px-6 font-medium"
+                        style={{ color: 'var(--gold)' }}
+                      >
+                        {row.pro}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Guarantee Section */}
+        <section className="py-24 px-6" style={{ background: 'var(--cream)' }}>
+          <div className="max-w-3xl mx-auto">
             <div
-              className="rounded-3xl p-8 relative"
+              className="p-12 text-center relative"
               style={{
-                background: 'linear-gradient(135deg, var(--matcha-500) 0%, var(--matcha-600) 100%)',
-                boxShadow: '0 20px 60px rgba(104, 166, 125, 0.3)',
+                background: 'var(--white)',
+                border: '1px solid rgba(26, 46, 74, 0.1)',
               }}
             >
-              {/* Popular badge */}
               <div
-                className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-sm font-semibold"
-                style={{
-                  background: 'var(--terra-400)',
-                  color: 'white',
-                  boxShadow: '0 4px 12px rgba(224, 123, 76, 0.4)',
-                }}
+                className="absolute top-0 left-0 right-0 h-1"
+                style={{ background: 'linear-gradient(90deg, var(--navy), var(--blue), var(--gold))' }}
+              />
+
+              <span
+                className="text-xs uppercase tracking-[0.4em] block mb-4"
+                style={{ color: 'var(--gold)' }}
               >
-                {t.pricing.mostPopular}
-              </div>
-
-              <div className="mb-6">
-                <span
-                  className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.2)',
-                    color: 'white',
-                  }}
-                >
-                  {t.pricing.pro}
-                </span>
-                <h2
-                  className="text-2xl mb-2"
-                  style={{
-                    fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
-                    color: 'white',
-                  }}
-                >
-                  {t.pricing.transformation}
-                </h2>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-white">
-                    {billingPeriod === 'monthly' ? monthlyPrice : yearlyPrice}{currency}
-                  </span>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{t.pricing.perMonth}</span>
-                </div>
-                {billingPeriod === 'yearly' && (
-                  <p className="text-sm mt-1" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                    {t.pricing.billedYearly.replace('{amount}', yearlyTotal + currency).replace('{savings}', yearlySavings + currency)}
-                  </p>
-                )}
-                <p
-                  className="mt-2 text-sm"
-                  style={{ color: 'rgba(255, 255, 255, 0.85)' }}
-                >
-                  {t.pricing.proDesc}
-                </p>
-              </div>
-
-              <ul className="space-y-4 mb-8">
+                Our Promise
+              </span>
+              <h2
+                className="heading-serif text-2xl md:text-3xl font-light mb-6"
+                style={{ color: 'var(--navy)' }}
+              >
+                {t.pricing.guaranteeTitle}
+              </h2>
+              <p
+                className="max-w-xl mx-auto mb-8"
+                style={{ color: 'var(--navy)', opacity: 0.6, lineHeight: 1.8 }}
+              >
+                {t.pricing.guaranteeDesc}
+              </p>
+              <div className="flex flex-wrap justify-center gap-8">
                 {[
-                  t.pricing.proFeature1,
-                  t.pricing.proFeature2,
-                  t.pricing.proFeature3,
-                  t.pricing.proFeature4,
-                  t.pricing.proFeature5,
-                  t.pricing.proFeature6,
-                  t.pricing.proFeature7,
-                  t.pricing.proFeature8,
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
+                  t.pricing.cancelAnytime,
+                  t.pricing.noCommitment,
+                  t.pricing.immediateRefund,
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3">
                     <span
-                      className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ background: 'white' }}
+                      className="w-2 h-2"
+                      style={{ background: 'var(--gold)' }}
                     />
-                    <span style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
-                      {feature}
+                    <span className="text-sm" style={{ color: 'var(--navy)', opacity: 0.7 }}>
+                      {item}
                     </span>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
+            </div>
+          </div>
+        </section>
 
+        {/* FAQ Section */}
+        <section className="py-24 px-6" style={{ background: 'var(--white)' }}>
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-16">
+              <span
+                className="text-xs uppercase tracking-[0.4em] block mb-4"
+                style={{ color: 'var(--gold)' }}
+              >
+                Questions
+              </span>
+              <h2
+                className="heading-serif text-3xl md:text-4xl font-light"
+                style={{ color: 'var(--navy)' }}
+              >
+                {t.pricing.faqTitle}
+              </h2>
+              <div className="w-16 h-px mx-auto mt-6" style={{ background: 'var(--gold)' }} />
+            </div>
+
+            <div className="space-y-4">
+              {[
+                { q: t.pricing.faq1Q, a: t.pricing.faq1A },
+                { q: t.pricing.faq2Q, a: t.pricing.faq2A },
+                { q: t.pricing.faq3Q, a: t.pricing.faq3A },
+                { q: t.pricing.faq4Q, a: t.pricing.faq4A },
+                { q: t.pricing.faq5Q, a: t.pricing.faq5A },
+              ].map((faq, i) => (
+                <details
+                  key={i}
+                  className="group"
+                  style={{ border: '1px solid rgba(26, 46, 74, 0.1)' }}
+                >
+                  <summary
+                    className="cursor-pointer px-6 py-5 font-medium flex items-center justify-between transition-all duration-300 hover:bg-[rgba(26,46,74,0.02)]"
+                    style={{ color: 'var(--navy)' }}
+                  >
+                    {faq.q}
+                    <span
+                      className="ml-4 transition-transform duration-300 group-open:rotate-45 text-lg"
+                      style={{ color: 'var(--gold)' }}
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <div
+                    className="px-6 pb-6"
+                    style={{ color: 'var(--navy)', opacity: 0.6 }}
+                  >
+                    {faq.a}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section
+          className="py-24 px-6"
+          style={{ background: 'linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%)' }}
+        >
+          <PaintSplatter
+            className="w-[300px] h-[300px] -top-20 -left-20 opacity-10"
+            color="var(--light-blue)"
+            delay={0}
+            scale={0.6}
+          />
+
+          <div className="max-w-3xl mx-auto text-center relative z-10">
+            <span
+              className="text-xs uppercase tracking-[0.4em] block mb-4"
+              style={{ color: 'var(--gold)' }}
+            >
+              Get Started
+            </span>
+            <h2
+              className="heading-serif text-3xl md:text-4xl lg:text-5xl font-light mb-6"
+              style={{ color: 'var(--cream)' }}
+            >
+              {t.pricing.readyToTransform.split(' ').slice(0, -1).join(' ')}{' '}
+              <span className="italic" style={{ color: 'var(--light-blue)' }}>
+                {t.pricing.readyToTransform.split(' ').slice(-1)[0]}
+              </span>
+            </h2>
+            <p className="mb-10" style={{ color: 'var(--cream)', opacity: 0.6 }}>
+              {t.pricing.joinThousands}
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Link
+                href="/signup"
+                className="group relative px-10 py-4 text-xs uppercase tracking-[0.15em] font-medium overflow-hidden transition-all duration-500"
+                style={{ background: 'var(--gold)', color: 'var(--navy)' }}
+              >
+                <span className="relative z-10">{t.pricing.startFree}</span>
+                <div
+                  className="absolute inset-0 transition-transform duration-500 group-hover:translate-x-0 -translate-x-full"
+                  style={{ background: 'var(--amber)' }}
+                />
+              </Link>
               <Link
                 href={`/checkout?plan=pro&billing=${billingPeriod}`}
-                className="inline-flex w-full items-center justify-center px-6 py-3 rounded-xl font-medium transition-all"
+                className="px-10 py-4 text-xs uppercase tracking-[0.15em] font-medium transition-all duration-300 hover:bg-[var(--cream)] hover:text-[var(--navy)]"
                 style={{
-                  background: 'white',
-                  color: 'var(--matcha-700)',
-                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
+                  border: '1px solid var(--cream)',
+                  color: 'var(--cream)',
                 }}
               >
                 {t.pricing.tryPro}
               </Link>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Features Comparison */}
-      <section
-        className="py-20 px-4"
-        style={{ background: 'var(--cream-100)' }}
-      >
-        <div className="max-w-4xl mx-auto">
-          <h2
-            className="text-3xl text-center mb-12"
-            style={{
-              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
-              color: 'var(--text-primary)',
-            }}
-          >
-            {t.pricing.compareTitle}
-          </h2>
+          <GoldRect className="bottom-16 right-[10%] opacity-30" size="sm" delay={0.5} />
+        </section>
 
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-soft)',
-            }}
-          >
-            <table className="w-full">
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--border-soft)' }}>
-                  <th
-                    className="text-left py-4 px-6 font-medium"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {t.pricing.feature}
-                  </th>
-                  <th
-                    className="text-center py-4 px-6 font-medium"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {t.pricing.free}
-                  </th>
-                  <th
-                    className="text-center py-4 px-6 font-medium"
-                    style={{ color: 'var(--matcha-600)' }}
-                  >
-                    {t.pricing.pro}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { feature: t.pricing.analysesPerMonth, free: '3', pro: t.pricing.unlimited },
-                  { feature: t.pricing.psychProfile, free: t.pricing.basic, pro: t.pricing.complete },
-                  { feature: t.pricing.biasesDetected, free: t.pricing.mainOnly, pro: t.pricing.all20Plus },
-                  { feature: t.pricing.progressTracking, free: t.pricing.no, pro: t.pricing.yes },
-                  { feature: t.pricing.personalizedReports, free: t.pricing.no, pro: t.pricing.weekly },
-                  { feature: t.pricing.deepAIChat, free: t.pricing.no, pro: t.pricing.yes },
-                  { feature: t.pricing.pdfExport, free: t.pricing.yes, pro: t.pricing.yes },
-                  { feature: t.pricing.support, free: t.pricing.community, pro: t.pricing.priority },
-                ].map((row, i) => (
-                  <tr
-                    key={i}
-                    style={{
-                      borderBottom:
-                        i < 7 ? '1px solid var(--border-soft)' : 'none',
-                    }}
-                  >
-                    <td
-                      className="py-4 px-6"
-                      style={{ color: 'var(--text-primary)' }}
-                    >
-                      {row.feature}
-                    </td>
-                    <td
-                      className="text-center py-4 px-6"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
-                      {row.free}
-                    </td>
-                    <td
-                      className="text-center py-4 px-6 font-medium"
-                      style={{ color: 'var(--matcha-600)' }}
-                    >
-                      {row.pro}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* Guarantee Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-3xl mx-auto">
-          <div
-            className="rounded-3xl p-10 text-center"
-            style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-soft)',
-              boxShadow: 'var(--shadow-lg)',
-            }}
-          >
-            <h2
-              className="text-2xl mb-4"
-              style={{
-                fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
-                color: 'var(--text-primary)',
-              }}
-            >
-              {t.pricing.guaranteeTitle}
-            </h2>
-            <p
-              className="max-w-xl mx-auto mb-6"
-              style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}
-            >
-              {t.pricing.guaranteeDesc}
-            </p>
-            <div className="flex flex-wrap justify-center gap-8 text-sm">
-              {[
-                t.pricing.cancelAnytime,
-                t.pricing.noCommitment,
-                t.pricing.immediateRefund,
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ background: 'var(--matcha-500)' }}
-                  />
-                  <span style={{ color: 'var(--text-secondary)' }}>{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section
-        className="py-20 px-4"
-        style={{ background: 'var(--cream-100)' }}
-      >
-        <div className="max-w-3xl mx-auto">
-          <h2
-            className="text-3xl text-center mb-12"
-            style={{
-              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
-              color: 'var(--text-primary)',
-            }}
-          >
-            {t.pricing.faqTitle}
-          </h2>
-
-          <div className="space-y-4">
-            {[
-              { q: t.pricing.faq1Q, a: t.pricing.faq1A },
-              { q: t.pricing.faq2Q, a: t.pricing.faq2A },
-              { q: t.pricing.faq3Q, a: t.pricing.faq3A },
-              { q: t.pricing.faq4Q, a: t.pricing.faq4A },
-              { q: t.pricing.faq5Q, a: t.pricing.faq5A },
-            ].map((faq, i) => (
-              <details
-                key={i}
-                className="group rounded-2xl overflow-hidden"
-                style={{
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-soft)',
-                }}
-              >
-                <summary
-                  className="cursor-pointer px-6 py-5 font-medium flex items-center justify-between"
-                  style={{ color: 'var(--text-primary)' }}
-                >
-                  {faq.q}
-                  <span
-                    className="ml-4 transition-transform group-open:rotate-45"
-                    style={{ color: 'var(--matcha-500)' }}
-                  >
-                    +
-                  </span>
-                </summary>
-                <div
-                  className="px-6 pb-5"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {faq.a}
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-20 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2
-            className="text-3xl mb-4"
-            style={{
-              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
-              color: 'var(--text-primary)',
-            }}
-          >
-            {t.pricing.readyToTransform}
-          </h2>
-          <p className="mb-8" style={{ color: 'var(--text-secondary)' }}>
-            {t.pricing.joinThousands}
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              href="/signup"
-              className="matcha-btn matcha-btn-primary text-base px-8 py-4"
-            >
-              {t.pricing.startFree}
-            </Link>
-            <Link
-              href={`/checkout?plan=pro&billing=${billingPeriod}`}
-              className="matcha-btn matcha-btn-secondary text-base px-8 py-4"
-            >
-              {t.pricing.tryPro}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer
-        className="py-12 px-4 border-t"
-        style={{
-          background: 'var(--cream-50)',
-          borderColor: 'var(--border-soft)',
-        }}
-      >
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-              <p
-                className="text-xl font-semibold mb-1"
-                style={{
-                  fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
-                  color: 'var(--matcha-600)',
-                }}
-              >
-                Matcha
-              </p>
-              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                {t.landing.footerTagline}
-              </p>
-            </div>
-            <div className="flex gap-8">
-              <Link
-                href="/"
-                className="text-sm hover:text-[var(--matcha-600)] transition-colors"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.header.home}
-              </Link>
-              <Link
-                href="/login"
-                className="text-sm hover:text-[var(--matcha-600)] transition-colors"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.header.login}
-              </Link>
-              <Link
-                href="/signup"
-                className="text-sm hover:text-[var(--matcha-600)] transition-colors"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t.common.signup}
-              </Link>
-            </div>
-          </div>
-          <div
-            className="mt-8 pt-8 border-t text-center text-sm"
-            style={{
-              borderColor: 'var(--border-soft)',
-              color: 'var(--text-muted)',
-            }}
-          >
-            © 2024 Matcha. {t.landing.allRightsReserved}
-          </div>
-        </div>
-      </footer>
-    </div>
+        <ArtisticFooter />
+      </div>
+    </>
   );
 }

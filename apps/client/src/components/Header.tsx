@@ -1,202 +1,222 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from './LanguageProvider';
+import ArtisticT21 from './ui/ArtisticT21';
 
 export default function Header() {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'fr' : 'en');
   };
 
+  const navItems = [
+    { label: 'Journey', href: '/dashboard' },
+    { label: 'Assessment', href: '/assessment' },
+    { label: 'Blog', href: '/blog' },
+  ];
+
   return (
-    <header
-      className="w-full border-b"
-      style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(8px)',
-        borderColor: 'var(--border-soft)',
-      }}
-    >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="text-xl font-semibold select-none"
-            style={{
-              fontFamily: 'var(--font-poppins), var(--font-cairo), system-ui, sans-serif', fontWeight: 700,
-              color: 'var(--brand-600)',
-            }}
-          >
-            21|Twenty One®
-          </Link>
+    <>
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;500&display=swap');
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link
-              href="/dashboard"
-              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
-              style={{ color: 'var(--brand-600)' }}
-            >
-              My Journey
-            </Link>
-            <Link
-              href="/assessment"
-              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Free Assessment
-            </Link>
-            <Link
-              href="/app"
-              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Our App
-            </Link>
-            <Link
-              href="/shop"
-              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Shop
-            </Link>
-            <Link
-              href="/blog"
-              className="text-sm font-medium transition-colors hover:text-[var(--brand-600)]"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Blog
-            </Link>
-          </nav>
+        .header-artistic {
+          --navy: #1a2e4a;
+          --blue: #2d5a8a;
+          --gold: #d4a039;
+          --cream: #f5f0e8;
+          --white: #ffffff;
+        }
 
-          {/* Desktop Language Switcher + CTA */}
-          <div className="hidden md:flex items-center gap-3">
-            {/* Language Switcher */}
-            <button
-              onClick={toggleLanguage}
-              className="px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:bg-[var(--cream-200)]"
-              style={{
-                color: 'var(--text-secondary)',
-                border: '1px solid var(--border-soft)',
-              }}
-            >
-              {language === 'en' ? 'FR' : 'EN'}
-            </button>
+        .header-artistic .heading-serif {
+          font-family: 'Cormorant Garamond', serif;
+        }
+      `}</style>
 
+      <header
+        className="header-artistic w-full transition-all duration-500"
+        style={{
+          background: scrolled ? 'rgba(26, 46, 74, 0.95)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        }}
+      >
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
             <Link
-              href="/dashboard"
-              className="matcha-btn matcha-btn-primary text-sm px-5 py-2"
+              href="/"
+              className="text-2xl font-normal transition-colors duration-300 flex items-center"
             >
-              Start Healing
+              <ArtisticT21 scrolled={scrolled} />
             </Link>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-[var(--bg-elevated)]"
-            aria-label="Menu"
-          >
-            <div className="w-5 h-4 flex flex-col justify-between">
-              <span
-                className={`block h-0.5 w-full bg-[var(--text-primary)] transition-transform ${
-                  mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''
-                }`}
-              />
-              <span
-                className={`block h-0.5 w-full bg-[var(--text-primary)] ${
-                  mobileMenuOpen ? 'opacity-0' : ''
-                }`}
-              />
-              <span
-                className={`block h-0.5 w-full bg-[var(--text-primary)] transition-transform ${
-                  mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
-                }`}
-              />
-            </div>
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-[var(--border-soft)]">
-            <nav className="flex flex-col gap-3">
-              <Link
-                href="/dashboard"
-                className="text-sm font-semibold py-2"
-                style={{ color: 'var(--brand-600)' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                My Journey
-              </Link>
-              <Link
-                href="/assessment"
-                className="text-sm font-medium py-2"
-                style={{ color: 'var(--text-secondary)' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Free Assessment
-              </Link>
-              <Link
-                href="/app"
-                className="text-sm font-medium py-2"
-                style={{ color: 'var(--text-secondary)' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Our App
-              </Link>
-              <Link
-                href="/shop"
-                className="text-sm font-medium py-2"
-                style={{ color: 'var(--text-secondary)' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Shop
-              </Link>
-              <Link
-                href="/blog"
-                className="text-sm font-medium py-2"
-                style={{ color: 'var(--text-secondary)' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Blog
-              </Link>
-
-              {/* Mobile Language Switcher */}
-              <button
-                onClick={toggleLanguage}
-                className="text-sm font-medium py-2 text-left flex items-center gap-2"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                <span
-                  className="px-2 py-1 rounded text-xs"
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-10">
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="text-xs uppercase tracking-[0.2em] transition-all duration-300 hover:opacity-100 relative group"
                   style={{
-                    background: 'var(--cream-200)',
+                    color: scrolled ? 'var(--cream)' : 'var(--navy)',
+                    opacity: 0.7,
+                    fontFamily: 'Outfit, sans-serif',
+                    fontWeight: 400,
                   }}
                 >
-                  {language === 'en' ? 'EN' : 'FR'}
-                </span>
-                {language === 'en' ? 'Switch to French' : 'Passer en anglais'}
+                  {item.label}
+                  <span
+                    className="absolute -bottom-1 left-0 w-0 h-px transition-all duration-300 group-hover:w-full"
+                    style={{ background: 'var(--gold)' }}
+                  />
+                </Link>
+              ))}
+            </nav>
+
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-4">
+              {/* Language Switcher */}
+              <button
+                onClick={toggleLanguage}
+                className="text-xs uppercase tracking-[0.15em] transition-all duration-300 hover:opacity-100"
+                style={{
+                  color: scrolled ? 'var(--cream)' : 'var(--navy)',
+                  opacity: 0.6,
+                  fontFamily: 'Outfit, sans-serif',
+                }}
+              >
+                {language === 'en' ? 'FR' : 'EN'}
               </button>
 
-              <div className="pt-3 border-t border-[var(--border-soft)]">
-                <Link
-                  href="/dashboard"
-                  className="matcha-btn matcha-btn-primary text-sm w-full text-center block"
-                  onClick={() => setMobileMenuOpen(false)}
+              <Link
+                href="/dashboard"
+                className="group relative px-6 py-2.5 overflow-hidden transition-all duration-500"
+                style={{
+                  background: scrolled ? 'var(--gold)' : 'var(--navy)',
+                  color: scrolled ? 'var(--navy)' : 'var(--cream)',
+                }}
+              >
+                <span
+                  className="relative z-10 text-xs uppercase tracking-[0.15em]"
+                  style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 500 }}
                 >
                   Start Healing
-                </Link>
-              </div>
-            </nav>
+                </span>
+                <div
+                  className="absolute inset-0 transition-transform duration-500 group-hover:translate-x-0 -translate-x-full"
+                  style={{ background: scrolled ? '#e8a54b' : 'var(--blue)' }}
+                />
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden flex flex-col gap-1.5 p-2"
+              aria-label="Menu"
+            >
+              <span
+                className="w-6 h-px transition-all duration-300"
+                style={{
+                  background: scrolled ? 'var(--cream)' : 'var(--navy)',
+                  transform: mobileMenuOpen ? 'rotate(45deg) translate(4px, 4px)' : 'none',
+                }}
+              />
+              <span
+                className="w-6 h-px transition-all duration-300"
+                style={{
+                  background: scrolled ? 'var(--cream)' : 'var(--navy)',
+                  opacity: mobileMenuOpen ? 0 : 1,
+                }}
+              />
+              <span
+                className="w-6 h-px transition-all duration-300"
+                style={{
+                  background: scrolled ? 'var(--cream)' : 'var(--navy)',
+                  transform: mobileMenuOpen ? 'rotate(-45deg) translate(4px, -4px)' : 'none',
+                }}
+              />
+            </button>
           </div>
-        )}
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className="fixed inset-0 z-40 md:hidden transition-all duration-500"
+        style={{
+          background: 'var(--navy)',
+          opacity: mobileMenuOpen ? 1 : 0,
+          pointerEvents: mobileMenuOpen ? 'auto' : 'none',
+        }}
+      >
+        <div className="flex flex-col items-center justify-center h-full gap-8 px-6">
+          {navItems.map((item, i) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="heading-serif text-3xl transition-all duration-500"
+              style={{
+                color: 'var(--cream)',
+                transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
+                opacity: mobileMenuOpen ? 1 : 0,
+                transitionDelay: `${i * 80}ms`,
+              }}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+
+          {/* Mobile Language Switcher */}
+          <button
+            onClick={toggleLanguage}
+            className="mt-4 text-xs uppercase tracking-[0.2em] transition-all duration-500"
+            style={{
+              color: 'var(--gold)',
+              transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
+              opacity: mobileMenuOpen ? 1 : 0,
+              transitionDelay: `${navItems.length * 80}ms`,
+            }}
+          >
+            {language === 'en' ? 'Switch to French' : 'Passer en anglais'}
+          </button>
+
+          {/* Mobile CTA */}
+          <Link
+            href="/dashboard"
+            className="mt-6 px-10 py-4 transition-all duration-500"
+            style={{
+              background: 'var(--gold)',
+              color: 'var(--navy)',
+              transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
+              opacity: mobileMenuOpen ? 1 : 0,
+              transitionDelay: `${(navItems.length + 1) * 80}ms`,
+            }}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <span
+              className="text-xs uppercase tracking-[0.2em]"
+              style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 500 }}
+            >
+              Start Healing
+            </span>
+          </Link>
+        </div>
       </div>
-    </header>
+    </>
   );
 }
