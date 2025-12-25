@@ -1,113 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
-
-// Custom Navigation
-const Navigation = ({ scrollY }: { scrollY: number }) => {
-  const isScrolled = scrollY > 100;
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  return (
-    <>
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-500"
-        style={{
-          background: isScrolled ? 'rgba(26, 46, 74, 0.95)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(20px)' : 'none',
-        }}
-      >
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Logo */}
-          <a
-            href="#"
-            className="heading-serif text-xl md:text-2xl transition-colors duration-300"
-            style={{ color: isScrolled ? 'var(--cream)' : 'var(--navy)' }}
-          >
-            T<span className="italic">21</span>
-          </a>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-12">
-            {['Studio', 'Work', 'About', 'Contact'].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="text-xs uppercase tracking-[0.2em] transition-all duration-300 hover:opacity-100 relative group"
-                style={{
-                  color: isScrolled ? 'var(--cream)' : 'var(--navy)',
-                  opacity: 0.7
-                }}
-              >
-                {item}
-                <span
-                  className="absolute -bottom-1 left-0 w-0 h-px transition-all duration-300 group-hover:w-full"
-                  style={{ background: 'var(--gold)' }}
-                />
-              </a>
-            ))}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            <span
-              className="w-6 h-px transition-all duration-300"
-              style={{
-                background: isScrolled ? 'var(--cream)' : 'var(--navy)',
-                transform: menuOpen ? 'rotate(45deg) translate(4px, 4px)' : 'none'
-              }}
-            />
-            <span
-              className="w-6 h-px transition-all duration-300"
-              style={{
-                background: isScrolled ? 'var(--cream)' : 'var(--navy)',
-                opacity: menuOpen ? 0 : 1
-              }}
-            />
-            <span
-              className="w-6 h-px transition-all duration-300"
-              style={{
-                background: isScrolled ? 'var(--cream)' : 'var(--navy)',
-                transform: menuOpen ? 'rotate(-45deg) translate(4px, -4px)' : 'none'
-              }}
-            />
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      <div
-        className="fixed inset-0 z-40 md:hidden transition-all duration-500"
-        style={{
-          background: 'var(--navy)',
-          opacity: menuOpen ? 1 : 0,
-          pointerEvents: menuOpen ? 'auto' : 'none',
-        }}
-      >
-        <div className="flex flex-col items-center justify-center h-full gap-8">
-          {['Studio', 'Work', 'About', 'Contact'].map((item, i) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="heading-serif text-4xl transition-all duration-500"
-              style={{
-                color: 'var(--cream)',
-                transform: menuOpen ? 'translateY(0)' : 'translateY(20px)',
-                opacity: menuOpen ? 1 : 0,
-                transitionDelay: `${i * 100}ms`
-              }}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item}
-            </a>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-};
+import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 
 // Scroll-triggered section hook
 const useIntersectionObserver = () => {
@@ -216,91 +110,61 @@ const GrainOverlay = () => (
   />
 );
 
-// Work/Portfolio Item
-const WorkItem = ({
+// Week Card Component
+const WeekCard = ({
+  week,
   title,
-  category,
-  index
+  description,
+  items,
+  isActive
 }: {
+  week: string;
   title: string;
-  category: string;
-  index: number;
+  description: string;
+  items: string[];
+  isActive?: boolean;
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <div
-      className={`relative group cursor-pointer overflow-hidden ${
-        index % 3 === 0 ? 'col-span-2 row-span-2' : 'col-span-1 row-span-1'
-      }`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="relative p-8 md:p-10 transition-all duration-500 hover:translate-y-[-4px]"
       style={{
-        aspectRatio: index % 3 === 0 ? '1' : index % 2 === 0 ? '3/4' : '4/3'
+        background: isActive ? 'var(--navy)' : 'var(--white)',
+        border: isActive ? 'none' : '1px solid rgba(26, 46, 74, 0.1)'
       }}
     >
-      <div
-        className="absolute inset-0 transition-all duration-700 ease-out"
-        style={{
-          background: `linear-gradient(${135 + index * 45}deg,
-            ${index % 2 === 0 ? '#1a2e4a' : '#2d5a8a'} 0%,
-            ${index % 3 === 0 ? '#6b9cc4' : '#1a2e4a'} 100%)`,
-          transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-        }}
-      />
-
-      {/* Paint splatter on hover */}
-      <div
-        className="absolute inset-0 transition-opacity duration-500"
-        style={{ opacity: isHovered ? 0.3 : 0 }}
+      <span
+        className="text-xs uppercase tracking-[0.3em] block mb-4"
+        style={{ color: 'var(--gold)' }}
       >
-        <PaintSplatter
-          className="w-full h-full"
-          color="rgba(212, 160, 57, 0.6)"
-          scale={isHovered ? 1 : 0.5}
-        />
-      </div>
-
-      {/* Content */}
-      <div className="absolute inset-0 p-6 flex flex-col justify-end">
-        <div
-          className="transform transition-all duration-500"
-          style={{
-            transform: isHovered ? 'translateY(0)' : 'translateY(20px)',
-            opacity: isHovered ? 1 : 0.7
-          }}
-        >
-          <span
-            className="text-xs uppercase tracking-[0.3em] mb-2 block"
-            style={{
-              color: '#d4a039',
-              fontFamily: 'Outfit, sans-serif'
-            }}
-          >
-            {category}
-          </span>
-          <h3
-            className="text-xl md:text-2xl"
-            style={{
-              color: '#f5f0e8',
-              fontFamily: 'Cormorant Garamond, serif',
-              fontWeight: 500
-            }}
-          >
-            {title}
-          </h3>
-        </div>
-      </div>
-
-      {/* Gold corner accent */}
-      <div
-        className="absolute top-0 right-0 w-12 h-12 transition-all duration-500"
+        {week}
+      </span>
+      <h3
+        className="heading-serif text-2xl md:text-3xl font-light mb-4"
+        style={{ color: isActive ? 'var(--cream)' : 'var(--navy)' }}
+      >
+        {title}
+      </h3>
+      <p
+        className="mb-6 leading-relaxed"
         style={{
-          background: 'linear-gradient(135deg, transparent 50%, #d4a039 50%)',
-          transform: isHovered ? 'translate(0, 0)' : 'translate(20px, -20px)',
-          opacity: isHovered ? 1 : 0
+          color: isActive ? 'var(--cream)' : 'var(--navy)',
+          opacity: 0.7
         }}
-      />
+      >
+        {description}
+      </p>
+      <ul className="space-y-3">
+        {items.map((item, i) => (
+          <li
+            key={i}
+            className="flex gap-3 text-sm"
+            style={{ color: isActive ? 'var(--cream)' : 'var(--navy)' }}
+          >
+            <span style={{ color: 'var(--gold)' }}>•</span>
+            <span style={{ opacity: 0.8 }}>{item}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
@@ -328,15 +192,6 @@ export default function TheTwentyOnePage() {
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
-
-  const works = [
-    { title: "Ethereal Visions", category: "Branding" },
-    { title: "Chromatic Dreams", category: "Art Direction" },
-    { title: "Silent Echoes", category: "Photography" },
-    { title: "Abstract Horizons", category: "Digital Art" },
-    { title: "Fluid Motion", category: "Motion Design" },
-    { title: "Tactile Memories", category: "Installation" },
-  ];
 
   return (
     <>
@@ -441,25 +296,6 @@ export default function TheTwentyOnePage() {
           transform-origin: left;
         }
 
-        /* Custom cursor */
-        .cursor-gallery {
-          cursor: none;
-        }
-
-        .cursor-gallery::after {
-          content: '';
-          position: fixed;
-          width: 40px;
-          height: 40px;
-          border: 2px solid var(--gold);
-          border-radius: 50%;
-          pointer-events: none;
-          transform: translate(-50%, -50%);
-          transition: all 0.15s ease-out;
-          z-index: 9999;
-        }
-
-        /* Scroll-triggered animations */
         .fade-in-section {
           opacity: 0;
           transform: translateY(40px);
@@ -472,9 +308,8 @@ export default function TheTwentyOnePage() {
         }
       `}</style>
 
-      <div className="twenty-one-page min-h-screen overflow-x-hidden">
+      <div className="twenty-one-page min-h-screen overflow-x-hidden pt-20">
         <GrainOverlay />
-        <Navigation scrollY={scrollY} />
 
         {/* Custom Cursor */}
         <div
@@ -497,7 +332,7 @@ export default function TheTwentyOnePage() {
 
         {/* ==================== HERO SECTION ==================== */}
         <section
-          id="studio"
+          id="hero"
           ref={heroRef}
           className="relative min-h-screen flex items-center justify-center overflow-hidden"
           style={{ background: 'var(--cream)' }}
@@ -522,72 +357,45 @@ export default function TheTwentyOnePage() {
             scale={0.8}
           />
 
-          {/* Blue Explosion Center */}
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px]"
-            style={{
-              background: 'radial-gradient(circle, rgba(45, 90, 138, 0.08) 0%, rgba(107, 156, 196, 0.04) 40%, transparent 70%)',
-              transform: `translate(-50%, -50%) scale(${1 + scrollY * 0.0005})`,
-              transition: 'transform 0.1s ease-out'
-            }}
-          />
-
           {/* Floating Gold Rectangles */}
           <GoldRect className="top-[15%] left-[10%] animate-float-gold" size="md" delay={0.5} />
           <GoldRect className="top-[25%] right-[15%] animate-float-gold" size="lg" delay={1} />
           <GoldRect className="bottom-[20%] left-[20%] animate-float-gold" size="sm" delay={1.5} />
           <GoldRect className="bottom-[30%] right-[25%] animate-float-gold" size="md" delay={2} />
-          <GoldRect className="top-[60%] left-[8%] animate-float-gold" size="sm" delay={0.8} />
-
-          {/* Paint Drips */}
-          <div
-            className="absolute top-0 left-[30%] w-1 h-40 animate-drip"
-            style={{
-              background: 'linear-gradient(to bottom, var(--blue), transparent)',
-              animationDelay: '1s'
-            }}
-          />
-          <div
-            className="absolute top-0 right-[25%] w-0.5 h-28 animate-drip"
-            style={{
-              background: 'linear-gradient(to bottom, var(--gold), transparent)',
-              animationDelay: '1.5s'
-            }}
-          />
 
           {/* Hero Content */}
-          <div className="relative z-10 text-center px-6">
-            {/* Logo Text */}
+          <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            {/* Badge */}
             <div
               className={`overflow-hidden ${isLoaded ? 'reveal-up' : 'opacity-0'}`}
               style={{ animationDelay: '0.2s' }}
             >
               <span
-                className="text-sm uppercase tracking-[0.5em] block mb-6"
+                className="inline-block px-4 py-2 text-xs uppercase tracking-[0.3em] mb-6"
                 style={{
-                  color: 'var(--gold)',
-                  fontWeight: 500,
-                  letterSpacing: '0.5em'
+                  background: 'var(--gold)',
+                  color: 'var(--navy)',
+                  fontWeight: 600
                 }}
               >
-                Creative Studio
+                21-Day Protocol
               </span>
             </div>
 
             <h1
-              className={`heading-serif text-6xl md:text-8xl lg:text-9xl font-light mb-8 ${isLoaded ? 'reveal-up' : 'opacity-0'}`}
+              className={`heading-serif text-5xl md:text-7xl lg:text-8xl font-light mb-8 ${isLoaded ? 'reveal-up' : 'opacity-0'}`}
               style={{
                 color: 'var(--navy)',
                 animationDelay: '0.4s',
-                lineHeight: 0.9
+                lineHeight: 0.95
               }}
             >
-              <span className="block">The</span>
+              <span className="block">Break Free From</span>
               <span
                 className="block italic"
                 style={{ color: 'var(--blue)' }}
               >
-                Twenty One
+                Toxic Attachment
               </span>
             </h1>
 
@@ -601,18 +409,52 @@ export default function TheTwentyOnePage() {
             />
 
             <p
-              className={`text-lg md:text-xl max-w-md mx-auto ${isLoaded ? 'reveal-up' : 'opacity-0'}`}
+              className={`text-lg md:text-xl max-w-2xl mx-auto mb-10 ${isLoaded ? 'reveal-up' : 'opacity-0'}`}
               style={{
                 color: 'var(--navy)',
-                opacity: 0.7,
+                opacity: 0.8,
                 animationDelay: '0.6s',
                 fontWeight: 300,
-                letterSpacing: '0.05em'
+                letterSpacing: '0.02em',
+                lineHeight: 1.7
               }}
             >
-              Where artistry meets intention.<br />
-              Crafting unforgettable experiences.
+              A science-backed 21-day journey to heal your attachment wounds,
+              calm your anxious mind, and build the foundation for
+              <strong> healthy, secure love</strong>.
             </p>
+
+            {/* CTA Button */}
+            <div
+              className={`${isLoaded ? 'reveal-up' : 'opacity-0'}`}
+              style={{ animationDelay: '0.8s' }}
+            >
+              <Link
+                href="/dashboard"
+                className="group relative inline-block px-12 py-5 overflow-hidden transition-all duration-500"
+                style={{ background: 'var(--navy)', color: 'var(--cream)' }}
+              >
+                <span className="relative z-10 text-sm uppercase tracking-[0.2em] font-medium">
+                  Start Your Healing Journey
+                </span>
+                <div
+                  className="absolute inset-0 transition-transform duration-500 group-hover:translate-x-0 -translate-x-full"
+                  style={{ background: 'var(--blue)' }}
+                />
+              </Link>
+            </div>
+
+            {/* Trust Indicators */}
+            <div
+              className={`flex flex-wrap items-center justify-center gap-6 mt-8 text-sm ${isLoaded ? 'reveal-up' : 'opacity-0'}`}
+              style={{ animationDelay: '1s', color: 'var(--navy)', opacity: 0.5 }}
+            >
+              <span>21 Days</span>
+              <span style={{ color: 'var(--gold)' }}>•</span>
+              <span>Daily Exercises</span>
+              <span style={{ color: 'var(--gold)' }}>•</span>
+              <span>Proven Results</span>
+            </div>
 
             {/* Scroll Indicator */}
             <div
@@ -623,7 +465,7 @@ export default function TheTwentyOnePage() {
                 className="text-xs uppercase tracking-[0.3em]"
                 style={{ color: 'var(--navy)', opacity: 0.5 }}
               >
-                Explore
+                Discover
               </span>
               <div
                 className="w-px h-12"
@@ -633,409 +475,36 @@ export default function TheTwentyOnePage() {
               />
             </div>
           </div>
-
-          {/* Parallax Elements */}
-          <div
-            className="absolute w-20 h-20 rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(212, 160, 57, 0.3) 0%, transparent 70%)',
-              top: '30%',
-              left: '60%',
-              transform: `translate(${scrollY * 0.1}px, ${scrollY * 0.05}px)`
-            }}
-          />
         </section>
 
-        {/* ==================== ABOUT SECTION ==================== */}
+        {/* ==================== THE PROBLEM SECTION ==================== */}
         <section
-          id="about"
+          id="problem"
           data-animate
           className="relative py-32 md:py-48 px-6"
           style={{ background: 'var(--navy)' }}
         >
-          {/* Scattered Gold Accents */}
           <GoldRect className="top-20 right-[10%] animate-float-gold opacity-60" size="sm" delay={0} />
           <GoldRect className="bottom-32 left-[5%] animate-float-gold opacity-40" size="md" delay={0.5} />
 
-          <div className="max-w-7xl mx-auto">
-            <div className="grid md:grid-cols-12 gap-12 md:gap-8 items-center">
-              {/* Left: Large Number */}
-              <div className="md:col-span-4 relative">
-                <span
-                  className="heading-serif text-[200px] md:text-[300px] font-light leading-none"
-                  style={{
-                    color: 'var(--blue)',
-                    opacity: 0.3
-                  }}
-                >
-                  21
-                </span>
-                <div
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24"
-                  style={{
-                    background: 'var(--gold)',
-                    opacity: 0.8
-                  }}
-                />
-              </div>
-
-              {/* Right: Content */}
-              <div className="md:col-span-7 md:col-start-6">
-                <span
-                  className="text-xs uppercase tracking-[0.4em] block mb-6"
-                  style={{ color: 'var(--gold)' }}
-                >
-                  Our Philosophy
-                </span>
-
-                <h2
-                  className="heading-serif text-4xl md:text-5xl lg:text-6xl font-light mb-8"
-                  style={{
-                    color: 'var(--cream)',
-                    lineHeight: 1.1
-                  }}
-                >
-                  We believe in the
-                  <span className="italic" style={{ color: 'var(--light-blue)' }}> power </span>
-                  of thoughtful design
-                </h2>
-
-                <div
-                  className="w-16 h-px mb-8"
-                  style={{ background: 'var(--gold)' }}
-                />
-
-                <p
-                  className="text-lg md:text-xl mb-6 leading-relaxed"
-                  style={{
-                    color: 'var(--cream)',
-                    opacity: 0.7,
-                    fontWeight: 300
-                  }}
-                >
-                  Every stroke, every pixel, every moment is crafted with intention.
-                  We don&apos;t follow trends—we set them. Our work lives at the
-                  intersection of art and strategy.
-                </p>
-
-                <p
-                  className="text-base leading-relaxed"
-                  style={{
-                    color: 'var(--cream)',
-                    opacity: 0.5,
-                    fontWeight: 300
-                  }}
-                >
-                  Founded with a vision to transform brands into unforgettable
-                  experiences, The Twenty One brings together visionaries,
-                  artists, and strategists who dare to think differently.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Paint Splatter Accent */}
-          <PaintSplatter
-            className="w-[300px] h-[300px] -bottom-20 right-[20%] opacity-20"
-            color="var(--light-blue)"
-            delay={0}
-            scale={0.6}
-          />
-        </section>
-
-        {/* ==================== SERVICES SECTION ==================== */}
-        <section
-          className="relative py-32 md:py-48 px-6 overflow-hidden"
-          style={{ background: 'var(--cream)' }}
-        >
-          {/* Background Decorations */}
-          <div
-            className="absolute inset-0 opacity-5"
-            style={{
-              backgroundImage: `
-                radial-gradient(circle at 20% 30%, var(--blue) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, var(--navy) 0%, transparent 50%)
-              `
-            }}
-          />
-
-          <div className="max-w-7xl mx-auto relative">
-            {/* Section Header */}
-            <div className="text-center mb-20 md:mb-32">
-              <span
-                className="text-xs uppercase tracking-[0.4em] block mb-4"
-                style={{ color: 'var(--gold)' }}
-              >
-                What We Do
-              </span>
-              <h2
-                className="heading-serif text-4xl md:text-6xl lg:text-7xl font-light"
-                style={{
-                  color: 'var(--navy)',
-                  lineHeight: 1.1
-                }}
-              >
-                Crafting <span className="italic">Experiences</span>
-              </h2>
-            </div>
-
-            {/* Services Grid - Asymmetric */}
-            <div className="grid md:grid-cols-12 gap-8 md:gap-12">
-              {/* Service 1 - Large */}
-              <div className="md:col-span-7 group">
-                <div
-                  className="relative p-8 md:p-12 transition-all duration-500 group-hover:translate-y-[-4px]"
-                  style={{
-                    background: 'var(--navy)',
-                    minHeight: '400px'
-                  }}
-                >
-                  <GoldRect className="absolute top-6 right-6 opacity-60" size="sm" />
-
-                  <span
-                    className="text-[120px] md:text-[180px] font-light absolute -top-8 -left-4 opacity-10 heading-serif"
-                    style={{ color: 'var(--light-blue)' }}
-                  >
-                    01
-                  </span>
-
-                  <div className="relative z-10 h-full flex flex-col justify-end">
-                    <h3
-                      className="heading-serif text-3xl md:text-4xl font-light mb-4"
-                      style={{ color: 'var(--cream)' }}
-                    >
-                      Brand <span className="italic">Identity</span>
-                    </h3>
-                    <p
-                      className="text-base leading-relaxed max-w-md"
-                      style={{ color: 'var(--cream)', opacity: 0.6 }}
-                    >
-                      We craft visual identities that tell your story. From logos to complete
-                      brand systems, every element is designed with purpose and precision.
-                    </p>
-
-                    <div
-                      className="w-12 h-px mt-8 transition-all duration-500 group-hover:w-24"
-                      style={{ background: 'var(--gold)' }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Service 2 - Small Top */}
-              <div className="md:col-span-5 group">
-                <div
-                  className="relative p-8 md:p-10 transition-all duration-500 group-hover:translate-y-[-4px]"
-                  style={{
-                    background: 'linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%)',
-                    minHeight: '250px'
-                  }}
-                >
-                  <span
-                    className="text-[80px] font-light absolute -top-4 -right-2 opacity-10 heading-serif"
-                    style={{ color: 'var(--cream)' }}
-                  >
-                    02
-                  </span>
-
-                  <div className="relative z-10 h-full flex flex-col justify-end">
-                    <h3
-                      className="heading-serif text-2xl md:text-3xl font-light mb-3"
-                      style={{ color: 'var(--cream)' }}
-                    >
-                      Art <span className="italic">Direction</span>
-                    </h3>
-                    <p
-                      className="text-sm leading-relaxed"
-                      style={{ color: 'var(--cream)', opacity: 0.6 }}
-                    >
-                      Visual storytelling that captivates and inspires.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Service 3 - Small Bottom */}
-              <div className="md:col-span-5 md:col-start-1 group">
-                <div
-                  className="relative p-8 md:p-10 transition-all duration-500 group-hover:translate-y-[-4px]"
-                  style={{
-                    border: '1px solid var(--navy)',
-                    minHeight: '250px'
-                  }}
-                >
-                  <span
-                    className="text-[80px] font-light absolute -top-4 -right-2 opacity-10 heading-serif"
-                    style={{ color: 'var(--navy)' }}
-                  >
-                    03
-                  </span>
-
-                  <div className="relative z-10 h-full flex flex-col justify-end">
-                    <h3
-                      className="heading-serif text-2xl md:text-3xl font-light mb-3"
-                      style={{ color: 'var(--navy)' }}
-                    >
-                      Digital <span className="italic">Design</span>
-                    </h3>
-                    <p
-                      className="text-sm leading-relaxed"
-                      style={{ color: 'var(--navy)', opacity: 0.6 }}
-                    >
-                      Websites and apps that feel as good as they look.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Service 4 - Large */}
-              <div className="md:col-span-7 group">
-                <div
-                  className="relative p-8 md:p-12 transition-all duration-500 group-hover:translate-y-[-4px]"
-                  style={{
-                    background: 'linear-gradient(135deg, var(--gold) 0%, var(--amber) 100%)',
-                    minHeight: '300px'
-                  }}
-                >
-                  <span
-                    className="text-[120px] md:text-[160px] font-light absolute -bottom-8 -right-4 opacity-20 heading-serif"
-                    style={{ color: 'var(--navy)' }}
-                  >
-                    04
-                  </span>
-
-                  <div className="relative z-10 h-full flex flex-col justify-between">
-                    <div>
-                      <h3
-                        className="heading-serif text-3xl md:text-4xl font-light mb-4"
-                        style={{ color: 'var(--navy)' }}
-                      >
-                        Motion <span className="italic">& Film</span>
-                      </h3>
-                      <p
-                        className="text-base leading-relaxed max-w-md"
-                        style={{ color: 'var(--navy)', opacity: 0.7 }}
-                      >
-                        From subtle animations to full productions, we bring
-                        brands to life through the power of motion.
-                      </p>
-                    </div>
-
-                    <div
-                      className="w-12 h-px transition-all duration-500 group-hover:w-24"
-                      style={{ background: 'var(--navy)' }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Floating Gold Accents */}
-          <GoldRect className="top-1/4 right-[3%] animate-float-gold opacity-40" size="md" delay={0} />
-          <GoldRect className="bottom-1/3 left-[2%] animate-float-gold opacity-30" size="lg" delay={1.2} />
-        </section>
-
-        {/* ==================== WORK/GALLERY SECTION ==================== */}
-        <section
-          id="work"
-          data-animate
-          className="relative py-32 md:py-48 px-6"
-          style={{ background: 'var(--cream)' }}
-        >
-          <div className="max-w-7xl mx-auto">
-            {/* Section Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-24">
-              <div>
-                <span
-                  className="text-xs uppercase tracking-[0.4em] block mb-4"
-                  style={{ color: 'var(--gold)' }}
-                >
-                  Selected Works
-                </span>
-                <h2
-                  className="heading-serif text-4xl md:text-6xl font-light"
-                  style={{
-                    color: 'var(--navy)',
-                    lineHeight: 1.1
-                  }}
-                >
-                  Our <span className="italic">Gallery</span>
-                </h2>
-              </div>
-
-              <a
-                href="#"
-                className="mt-6 md:mt-0 text-sm uppercase tracking-[0.2em] flex items-center gap-3 group"
-                style={{ color: 'var(--navy)' }}
-              >
-                View All Works
-                <span
-                  className="w-8 h-px transition-all duration-300 group-hover:w-12"
-                  style={{ background: 'var(--gold)' }}
-                />
-              </a>
-            </div>
-
-            {/* Gallery Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px] md:auto-rows-[250px]">
-              {works.map((work, index) => (
-                <WorkItem
-                  key={index}
-                  title={work.title}
-                  category={work.category}
-                  index={index}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Floating Decorations */}
-          <GoldRect className="top-40 left-[5%] animate-float-gold opacity-30" size="lg" delay={0} />
-          <GoldRect className="bottom-20 right-[8%] animate-float-gold opacity-50" size="sm" delay={1} />
-        </section>
-
-        {/* ==================== CONTACT SECTION ==================== */}
-        <section
-          id="contact"
-          data-animate
-          className="relative py-32 md:py-48 px-6"
-          style={{
-            background: 'linear-gradient(180deg, var(--navy) 0%, #0f1a2a 100%)'
-          }}
-        >
           <div className="max-w-4xl mx-auto text-center">
-            {/* Decorative Paint Splatters */}
-            <PaintSplatter
-              className="w-[400px] h-[400px] -top-20 -left-40 opacity-10"
-              color="var(--blue)"
-              delay={0}
-              scale={0.8}
-            />
-            <PaintSplatter
-              className="w-[300px] h-[300px] -bottom-10 -right-20 opacity-10"
-              color="var(--light-blue)"
-              delay={200}
-              scale={0.6}
-            />
-
             <span
               className="text-xs uppercase tracking-[0.4em] block mb-6"
               style={{ color: 'var(--gold)' }}
             >
-              Get In Touch
+              The Challenge
             </span>
 
             <h2
-              className="heading-serif text-4xl md:text-6xl lg:text-7xl font-light mb-8"
+              className="heading-serif text-4xl md:text-5xl lg:text-6xl font-light mb-8"
               style={{
                 color: 'var(--cream)',
                 lineHeight: 1.1
               }}
             >
-              Let&apos;s create something
+              Are you tired of
               <span className="italic block" style={{ color: 'var(--light-blue)' }}>
-                extraordinary
+                repeating the same patterns?
               </span>
             </h2>
 
@@ -1044,85 +513,332 @@ export default function TheTwentyOnePage() {
               style={{ background: 'var(--gold)' }}
             />
 
-            {/* Contact Form */}
-            <form className="max-w-xl mx-auto space-y-6 text-left">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label
-                    className="text-xs uppercase tracking-[0.2em] block mb-3"
-                    style={{ color: 'var(--cream)', opacity: 0.6 }}
-                  >
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full bg-transparent border-b py-3 outline-none transition-all duration-300 focus:border-[var(--gold)]"
-                    style={{
-                      borderColor: 'rgba(245, 240, 232, 0.2)',
-                      color: 'var(--cream)'
-                    }}
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label
-                    className="text-xs uppercase tracking-[0.2em] block mb-3"
-                    style={{ color: 'var(--cream)', opacity: 0.6 }}
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full bg-transparent border-b py-3 outline-none transition-all duration-300 focus:border-[var(--gold)]"
-                    style={{
-                      borderColor: 'rgba(245, 240, 232, 0.2)',
-                      color: 'var(--cream)'
-                    }}
-                    placeholder="your@email.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  className="text-xs uppercase tracking-[0.2em] block mb-3"
-                  style={{ color: 'var(--cream)', opacity: 0.6 }}
+            <div className="grid md:grid-cols-2 gap-8 text-left mb-12">
+              {[
+                "Obsessing over someone who doesn't choose you",
+                "Feeling anxious when they don't text back",
+                "Losing yourself in relationships",
+                "Attracting unavailable partners",
+                "Struggling to set healthy boundaries",
+                "Breaking up and getting back together repeatedly"
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="flex gap-4 items-start"
+                  style={{ color: 'var(--cream)' }}
                 >
-                  Tell us about your vision
-                </label>
-                <textarea
-                  rows={4}
-                  className="w-full bg-transparent border-b py-3 outline-none transition-all duration-300 focus:border-[var(--gold)] resize-none"
-                  style={{
-                    borderColor: 'rgba(245, 240, 232, 0.2)',
-                    color: 'var(--cream)'
-                  }}
-                  placeholder="Describe your project..."
-                />
-              </div>
-
-              <div className="pt-6">
-                <button
-                  type="submit"
-                  className="group relative px-12 py-4 overflow-hidden transition-all duration-500"
-                  style={{
-                    background: 'var(--gold)',
-                    color: 'var(--navy)'
-                  }}
-                >
-                  <span className="relative z-10 text-sm uppercase tracking-[0.2em] font-medium">
-                    Start a Conversation
-                  </span>
-                  <div
-                    className="absolute inset-0 transition-transform duration-500 group-hover:translate-x-0 -translate-x-full"
-                    style={{ background: 'var(--amber)' }}
+                  <span
+                    className="w-2 h-2 mt-2 rounded-full flex-shrink-0"
+                    style={{ background: 'var(--gold)' }}
                   />
-                </button>
-              </div>
-            </form>
+                  <p style={{ opacity: 0.8 }}>{item}</p>
+                </div>
+              ))}
+            </div>
+
+            <p
+              className="text-xl md:text-2xl heading-serif italic"
+              style={{ color: 'var(--light-blue)' }}
+            >
+              It's not your fault. It's your attachment style.
+              <br />
+              And it can be healed.
+            </p>
           </div>
 
-          {/* Floating Gold Rectangles */}
+          <PaintSplatter
+            className="w-[300px] h-[300px] -bottom-20 right-[20%] opacity-20"
+            color="var(--light-blue)"
+            delay={0}
+            scale={0.6}
+          />
+        </section>
+
+        {/* ==================== THE SOLUTION SECTION ==================== */}
+        <section
+          id="solution"
+          className="relative py-32 md:py-48 px-6 overflow-hidden"
+          style={{ background: 'var(--cream)' }}
+        >
+          <div className="max-w-6xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center mb-20">
+              <span
+                className="text-xs uppercase tracking-[0.4em] block mb-4"
+                style={{ color: 'var(--gold)' }}
+              >
+                The Solution
+              </span>
+              <h2
+                className="heading-serif text-4xl md:text-6xl lg:text-7xl font-light"
+                style={{
+                  color: 'var(--navy)',
+                  lineHeight: 1.1
+                }}
+              >
+                The <span className="italic">21 Protocol</span>
+              </h2>
+              <div
+                className="w-16 h-px mx-auto mt-8 mb-8"
+                style={{ background: 'var(--gold)' }}
+              />
+              <p
+                className="text-lg md:text-xl max-w-3xl mx-auto"
+                style={{ color: 'var(--navy)', opacity: 0.7, lineHeight: 1.7 }}
+              >
+                A structured 21-day program designed to rewire your attachment patterns
+                through daily exercises, proven techniques, and practical tools you can
+                use in real-life situations.
+              </p>
+            </div>
+
+            {/* Three Weeks Grid */}
+            <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+              <WeekCard
+                week="Week 1"
+                title="Awareness & Understanding"
+                description="Discover your attachment style and understand why you react the way you do."
+                items={[
+                  "Identify your attachment triggers",
+                  "Understand your emotional patterns",
+                  "Map your relationship history",
+                  "Recognize unhealthy dynamics"
+                ]}
+              />
+              <WeekCard
+                week="Week 2"
+                title="Healing & Regulation"
+                description="Learn to calm your nervous system and process difficult emotions."
+                items={[
+                  "Emotional regulation techniques",
+                  "Anxiety and urge management",
+                  "Inner child healing exercises",
+                  "Building self-soothing skills"
+                ]}
+                isActive
+              />
+              <WeekCard
+                week="Week 3"
+                title="Boundaries & Growth"
+                description="Build healthy boundaries and prepare for secure relationships."
+                items={[
+                  "Setting and maintaining boundaries",
+                  "Healthy communication scripts",
+                  "Standards for future partners",
+                  "Creating your new love story"
+                ]}
+              />
+            </div>
+          </div>
+
+          <GoldRect className="top-1/4 right-[3%] animate-float-gold opacity-40" size="md" delay={0} />
+          <GoldRect className="bottom-1/3 left-[2%] animate-float-gold opacity-30" size="lg" delay={1.2} />
+        </section>
+
+        {/* ==================== WHAT'S INCLUDED ==================== */}
+        <section
+          id="included"
+          className="relative py-32 md:py-48 px-6"
+          style={{ background: 'var(--white)' }}
+        >
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-16">
+              <span
+                className="text-xs uppercase tracking-[0.4em] block mb-4"
+                style={{ color: 'var(--gold)' }}
+              >
+                What's Included
+              </span>
+              <h2
+                className="heading-serif text-4xl md:text-5xl lg:text-6xl font-light"
+                style={{ color: 'var(--navy)', lineHeight: 1.1 }}
+              >
+                Everything You Need to{' '}
+                <span className="italic" style={{ color: 'var(--blue)' }}>
+                  Heal
+                </span>
+              </h2>
+              <div className="w-16 h-px mx-auto mt-8" style={{ background: 'var(--gold)' }} />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {[
+                {
+                  title: "21 Daily Lessons",
+                  description: "Bite-sized lessons designed for busy lives. Just 15-20 minutes a day."
+                },
+                {
+                  title: "Guided Exercises",
+                  description: "Practical exercises that create real change in how you think and feel."
+                },
+                {
+                  title: "Video Trainings",
+                  description: "Deep-dive video modules on attachment, boundaries, and self-worth."
+                },
+                {
+                  title: "PDF Workbook",
+                  description: "Your personal journal with prompts, checklists, and trackers."
+                },
+                {
+                  title: "Scripts & Templates",
+                  description: "What to say (and not say) in triggering moments and difficult conversations."
+                },
+                {
+                  title: "Emergency Tools",
+                  description: "Calming audios and quick techniques for when emotions spike."
+                }
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="p-8 transition-all duration-500 hover:translate-y-[-4px]"
+                  style={{
+                    background: 'var(--cream)',
+                    border: '1px solid rgba(26, 46, 74, 0.08)'
+                  }}
+                >
+                  <h3
+                    className="heading-serif text-xl font-semibold mb-3"
+                    style={{ color: 'var(--navy)' }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p style={{ color: 'var(--navy)', opacity: 0.7, lineHeight: 1.7 }}>
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ==================== TRANSFORMATION SECTION ==================== */}
+        <section
+          id="transformation"
+          className="relative py-32 md:py-48 px-6"
+          style={{ background: 'linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%)' }}
+        >
+          <div className="max-w-4xl mx-auto text-center">
+            <span
+              className="text-xs uppercase tracking-[0.4em] block mb-6"
+              style={{ color: 'var(--gold)' }}
+            >
+              Your Transformation
+            </span>
+
+            <h2
+              className="heading-serif text-4xl md:text-5xl lg:text-6xl font-light mb-12"
+              style={{ color: 'var(--cream)', lineHeight: 1.1 }}
+            >
+              In 21 Days,{' '}
+              <span className="italic" style={{ color: 'var(--light-blue)' }}>
+                You Will...
+              </span>
+            </h2>
+
+            <div className="grid md:grid-cols-2 gap-8 text-left">
+              {[
+                "Stop obsessing over people who don't choose you",
+                "Feel calm and grounded instead of anxious",
+                "Set healthy boundaries without guilt",
+                "Trust yourself and your worth",
+                "Attract partners who are emotionally available",
+                "Break the cycle of toxic relationships"
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="flex gap-4 items-start p-4"
+                  style={{ background: 'rgba(255, 255, 255, 0.05)' }}
+                >
+                  <span style={{ color: 'var(--gold)', fontSize: '1.25rem' }}>✓</span>
+                  <p style={{ color: 'var(--cream)', fontSize: '1.1rem' }}>{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <PaintSplatter
+            className="w-[300px] h-[300px] -bottom-16 left-[10%] opacity-10"
+            color="var(--light-blue)"
+            delay={0}
+            scale={0.6}
+          />
+        </section>
+
+        {/* ==================== CTA SECTION ==================== */}
+        <section
+          id="cta"
+          className="relative py-32 md:py-48 px-6"
+          style={{ background: 'var(--cream)' }}
+        >
+          <PaintSplatter
+            className="w-[400px] h-[400px] -top-20 -left-40 opacity-10"
+            color="var(--blue)"
+            delay={0}
+            scale={0.8}
+          />
+          <PaintSplatter
+            className="w-[300px] h-[300px] -bottom-10 -right-20 opacity-10"
+            color="var(--navy)"
+            delay={200}
+            scale={0.6}
+          />
+
+          <div className="max-w-3xl mx-auto text-center relative z-10">
+            <span
+              className="text-xs uppercase tracking-[0.4em] block mb-6"
+              style={{ color: 'var(--gold)' }}
+            >
+              Begin Today
+            </span>
+
+            <h2
+              className="heading-serif text-4xl md:text-6xl lg:text-7xl font-light mb-8"
+              style={{
+                color: 'var(--navy)',
+                lineHeight: 1.1
+              }}
+            >
+              Ready to heal your{' '}
+              <span className="italic block" style={{ color: 'var(--blue)' }}>
+                attachment wounds?
+              </span>
+            </h2>
+
+            <div
+              className="w-16 h-px mx-auto mb-8"
+              style={{ background: 'var(--gold)' }}
+            />
+
+            <p
+              className="text-lg md:text-xl mb-12"
+              style={{ color: 'var(--navy)', opacity: 0.7, lineHeight: 1.7 }}
+            >
+              Start your 21-day journey to emotional freedom.
+              Build the foundation for healthy, secure love.
+            </p>
+
+            <Link
+              href="/dashboard"
+              className="group relative inline-block px-14 py-6 overflow-hidden transition-all duration-500 mb-8"
+              style={{ background: 'var(--navy)', color: 'var(--cream)' }}
+            >
+              <span className="relative z-10 text-sm uppercase tracking-[0.2em] font-semibold">
+                Start The 21 Protocol Now
+              </span>
+              <div
+                className="absolute inset-0 transition-transform duration-500 group-hover:translate-x-0 -translate-x-full"
+                style={{ background: 'var(--blue)' }}
+              />
+            </Link>
+
+            <p
+              className="text-sm"
+              style={{ color: 'var(--navy)', opacity: 0.5 }}
+            >
+              Join thousands who have transformed their relationships
+            </p>
+          </div>
+
           <GoldRect className="top-1/4 left-[5%] animate-float-gold opacity-20" size="md" delay={0.5} />
           <GoldRect className="bottom-1/4 right-[8%] animate-float-gold opacity-30" size="sm" delay={1.5} />
         </section>
@@ -1143,21 +859,25 @@ export default function TheTwentyOnePage() {
                   className="heading-serif text-2xl"
                   style={{ color: 'var(--cream)' }}
                 >
-                  The <span className="italic">Twenty One</span>
+                  21 | <span className="italic">Twenty One</span>
                 </span>
               </div>
 
               {/* Links */}
               <div className="flex gap-8">
-                {['Instagram', 'Behance', 'Dribbble'].map((link) => (
-                  <a
-                    key={link}
-                    href="#"
+                {[
+                  { label: 'Home', href: '/' },
+                  { label: 'Dashboard', href: '/dashboard' },
+                  { label: 'Assessment', href: '/assessment' }
+                ].map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
                     className="text-xs uppercase tracking-[0.2em] transition-colors duration-300 hover:text-[var(--gold)]"
                     style={{ color: 'var(--cream)', opacity: 0.6 }}
                   >
-                    {link}
-                  </a>
+                    {link.label}
+                  </Link>
                 ))}
               </div>
 
@@ -1166,7 +886,7 @@ export default function TheTwentyOnePage() {
                 className="text-xs"
                 style={{ color: 'var(--cream)', opacity: 0.4 }}
               >
-                &copy; 2024 The Twenty One. All rights reserved.
+                &copy; {new Date().getFullYear()} 21|Twenty One. All rights reserved.
               </p>
             </div>
           </div>

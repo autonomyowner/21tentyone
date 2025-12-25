@@ -84,7 +84,7 @@ export default function DashboardPage() {
     <>
       <style jsx global>{artisticStyles}</style>
       <div
-        className="artistic-page min-h-screen pb-16"
+        className="artistic-page min-h-screen pb-16 pt-20"
         style={{
           background: 'var(--cream)',
           backgroundImage: `
@@ -99,7 +99,7 @@ export default function DashboardPage() {
 
         {/* Header */}
         <header
-          className="sticky top-0 z-40 backdrop-blur-md"
+          className="sticky top-20 z-40 backdrop-blur-md"
           style={{
             backgroundColor: 'rgba(245, 240, 232, 0.95)',
             borderBottom: '1px solid rgba(26, 46, 74, 0.08)',

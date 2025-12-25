@@ -104,9 +104,7 @@ export default function RootLayout({
         }}
       >
         <LanguageProvider>
-          <div className="sticky top-0 z-50">
-            <Header />
-          </div>
+          <Header />
           <main>{children}</main>
         </LanguageProvider>
       </body>

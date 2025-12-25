@@ -27,16 +27,6 @@ export default function TheTwentyOneLayout({
 }) {
   return (
     <div className="the-twenty-one-wrapper">
-      {/* Hide default header with CSS */}
-      <style>{`
-        .the-twenty-one-wrapper {
-          position: relative;
-        }
-        /* Hide the sticky header for this page */
-        .sticky.top-0.z-50 {
-          display: none !important;
-        }
-      `}</style>
       {children}
     </div>
   );

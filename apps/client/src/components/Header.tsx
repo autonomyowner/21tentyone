@@ -47,14 +47,14 @@ export default function Header() {
       `}</style>
 
       <header
-        className="header-artistic w-full transition-all duration-500"
+        className="header-artistic fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
           background: scrolled ? 'rgba(26, 46, 74, 0.95)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
         }}
       >
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center justify-between h-20">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="flex items-center justify-between h-20 py-6">
             {/* Logo */}
             <Link
               href="/"
