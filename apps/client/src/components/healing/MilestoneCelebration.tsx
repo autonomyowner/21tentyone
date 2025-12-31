@@ -57,16 +57,16 @@ export function MilestoneCelebration({
 
   if (!isVisible || !milestoneData) return null;
 
-  const colors = ['#1a2e4a', '#2d5a8a', '#d4a039', '#6b9cc4', '#f5f0e8'];
+  const colors = ['#81352E', '#9D433A', '#BA5448', '#E6C8C3', '#FBE9E7'];
 
   const getMilestoneGradient = () => {
     switch (milestone) {
       case 7:
-        return 'linear-gradient(135deg, #1a2e4a 0%, #2d5a8a 100%)';
+        return 'linear-gradient(135deg, #81352E 0%, #9D433A 100%)';
       case 14:
-        return 'linear-gradient(135deg, #2d5a8a 0%, #6b9cc4 100%)';
+        return 'linear-gradient(135deg, #9D433A 0%, #E6C8C3 100%)';
       case 21:
-        return 'linear-gradient(135deg, #1a2e4a 0%, #2d5a8a 50%, #d4a039 100%)';
+        return 'linear-gradient(135deg, #81352E 0%, #9D433A 50%, #BA5448 100%)';
     }
   };
 
@@ -76,7 +76,7 @@ export function MilestoneCelebration({
         showContent ? 'opacity-100' : 'opacity-0'
       }`}
       style={{
-        backgroundColor: 'rgba(26, 46, 74, 0.6)',
+        backgroundColor: 'rgba(129, 53, 46, 0.6)',
         backdropFilter: 'blur(8px)',
       }}
       onClick={onClose}
@@ -99,7 +99,7 @@ export function MilestoneCelebration({
         }`}
         style={{
           backgroundColor: 'var(--cream)',
-          boxShadow: '0 32px 64px rgba(26, 46, 74, 0.3)',
+          boxShadow: '0 32px 64px rgba(129, 53, 46, 0.3)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -167,7 +167,7 @@ export function MilestoneCelebration({
             </div>
             <div
               className="w-px"
-              style={{ backgroundColor: 'rgba(26, 46, 74, 0.1)' }}
+              style={{ backgroundColor: 'rgba(129, 53, 46, 0.1)' }}
             />
             <div className="text-center">
               <span
@@ -186,7 +186,7 @@ export function MilestoneCelebration({
           <div
             className="inline-block px-6 py-3 mb-8"
             style={{
-              backgroundColor: 'rgba(212, 160, 57, 0.12)',
+              backgroundColor: 'rgba(186, 84, 72, 0.12)',
             }}
           >
             <p className="text-sm" style={{ color: 'var(--gold)' }}>
@@ -201,7 +201,7 @@ export function MilestoneCelebration({
             style={{
               background: 'var(--gold)',
               color: 'var(--navy)',
-              boxShadow: '0 8px 24px rgba(212, 160, 57, 0.3)',
+              boxShadow: '0 8px 24px rgba(186, 84, 72, 0.3)',
             }}
           >
             Continue Your Journey

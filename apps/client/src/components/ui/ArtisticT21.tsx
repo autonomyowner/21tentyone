@@ -63,18 +63,18 @@ export default function ArtisticT21({ scrolled = false, className = '' }: Artist
           <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
             <path
               d="M20 40 Q40 20 60 35 Q80 25 100 40 Q85 60 60 45 Q40 65 20 40 Z"
-              fill={scrolled ? 'rgba(212, 160, 57, 0.15)' : 'rgba(45, 90, 138, 0.12)'}
+              fill={scrolled ? 'rgba(186, 84, 72, 0.15)' : 'rgba(157, 67, 58, 0.12)'}
             />
-            <circle cx="90" cy="25" r="4" fill={scrolled ? 'rgba(212, 160, 57, 0.2)' : 'rgba(45, 90, 138, 0.15)'} />
-            <circle cx="105" cy="35" r="3" fill={scrolled ? 'rgba(212, 160, 57, 0.2)' : 'rgba(45, 90, 138, 0.15)'} />
+            <circle cx="90" cy="25" r="4" fill={scrolled ? 'rgba(186, 84, 72, 0.2)' : 'rgba(157, 67, 58, 0.15)'} />
+            <circle cx="105" cy="35" r="3" fill={scrolled ? 'rgba(186, 84, 72, 0.2)' : 'rgba(157, 67, 58, 0.15)'} />
           </svg>
         </div>
 
         {/* The artistic T21 text */}
         <span className="t21-number" style={{
           backgroundImage: scrolled
-            ? 'linear-gradient(135deg, #f5f0e8 0%, #d4a039 100%)'
-            : 'linear-gradient(135deg, #1a2e4a 0%, #2d5a8a 100%)',
+            ? 'linear-gradient(135deg, #FBE9E7 0%, #BA5448 100%)'
+            : 'linear-gradient(135deg, #81352E 0%, #9D433A 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',

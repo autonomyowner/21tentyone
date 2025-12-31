@@ -80,7 +80,7 @@ const TestimonialCard = ({
     className="p-6 md:p-8 transition-all duration-500 hover:translate-y-[-4px]"
     style={{
       background: 'var(--white)',
-      border: '1px solid rgba(26, 46, 74, 0.1)',
+      border: '1px solid rgba(129, 53, 46, 0.1)',
       animationDelay: `${delay}s`
     }}
   >
@@ -110,7 +110,7 @@ const BonusItem = ({
   title: string;
   description: string;
 }) => (
-  <div className="flex gap-4 p-4" style={{ background: 'rgba(212, 160, 57, 0.08)' }}>
+  <div className="flex gap-4 p-4" style={{ background: 'rgba(186, 84, 72, 0.08)' }}>
     <div
       className="flex-shrink-0 w-8 h-8 flex items-center justify-center text-sm font-bold"
       style={{ background: 'var(--gold)', color: 'var(--navy)' }}
@@ -187,9 +187,9 @@ const GoldRect = ({
     <div
       className={`absolute ${sizes[size]} animate-float-gold pointer-events-none ${className}`}
       style={{
-        background: 'linear-gradient(135deg, #d4a039 0%, #e8a54b 50%, #d4a039 100%)',
+        background: 'linear-gradient(135deg, #BA5448 0%, #C1918C 50%, #BA5448 100%)',
         animationDelay: `${delay}s`,
-        boxShadow: '0 8px 32px rgba(212, 160, 57, 0.3)'
+        boxShadow: '0 8px 32px rgba(186, 84, 72, 0.3)'
       }}
     />
   );
@@ -289,12 +289,12 @@ export default function LandingPage() {
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap');
 
         :root {
-          --navy: #1a2e4a;
-          --blue: #2d5a8a;
-          --gold: #d4a039;
-          --cream: #f5f0e8;
-          --amber: #e8a54b;
-          --light-blue: #6b9cc4;
+          --navy: #81352E;
+          --blue: #9D433A;
+          --gold: #BA5448;
+          --cream: #FBE9E7;
+          --amber: #C1918C;
+          --light-blue: #E6C8C3;
           --white: #ffffff;
         }
 
@@ -420,19 +420,19 @@ export default function LandingPage() {
           {/* Animated Paint Splatters */}
           <PaintSplatter
             className="w-[500px] h-[500px] -top-20 -left-32 paint-expand"
-            color="rgba(45, 90, 138, 0.12)"
+            color="rgba(157, 67, 58, 0.12)"
             delay={300}
             scale={1}
           />
           <PaintSplatter
             className="w-[400px] h-[400px] -bottom-20 -right-16 paint-expand"
-            color="rgba(26, 46, 74, 0.1)"
+            color="rgba(129, 53, 46, 0.1)"
             delay={600}
             scale={0.9}
           />
           <PaintSplatter
             className="w-[300px] h-[300px] top-1/3 right-1/4 paint-expand"
-            color="rgba(107, 156, 196, 0.08)"
+            color="rgba(230, 200, 195, 0.08)"
             delay={900}
             scale={0.7}
           />
@@ -499,7 +499,7 @@ export default function LandingPage() {
               className={`mb-10 p-6 inline-block ${mounted ? 'reveal-up' : 'opacity-0'}`}
               style={{
                 background: 'var(--white)',
-                boxShadow: '0 8px 40px rgba(26, 46, 74, 0.12)',
+                boxShadow: '0 8px 40px rgba(129, 53, 46, 0.12)',
                 animationDelay: '0.65s'
               }}
             >
@@ -628,7 +628,7 @@ export default function LandingPage() {
                   className="p-8 transition-all duration-500 hover:translate-y-[-4px]"
                   style={{
                     background: 'var(--cream)',
-                    border: '1px solid rgba(26, 46, 74, 0.08)'
+                    border: '1px solid rgba(129, 53, 46, 0.08)'
                   }}
                 >
                   <span
@@ -876,7 +876,7 @@ export default function LandingPage() {
               {/* Old Way */}
               <div
                 className="p-8"
-                style={{ background: 'var(--cream)', border: '1px solid rgba(26, 46, 74, 0.1)' }}
+                style={{ background: 'var(--cream)', border: '1px solid rgba(129, 53, 46, 0.1)' }}
               >
                 <h3
                   className="text-lg font-semibold uppercase tracking-wider mb-6"
@@ -944,7 +944,7 @@ export default function LandingPage() {
                   <div
                     key={i}
                     className="flex gap-2 items-start p-3"
-                    style={{ background: 'rgba(212, 160, 57, 0.08)' }}
+                    style={{ background: 'rgba(186, 84, 72, 0.08)' }}
                   >
                     <span style={{ color: 'var(--gold)' }}>•</span>
                     <span style={{ color: 'var(--navy)', opacity: 0.8 }}>{benefit}</span>
@@ -1135,7 +1135,7 @@ export default function LandingPage() {
             {/* Two Columns */}
             <div className="grid md:grid-cols-2 gap-8">
               {/* Perfect For */}
-              <div className="p-8" style={{ background: 'rgba(212, 160, 57, 0.08)' }}>
+              <div className="p-8" style={{ background: 'rgba(186, 84, 72, 0.08)' }}>
                 <h3
                   className="text-lg font-semibold uppercase tracking-wider mb-6"
                   style={{ color: 'var(--gold)' }}
@@ -1262,7 +1262,7 @@ export default function LandingPage() {
             {/* Pricing Card */}
             <div
               className="p-8 md:p-12 mb-8 max-w-lg mx-auto"
-              style={{ background: 'var(--white)', boxShadow: '0 16px 48px rgba(26, 46, 74, 0.12)' }}
+              style={{ background: 'var(--white)', boxShadow: '0 16px 48px rgba(129, 53, 46, 0.12)' }}
             >
               <div className="mb-6">
                 <span
@@ -1326,7 +1326,7 @@ export default function LandingPage() {
           <div className="max-w-3xl mx-auto text-center">
             <div
               className="inline-block px-6 py-3 mb-6"
-              style={{ background: 'rgba(212, 160, 57, 0.1)' }}
+              style={{ background: 'rgba(186, 84, 72, 0.1)' }}
             >
               <span
                 className="text-sm uppercase tracking-wider font-semibold"
@@ -1411,7 +1411,7 @@ export default function LandingPage() {
         <footer
           className="relative py-20 px-6"
           style={{
-            background: 'linear-gradient(180deg, var(--navy) 0%, #0f1a2a 100%)'
+            background: 'linear-gradient(180deg, var(--navy) 0%, #5A231F 100%)'
           }}
         >
           <div className="max-w-6xl mx-auto">
@@ -1423,8 +1423,8 @@ export default function LandingPage() {
                   alt="21|Twenty One"
                   className="w-48 h-48 md:w-64 md:h-64 object-cover rounded-sm"
                   style={{
-                    boxShadow: '0 8px 32px rgba(212, 160, 57, 0.2)',
-                    border: '2px solid rgba(212, 160, 57, 0.3)'
+                    boxShadow: '0 8px 32px rgba(186, 84, 72, 0.2)',
+                    border: '2px solid rgba(186, 84, 72, 0.3)'
                   }}
                 />
               </div>

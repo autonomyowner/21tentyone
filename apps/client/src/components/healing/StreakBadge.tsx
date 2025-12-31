@@ -16,10 +16,10 @@ export function StreakBadge({ streak, longestStreak }: StreakBadgeProps) {
       }`}
       style={{
         backgroundColor: isActive
-          ? 'rgba(212, 160, 57, 0.08)'
-          : 'rgba(26, 46, 74, 0.06)',
+          ? 'rgba(186, 84, 72, 0.08)'
+          : 'rgba(129, 53, 46, 0.06)',
         border: `1px solid ${
-          isActive ? 'rgba(212, 160, 57, 0.2)' : 'rgba(26, 46, 74, 0.1)'
+          isActive ? 'rgba(186, 84, 72, 0.2)' : 'rgba(129, 53, 46, 0.1)'
         }`,
       }}
     >
@@ -40,13 +40,13 @@ export function StreakBadge({ streak, longestStreak }: StreakBadgeProps) {
       <div className="flex flex-col items-center">
         <span
           className="heading-serif text-2xl leading-none"
-          style={{ color: isActive ? 'var(--gold)' : 'rgba(26, 46, 74, 0.4)' }}
+          style={{ color: isActive ? 'var(--gold)' : 'rgba(129, 53, 46, 0.4)' }}
         >
           {streak}
         </span>
         <span
           className="text-xs mt-0.5"
-          style={{ color: isActive ? 'var(--navy)' : 'rgba(26, 46, 74, 0.3)' }}
+          style={{ color: isActive ? 'var(--navy)' : 'rgba(129, 53, 46, 0.3)' }}
         >
           streak
         </span>
@@ -55,7 +55,7 @@ export function StreakBadge({ streak, longestStreak }: StreakBadgeProps) {
       {/* Divider */}
       <div
         className="w-px h-8"
-        style={{ backgroundColor: 'rgba(26, 46, 74, 0.1)' }}
+        style={{ backgroundColor: 'rgba(129, 53, 46, 0.1)' }}
       />
 
       {/* Longest streak */}
@@ -76,10 +76,10 @@ export function StreakBadge({ streak, longestStreak }: StreakBadgeProps) {
         @keyframes streakGlow {
           0%,
           100% {
-            box-shadow: 0 0 12px rgba(212, 160, 57, 0.2);
+            box-shadow: 0 0 12px rgba(186, 84, 72, 0.2);
           }
           50% {
-            box-shadow: 0 0 24px rgba(212, 160, 57, 0.35);
+            box-shadow: 0 0 24px rgba(186, 84, 72, 0.35);
           }
         }
 

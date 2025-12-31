@@ -26,10 +26,10 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
       className="relative overflow-hidden transition-all duration-300"
       style={{
         backgroundColor: isCompleted
-          ? 'rgba(212, 160, 57, 0.06)'
+          ? 'rgba(186, 84, 72, 0.06)'
           : 'var(--white)',
         borderLeft: `4px solid ${categoryColor}`,
-        border: '1px solid rgba(26, 46, 74, 0.08)',
+        border: '1px solid rgba(129, 53, 46, 0.08)',
         borderLeftWidth: '4px',
         borderLeftColor: categoryColor,
         animationDelay: `${index * 100}ms`,
@@ -43,7 +43,7 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
             onClick={onToggle}
             className="relative flex-shrink-0 w-6 h-6 border-2 transition-all duration-300 mt-0.5"
             style={{
-              borderColor: isCompleted ? categoryColor : 'rgba(26, 46, 74, 0.2)',
+              borderColor: isCompleted ? categoryColor : 'rgba(129, 53, 46, 0.2)',
               backgroundColor: isCompleted ? categoryColor : 'transparent',
             }}
           >
@@ -77,7 +77,7 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
                   isCompleted ? 'line-through' : ''
                 }`}
                 style={{
-                  color: isCompleted ? 'rgba(26, 46, 74, 0.4)' : 'var(--navy)',
+                  color: isCompleted ? 'rgba(129, 53, 46, 0.4)' : 'var(--navy)',
                 }}
               >
                 {task.title}
@@ -98,7 +98,7 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
               <span
                 className="text-xs px-2 py-0.5"
                 style={{
-                  backgroundColor: 'rgba(26, 46, 74, 0.06)',
+                  backgroundColor: 'rgba(129, 53, 46, 0.06)',
                   color: 'var(--navy)',
                   opacity: 0.6,
                 }}
@@ -110,7 +110,7 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
             <p
               className="text-sm leading-relaxed"
               style={{
-                color: isCompleted ? 'rgba(26, 46, 74, 0.4)' : 'var(--navy)',
+                color: isCompleted ? 'rgba(129, 53, 46, 0.4)' : 'var(--navy)',
                 opacity: isCompleted ? 1 : 0.6,
               }}
             >
@@ -139,7 +139,7 @@ function TaskItem({ task, isCompleted, onToggle, index }: TaskItemProps) {
           <div
             className="mt-4 ml-9 p-4 text-sm leading-relaxed"
             style={{
-              backgroundColor: 'rgba(26, 46, 74, 0.03)',
+              backgroundColor: 'rgba(129, 53, 46, 0.03)',
               color: 'var(--navy)',
               opacity: 0.7,
             }}
@@ -168,7 +168,7 @@ export function HealingTasks({
       className="p-6"
       style={{
         background: 'var(--white)',
-        border: '1px solid rgba(26, 46, 74, 0.08)',
+        border: '1px solid rgba(129, 53, 46, 0.08)',
       }}
     >
       {/* Header */}
@@ -188,7 +188,7 @@ export function HealingTasks({
       <div className="mb-6">
         <div
           className="h-2 overflow-hidden"
-          style={{ backgroundColor: 'rgba(26, 46, 74, 0.08)' }}
+          style={{ backgroundColor: 'rgba(129, 53, 46, 0.08)' }}
         >
           <div
             className="h-full transition-all duration-500 ease-out"
@@ -197,7 +197,7 @@ export function HealingTasks({
               background:
                 progress === 100
                   ? 'var(--gold)'
-                  : 'linear-gradient(90deg, #1a2e4a 0%, #2d5a8a 100%)',
+                  : 'linear-gradient(90deg, #81352E 0%, #9D433A 100%)',
             }}
           />
         </div>

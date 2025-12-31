@@ -35,7 +35,7 @@
 .demo-glow-1 {
   width: 400px;
   height: 400px;
-  background: var(--matcha-200);
+  background: var(--brand-200);
   top: -100px;
   left: -100px;
   animation: ambientFloat 15s ease-in-out infinite;
@@ -44,7 +44,7 @@
 .demo-glow-2 {
   width: 300px;
   height: 300px;
-  background: var(--terra-200);
+  background: var(--brand-300);
   bottom: -50px;
   right: -50px;
   animation: ambientFloat 12s ease-in-out infinite reverse;
@@ -65,7 +65,7 @@
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.08),
     0 25px 80px -20px rgba(0, 0, 0, 0.5),
-    0 0 100px -30px rgba(125, 184, 143, 0.3);
+    0 0 100px -30px rgba(186, 84, 72, 0.3);
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -75,9 +75,9 @@
 
 .demo-device.playing {
   box-shadow:
-    0 0 0 1px rgba(125, 184, 143, 0.3),
+    0 0 0 1px rgba(186, 84, 72, 0.3),
     0 30px 100px -20px rgba(0, 0, 0, 0.6),
-    0 0 120px -20px rgba(125, 184, 143, 0.4);
+    0 0 120px -20px rgba(186, 84, 72, 0.4);
 }
 
 /* Browser Chrome */
@@ -112,7 +112,7 @@
   border-radius: 6px;
   font-family: 'Quicksand', sans-serif;
   font-size: 12px;
-  color: rgba(245, 240, 232, 0.5);
+  color: rgba(251, 233, 231, 0.5);
 }
 
 /* Screen */
@@ -140,7 +140,7 @@
 .screen-orb.orb-a {
   width: 200px;
   height: 200px;
-  background: rgba(125, 184, 143, 0.3);
+  background: rgba(186, 84, 72, 0.3);
   top: -50px;
   left: -50px;
   animation: orbFloat 10s ease-in-out infinite;
@@ -149,7 +149,7 @@
 .screen-orb.orb-b {
   width: 150px;
   height: 150px;
-  background: rgba(212, 165, 165, 0.2);
+  background: rgba(193, 145, 140, 0.2);
   bottom: -30px;
   right: -30px;
   animation: orbFloat 8s ease-in-out infinite reverse;
@@ -183,7 +183,7 @@
 
 .phase-content {
   text-align: center;
-  color: #f5f0e8;
+  color: #FBE9E7;
 }
 
 /* Typography */
@@ -207,14 +207,14 @@
 .demo-tagline {
   font-family: 'Quicksand', sans-serif;
   font-size: 1rem;
-  color: rgba(245, 240, 232, 0.6);
+  color: rgba(251, 233, 231, 0.6);
   font-weight: 300;
 }
 
 .demo-text {
   font-family: 'Quicksand', sans-serif;
   font-size: 0.9rem;
-  color: rgba(245, 240, 232, 0.6);
+  color: rgba(251, 233, 231, 0.6);
   margin-top: 8px;
 }
 
@@ -235,7 +235,7 @@
   height: 80px;
   margin: 32px auto 0;
   border-radius: 50%;
-  background: rgba(125, 184, 143, 0.2);
+  background: rgba(186, 84, 72, 0.2);
   position: relative;
 }
 
@@ -245,7 +245,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1px solid rgba(125, 184, 143, 0.4);
+  border: 1px solid rgba(186, 84, 72, 0.4);
   animation: pulseRing 2s ease-out infinite;
 }
 
@@ -268,13 +268,13 @@
 .flash-badge {
   display: inline-block;
   padding: 6px 16px;
-  background: rgba(125, 184, 143, 0.15);
-  border: 1px solid rgba(125, 184, 143, 0.3);
+  background: rgba(186, 84, 72, 0.15);
+  border: 1px solid rgba(186, 84, 72, 0.3);
   border-radius: 20px;
   font-family: 'Quicksand', sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
-  color: #7db88f;
+  color: #BA5448;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 16px;
@@ -310,16 +310,16 @@
 }
 
 .memory-block.distressing {
-  background: rgba(212, 165, 165, 0.2);
-  border: 1px solid rgba(212, 165, 165, 0.3);
-  color: #d4a5a5;
+  background: rgba(193, 145, 140, 0.2);
+  border: 1px solid rgba(193, 145, 140, 0.3);
+  color: #C1918C;
   animation: blockFadeIn 0.5s ease-out;
 }
 
 .memory-block.peaceful {
-  background: rgba(125, 184, 143, 0.2);
-  border: 1px solid rgba(125, 184, 143, 0.3);
-  color: #7db88f;
+  background: rgba(186, 84, 72, 0.2);
+  border: 1px solid rgba(186, 84, 72, 0.3);
+  color: #BA5448;
   animation: blockFadeIn 0.5s ease-out 0.3s both;
 }
 
@@ -337,7 +337,7 @@
 .processing-arrow {
   width: 40px;
   height: 2px;
-  background: linear-gradient(90deg, #d4a5a5, #7db88f);
+  background: linear-gradient(90deg, #C1918C, #BA5448);
   position: relative;
   animation: arrowGrow 0.5s ease-out 0.2s both;
 }
@@ -349,8 +349,8 @@
   top: -4px;
   width: 10px;
   height: 10px;
-  border-right: 2px solid #7db88f;
-  border-top: 2px solid #7db88f;
+  border-right: 2px solid #BA5448;
+  border-top: 2px solid #BA5448;
   transform: rotate(45deg);
 }
 
@@ -374,18 +374,18 @@
   display: block;
   font-family: 'Quicksand', sans-serif;
   font-size: 0.85rem;
-  color: rgba(245, 240, 232, 0.7);
+  color: rgba(251, 233, 231, 0.7);
   margin-bottom: 10px;
 }
 
 .input-mock {
   background: #252529;
-  border: 1px solid rgba(125, 184, 143, 0.3);
+  border: 1px solid rgba(186, 84, 72, 0.3);
   border-radius: 10px;
   padding: 14px 18px;
   font-family: 'Quicksand', sans-serif;
   font-size: 0.95rem;
-  color: #f5f0e8;
+  color: #FBE9E7;
   display: flex;
   align-items: center;
 }
@@ -406,7 +406,7 @@
 .cursor {
   width: 2px;
   height: 18px;
-  background: #7db88f;
+  background: #BA5448;
   margin-left: 2px;
   animation: blink 1s step-end infinite;
 }
@@ -429,14 +429,14 @@
   height: 80px;
   border-radius: 50%;
   background: #252529;
-  border: 2px solid rgba(125, 184, 143, 0.3);
+  border: 2px solid rgba(186, 84, 72, 0.3);
   transition: all 0.3s ease;
 }
 
 .bi-circle.active {
-  background: #7db88f;
-  border-color: #7db88f;
-  box-shadow: 0 0 40px rgba(125, 184, 143, 0.4);
+  background: #BA5448;
+  border-color: #BA5448;
+  box-shadow: 0 0 40px rgba(186, 84, 72, 0.4);
   transform: scale(1.1);
 }
 
@@ -451,15 +451,15 @@
 @keyframes biPulse {
   0%, 40%, 100% {
     background: #252529;
-    border-color: rgba(125, 184, 143, 0.3);
+    border-color: rgba(186, 84, 72, 0.3);
     transform: scale(1);
     box-shadow: none;
   }
   20% {
-    background: #7db88f;
-    border-color: #7db88f;
+    background: #BA5448;
+    border-color: #BA5448;
     transform: scale(1.1);
-    box-shadow: 0 0 40px rgba(125, 184, 143, 0.4);
+    box-shadow: 0 0 40px rgba(186, 84, 72, 0.4);
   }
 }
 
@@ -467,7 +467,7 @@
   position: absolute;
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.2rem;
-  color: rgba(245, 240, 232, 0.5);
+  color: rgba(251, 233, 231, 0.5);
   text-transform: uppercase;
   letter-spacing: 0.15em;
 }
@@ -480,8 +480,8 @@
   justify-content: center;
   font-family: 'Cormorant Garamond', serif;
   font-size: 2.5rem;
-  color: #f5f0e8;
-  text-shadow: 0 0 40px rgba(125, 184, 143, 0.6);
+  color: #FBE9E7;
+  text-shadow: 0 0 40px rgba(186, 84, 72, 0.6);
   letter-spacing: 0.2em;
   opacity: 0;
   animation: flashPulse 5s ease-in-out infinite;
@@ -489,7 +489,7 @@
 
 @keyframes flashPulse {
   0%, 30%, 100% { opacity: 0; background: transparent; }
-  35% { opacity: 1; background: rgba(125, 184, 143, 0.15); }
+  35% { opacity: 1; background: rgba(186, 84, 72, 0.15); }
   45% { opacity: 0; background: transparent; }
 }
 
@@ -504,7 +504,7 @@
   font-family: 'Cormorant Garamond', serif;
   font-size: 2rem;
   font-weight: 400;
-  color: #f5f0e8;
+  color: #FBE9E7;
   opacity: 0;
   transform: translateY(20px);
 }
@@ -533,7 +533,7 @@
   width: 64px;
   height: 64px;
   margin: 0 auto 16px;
-  color: #7db88f;
+  color: #BA5448;
   animation: iconPop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -588,9 +588,9 @@
   gap: 12px;
   padding: 24px 48px;
   background: transparent;
-  border: 2px solid rgba(125, 184, 143, 0.5);
+  border: 2px solid rgba(186, 84, 72, 0.5);
   border-radius: 16px;
-  color: #f5f0e8;
+  color: #FBE9E7;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Quicksand', sans-serif;
@@ -599,15 +599,15 @@
 }
 
 .play-btn:hover {
-  background: rgba(125, 184, 143, 0.1);
-  border-color: #7db88f;
+  background: rgba(186, 84, 72, 0.1);
+  border-color: #BA5448;
   transform: scale(1.05);
 }
 
 .play-btn svg {
   width: 48px;
   height: 48px;
-  color: #7db88f;
+  color: #BA5448;
 }
 
 /* Pause button */
@@ -620,7 +620,7 @@
   background: rgba(37, 37, 41, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  color: rgba(245, 240, 232, 0.7);
+  color: rgba(251, 233, 231, 0.7);
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -630,8 +630,8 @@
 }
 
 .pause-overlay-btn:hover {
-  background: rgba(245, 240, 232, 0.1);
-  color: #f5f0e8;
+  background: rgba(251, 233, 231, 0.1);
+  color: #FBE9E7;
 }
 
 .pause-overlay-btn svg {
@@ -647,7 +647,7 @@
 
 .demo-progress .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #7db88f, #5a9d6e);
+  background: linear-gradient(90deg, #BA5448, #9D433A);
   transition: width 0.1s linear;
 }
 
@@ -771,7 +771,7 @@
   .processing-arrow {
     width: 2px;
     height: 40px;
-    background: linear-gradient(180deg, #d4a5a5, #7db88f);
+    background: linear-gradient(180deg, #C1918C, #BA5448);
   }
 
   .processing-arrow::after {

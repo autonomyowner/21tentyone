@@ -7,12 +7,12 @@ export const artisticStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap');
 
   :root {
-    --navy: #1a2e4a;
-    --blue: #2d5a8a;
-    --gold: #d4a039;
-    --cream: #f5f0e8;
-    --amber: #e8a54b;
-    --light-blue: #6b9cc4;
+    --navy: #81352E;
+    --blue: #9D433A;
+    --gold: #BA5448;
+    --cream: #FBE9E7;
+    --amber: #C1918C;
+    --light-blue: #E6C8C3;
     --white: #ffffff;
   }
 
@@ -171,9 +171,9 @@ export const GoldRect = ({
     <div
       className={`absolute ${sizes[size]} animate-float-gold pointer-events-none ${className}`}
       style={{
-        background: 'linear-gradient(135deg, #d4a039 0%, #e8a54b 50%, #d4a039 100%)',
+        background: 'linear-gradient(135deg, #BA5448 0%, #C1918C 50%, #BA5448 100%)',
         animationDelay: `${delay}s`,
-        boxShadow: '0 8px 32px rgba(212, 160, 57, 0.3)'
+        boxShadow: '0 8px 32px rgba(186, 84, 72, 0.3)'
       }}
     />
   );
@@ -356,7 +356,7 @@ export const ArtisticFooter = () => {
     <footer
       className="relative py-20 px-6"
       style={{
-        background: 'linear-gradient(180deg, var(--navy) 0%, #0f1a2a 100%)'
+        background: 'linear-gradient(180deg, var(--navy) 0%, #5A231F 100%)'
       }}
     >
       <div className="max-w-6xl mx-auto">

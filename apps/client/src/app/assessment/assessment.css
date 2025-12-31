@@ -2,12 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap');
 
 :root {
-  --navy: #1a2e4a;
-  --blue: #2d5a8a;
-  --gold: #d4a039;
-  --cream: #f5f0e8;
-  --amber: #e8a54b;
-  --light-blue: #6b9cc4;
+  --navy: #81352E;
+  --blue: #9D433A;
+  --gold: #BA5448;
+  --cream: #FBE9E7;
+  --amber: #C1918C;
+  --light-blue: #E6C8C3;
   --white: #ffffff;
 }
 
@@ -94,7 +94,7 @@
   height: 44px;
   border-radius: 0;
   background: var(--white);
-  border: 1px solid rgba(26, 46, 74, 0.1);
+  border: 1px solid rgba(129, 53, 46, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -113,7 +113,7 @@
 .progress-track {
   flex: 1;
   height: 2px;
-  background: rgba(26, 46, 74, 0.1);
+  background: rgba(129, 53, 46, 0.1);
   overflow: hidden;
 }
 
@@ -234,7 +234,7 @@
   gap: 20px;
   padding: 20px 24px;
   background: var(--white);
-  border: 1px solid rgba(26, 46, 74, 0.08);
+  border: 1px solid rgba(129, 53, 46, 0.08);
 }
 
 .benefit-number {
@@ -348,7 +348,7 @@
   margin-bottom: 40px;
   padding: 32px;
   background: var(--white);
-  border: 1px solid rgba(26, 46, 74, 0.08);
+  border: 1px solid rgba(129, 53, 46, 0.08);
 }
 
 .scale-visual {
@@ -391,7 +391,7 @@
   font-weight: 500;
   font-size: 1.25rem;
   color: var(--navy);
-  box-shadow: 0 4px 20px rgba(26, 46, 74, 0.1);
+  box-shadow: 0 4px 20px rgba(129, 53, 46, 0.1);
 }
 
 .scale-slider {
@@ -444,7 +444,7 @@
 .scale-description {
   margin-top: 24px;
   padding: 20px;
-  background: rgba(26, 46, 74, 0.03);
+  background: rgba(129, 53, 46, 0.03);
   text-align: left;
 }
 
@@ -484,7 +484,7 @@
   position: relative;
   padding: 20px 24px;
   background: var(--white);
-  border: 1px solid rgba(26, 46, 74, 0.1);
+  border: 1px solid rgba(129, 53, 46, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: left;
@@ -497,7 +497,7 @@
 
 .option-card.selected {
   border-color: var(--gold);
-  background: rgba(212, 160, 57, 0.05);
+  background: rgba(186, 84, 72, 0.05);
 }
 
 .option-label {
@@ -544,7 +544,7 @@
   gap: 24px;
   padding: 24px 28px;
   background: var(--white);
-  border: 1px solid rgba(26, 46, 74, 0.1);
+  border: 1px solid rgba(129, 53, 46, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: left;
@@ -557,7 +557,7 @@
 
 .commitment-card.selected {
   border-color: var(--gold);
-  background: rgba(212, 160, 57, 0.05);
+  background: rgba(186, 84, 72, 0.05);
 }
 
 .commitment-time {
@@ -622,7 +622,7 @@
 /* Attachment Style Card */
 .attachment-style-card {
   background: var(--white);
-  border: 1px solid rgba(26, 46, 74, 0.08);
+  border: 1px solid rgba(129, 53, 46, 0.08);
   padding: 40px;
   margin-bottom: 24px;
   text-align: center;
@@ -677,13 +677,13 @@
   color: var(--navy);
   font-size: 0.8rem;
   font-weight: 400;
-  border: 1px solid rgba(26, 46, 74, 0.15);
+  border: 1px solid rgba(129, 53, 46, 0.15);
 }
 
 /* Score Card */
 .score-card {
   background: var(--white);
-  border: 1px solid rgba(26, 46, 74, 0.08);
+  border: 1px solid rgba(129, 53, 46, 0.08);
   padding: 40px;
   margin-bottom: 24px;
 }
@@ -717,7 +717,7 @@
 
 .ring-bg {
   fill: none;
-  stroke: rgba(26, 46, 74, 0.08);
+  stroke: rgba(129, 53, 46, 0.08);
   stroke-width: 6;
 }
 
@@ -776,7 +776,7 @@
 
 .focus-tag {
   padding: 10px 20px;
-  background: rgba(212, 160, 57, 0.1);
+  background: rgba(186, 84, 72, 0.1);
   color: var(--navy);
   font-size: 0.875rem;
   font-weight: 400;
@@ -796,7 +796,7 @@
 
 .insight-card {
   background: var(--white);
-  border: 1px solid rgba(26, 46, 74, 0.08);
+  border: 1px solid rgba(129, 53, 46, 0.08);
   padding: 24px;
   text-align: left;
 }
@@ -819,7 +819,7 @@
 
 .insight-rec {
   padding: 16px 20px;
-  background: rgba(26, 46, 74, 0.03);
+  background: rgba(129, 53, 46, 0.03);
   display: flex;
   gap: 12px;
   align-items: flex-start;
@@ -856,7 +856,7 @@
   display: flex;
   gap: 20px;
   padding: 20px 0;
-  border-bottom: 1px solid rgba(26, 46, 74, 0.08);
+  border-bottom: 1px solid rgba(129, 53, 46, 0.08);
   text-align: left;
 }
 

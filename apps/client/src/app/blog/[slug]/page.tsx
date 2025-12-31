@@ -113,8 +113,8 @@ export default function BlogPostPage() {
         style={{
           background: 'var(--cream)',
           backgroundImage: `
-            radial-gradient(ellipse at 20% 30%, rgba(45, 90, 138, 0.05) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 70%, rgba(107, 156, 196, 0.04) 0%, transparent 50%)
+            radial-gradient(ellipse at 20% 30%, rgba(157, 67, 58, 0.05) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 70%, rgba(230, 200, 195, 0.04) 0%, transparent 50%)
           `,
         }}
       >
@@ -123,7 +123,7 @@ export default function BlogPostPage() {
         {/* Decorative Elements */}
         <PaintSplatter
           className="w-[300px] h-[300px] -top-16 -right-16 opacity-20"
-          color="rgba(45, 90, 138, 0.12)"
+          color="rgba(157, 67, 58, 0.12)"
           delay={200}
           scale={0.8}
         />
@@ -134,9 +134,9 @@ export default function BlogPostPage() {
         <nav
           className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
           style={{
-            background: 'rgba(245, 240, 232, 0.95)',
+            background: 'rgba(251, 233, 231, 0.95)',
             backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(26, 46, 74, 0.08)',
+            borderBottom: '1px solid rgba(129, 53, 46, 0.08)',
           }}
         >
           <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
@@ -185,7 +185,7 @@ export default function BlogPostPage() {
               <span
                 className="px-3 py-1 text-xs uppercase tracking-[0.1em]"
                 style={{
-                  background: 'rgba(212, 160, 57, 0.15)',
+                  background: 'rgba(186, 84, 72, 0.15)',
                   color: 'var(--gold)'
                 }}
               >
@@ -240,12 +240,12 @@ export default function BlogPostPage() {
               className={`flex items-center gap-3 pb-8 mb-8 transition-all duration-1000 delay-400 ${
                 mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
-              style={{ borderBottom: '1px solid rgba(26, 46, 74, 0.1)' }}
+              style={{ borderBottom: '1px solid rgba(129, 53, 46, 0.1)' }}
             >
               <div
                 className="w-10 h-10 flex items-center justify-center text-sm font-medium"
                 style={{
-                  background: 'rgba(212, 160, 57, 0.15)',
+                  background: 'rgba(186, 84, 72, 0.15)',
                   color: 'var(--gold)'
                 }}
               >
@@ -275,7 +275,7 @@ export default function BlogPostPage() {
             {/* Tags */}
             <div
               className="mt-12 pt-8"
-              style={{ borderTop: '1px solid rgba(26, 46, 74, 0.1)' }}
+              style={{ borderTop: '1px solid rgba(129, 53, 46, 0.1)' }}
             >
               <p
                 className="text-xs uppercase tracking-[0.15em] font-medium mb-4"
@@ -289,7 +289,7 @@ export default function BlogPostPage() {
                     key={tag}
                     className="px-3 py-1 text-xs"
                     style={{
-                      background: 'rgba(26, 46, 74, 0.04)',
+                      background: 'rgba(129, 53, 46, 0.04)',
                       color: 'var(--navy)',
                       opacity: 0.7
                     }}
@@ -305,7 +305,7 @@ export default function BlogPostPage() {
               className="mt-8 p-6"
               style={{
                 background: 'var(--white)',
-                border: '1px solid rgba(26, 46, 74, 0.08)',
+                border: '1px solid rgba(129, 53, 46, 0.08)',
               }}
             >
               <p
@@ -371,7 +371,7 @@ export default function BlogPostPage() {
                     className="group p-6 md:p-8 block transition-all duration-300 hover:translate-y-[-4px]"
                     style={{
                       background: 'var(--white)',
-                      border: '1px solid rgba(26, 46, 74, 0.08)',
+                      border: '1px solid rgba(129, 53, 46, 0.08)',
                     }}
                   >
                     <div className="flex items-center gap-3 mb-4">

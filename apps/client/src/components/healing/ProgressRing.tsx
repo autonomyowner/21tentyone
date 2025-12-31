@@ -53,9 +53,9 @@ export function ProgressRing({
         {/* Gradient definition */}
         <defs>
           <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1a2e4a" />
-            <stop offset="50%" stopColor="#2d5a8a" />
-            <stop offset="100%" stopColor="#d4a039" />
+            <stop offset="0%" stopColor="#81352E" />
+            <stop offset="50%" stopColor="#9D433A" />
+            <stop offset="100%" stopColor="#BA5448" />
           </linearGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur" />
@@ -72,7 +72,7 @@ export function ProgressRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(26, 46, 74, 0.12)"
+          stroke="rgba(129, 53, 46, 0.12)"
           strokeWidth={strokeWidth}
         />
 
@@ -103,7 +103,7 @@ export function ProgressRing({
               cx={x}
               cy={y}
               r={day === 21 ? 8 : 6}
-              fill={isReached ? '#d4a039' : 'rgba(26, 46, 74, 0.2)'}
+              fill={isReached ? '#BA5448' : 'rgba(129, 53, 46, 0.2)'}
               stroke={isReached ? '#fff' : 'transparent'}
               strokeWidth={2}
               style={{
@@ -123,13 +123,13 @@ export function ProgressRing({
       >
         <span
           className="heading-serif text-6xl font-medium"
-          style={{ color: '#1a2e4a', lineHeight: 1 }}
+          style={{ color: '#81352E', lineHeight: 1 }}
         >
           {currentDay}
         </span>
         <span
           className="text-sm tracking-widest uppercase mt-1"
-          style={{ color: '#2d5a8a' }}
+          style={{ color: '#9D433A' }}
         >
           of {totalDays}
         </span>
@@ -139,7 +139,7 @@ export function ProgressRing({
       <div
         className="absolute inset-0 rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, transparent 60%, rgba(26, 46, 74, 0.03) 100%)',
+          background: 'radial-gradient(circle, transparent 60%, rgba(129, 53, 46, 0.03) 100%)',
         }}
       />
     </div>

@@ -40,7 +40,7 @@ export function TodaysFocus({
       className="relative overflow-hidden p-6"
       style={{
         background: 'var(--white)',
-        border: '1px solid rgba(26, 46, 74, 0.08)',
+        border: '1px solid rgba(129, 53, 46, 0.08)',
         borderLeft: `4px solid ${phase.color}`,
       }}
     >
@@ -97,7 +97,7 @@ export function TodaysFocus({
       <div
         className="h-px mb-6"
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(26, 46, 74, 0.15) 50%, transparent 100%)',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(129, 53, 46, 0.15) 50%, transparent 100%)',
         }}
       />
 
@@ -122,8 +122,8 @@ export function TodaysFocus({
               rows={2}
               className="w-full px-4 py-3 text-sm resize-none transition-all duration-200"
               style={{
-                backgroundColor: 'rgba(26, 46, 74, 0.02)',
-                border: '1px solid rgba(26, 46, 74, 0.12)',
+                backgroundColor: 'rgba(129, 53, 46, 0.02)',
+                border: '1px solid rgba(129, 53, 46, 0.12)',
                 color: 'var(--navy)',
                 outline: 'none',
               }}
@@ -145,8 +145,8 @@ export function TodaysFocus({
             onClick={() => setIsEditing(true)}
             className="w-full text-left px-4 py-3 transition-all duration-200 hover:bg-white/50 group"
             style={{
-              backgroundColor: 'rgba(26, 46, 74, 0.02)',
-              border: '1px solid rgba(26, 46, 74, 0.08)',
+              backgroundColor: 'rgba(129, 53, 46, 0.02)',
+              border: '1px solid rgba(129, 53, 46, 0.08)',
             }}
           >
             <p className="text-sm" style={{ color: 'var(--navy)' }}>
@@ -173,7 +173,7 @@ export function TodaysFocus({
       </div>
 
       {/* Journal prompt */}
-      <div className="mt-6 p-4" style={{ backgroundColor: 'rgba(45, 90, 138, 0.06)' }}>
+      <div className="mt-6 p-4" style={{ backgroundColor: 'rgba(157, 67, 58, 0.06)' }}>
         <span
           className="text-xs font-medium tracking-wider uppercase"
           style={{ color: 'var(--blue)' }}

@@ -9,14 +9,14 @@
 :root {
   --fs-night: #1a1a1f;
   --fs-night-soft: #252529;
-  --fs-cream: #f5f0e8;
-  --fs-cream-muted: rgba(245, 240, 232, 0.7);
-  --fs-cream-subtle: rgba(245, 240, 232, 0.4);
-  --fs-matcha: #7db88f;
-  --fs-matcha-glow: rgba(125, 184, 143, 0.3);
-  --fs-matcha-soft: rgba(125, 184, 143, 0.15);
-  --fs-rose: #d4a5a5;
-  --fs-rose-soft: rgba(212, 165, 165, 0.2);
+  --fs-cream: #FBE9E7;
+  --fs-cream-muted: rgba(251, 233, 231, 0.7);
+  --fs-cream-subtle: rgba(251, 233, 231, 0.4);
+  --fs-matcha: #BA5448;
+  --fs-matcha-glow: rgba(186, 84, 72, 0.3);
+  --fs-matcha-soft: rgba(186, 84, 72, 0.15);
+  --fs-rose: #C1918C;
+  --fs-rose-soft: rgba(193, 145, 140, 0.2);
 }
 
 /* =============================================
@@ -92,7 +92,7 @@
   position: fixed;
   z-index: 100;
   background: var(--fs-night-soft);
-  border: 1px solid rgba(245, 240, 232, 0.1);
+  border: 1px solid rgba(251, 233, 231, 0.1);
   color: var(--fs-cream-muted);
   padding: 12px;
   border-radius: 50%;
@@ -102,7 +102,7 @@
 
 .mute-btn:hover,
 .exit-btn:hover {
-  background: rgba(245, 240, 232, 0.1);
+  background: rgba(251, 233, 231, 0.1);
   color: var(--fs-cream);
 }
 
@@ -223,7 +223,7 @@
 
 .form-input {
   background: var(--fs-night-soft);
-  border: 1px solid rgba(245, 240, 232, 0.15);
+  border: 1px solid rgba(251, 233, 231, 0.15);
   border-radius: 12px;
   padding: 16px 20px;
   font-size: 1rem;
@@ -293,7 +293,7 @@
   background: var(--fs-night-soft);
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(245, 240, 232, 0.08);
+  border: 1px solid rgba(251, 233, 231, 0.08);
 }
 
 .intro-instructions h3 {
@@ -335,13 +335,13 @@
 .start-btn {
   width: 100%;
   padding: 20px;
-  background: linear-gradient(135deg, var(--fs-matcha), #5a9d6e);
+  background: linear-gradient(135deg, var(--fs-matcha), #9D433A);
   border: none;
   border-radius: 16px;
   font-family: inherit;
   font-size: 1.1rem;
   font-weight: 500;
-  color: var(--fs-night);
+  color: var(--fs-cream);
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 16px;
@@ -537,7 +537,7 @@
 
 @keyframes blinkFlash {
   0% {
-    background: rgba(125, 184, 143, 0.3);
+    background: rgba(186, 84, 72, 0.3);
   }
   100% {
     background: transparent;
@@ -661,7 +661,7 @@
 .end-early-btn {
   padding: 14px 24px;
   background: transparent;
-  border: 1px solid rgba(245, 240, 232, 0.2);
+  border: 1px solid rgba(251, 233, 231, 0.2);
   border-radius: 12px;
   font-family: inherit;
   font-size: 0.9rem;
@@ -791,7 +791,7 @@
 
 .stat-card {
   background: var(--fs-night-soft);
-  border: 1px solid rgba(245, 240, 232, 0.08);
+  border: 1px solid rgba(251, 233, 231, 0.08);
   border-radius: 16px;
   padding: 20px 24px;
   min-width: 120px;
@@ -846,7 +846,7 @@
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 32px;
-  border: 1px solid rgba(245, 240, 232, 0.05);
+  border: 1px solid rgba(251, 233, 231, 0.05);
 }
 
 .summary-reminder p {

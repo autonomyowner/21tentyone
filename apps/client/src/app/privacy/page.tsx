@@ -12,8 +12,8 @@ export default function PrivacyPage() {
         style={{
           background: 'var(--cream)',
           backgroundImage: `
-            radial-gradient(ellipse at 20% 30%, rgba(45, 90, 138, 0.04) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 70%, rgba(107, 156, 196, 0.03) 0%, transparent 50%)
+            radial-gradient(ellipse at 20% 30%, rgba(157, 67, 58, 0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 70%, rgba(230, 200, 195, 0.03) 0%, transparent 50%)
           `,
         }}
       >
@@ -25,9 +25,9 @@ export default function PrivacyPage() {
         <header
           className="sticky top-0 z-50 transition-all duration-500"
           style={{
-            background: 'rgba(245, 240, 232, 0.95)',
+            background: 'rgba(251, 233, 231, 0.95)',
             backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(26, 46, 74, 0.08)',
+            borderBottom: '1px solid rgba(129, 53, 46, 0.08)',
           }}
         >
           <div className="max-w-4xl mx-auto px-6 py-5">
@@ -259,7 +259,7 @@ export default function PrivacyPage() {
           </div>
 
           {/* Back link */}
-          <div className="mt-16 pt-8" style={{ borderTop: '1px solid rgba(26, 46, 74, 0.1)' }}>
+          <div className="mt-16 pt-8" style={{ borderTop: '1px solid rgba(129, 53, 46, 0.1)' }}>
             <Link
               href="/"
               className="inline-block text-xs uppercase tracking-[0.2em] transition-all duration-300 hover:opacity-100 relative group"

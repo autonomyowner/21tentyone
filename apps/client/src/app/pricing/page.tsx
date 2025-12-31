@@ -82,7 +82,7 @@ export default function PricingPage() {
               className={`inline-flex items-center gap-1 p-1 ${mounted ? 'reveal-up' : 'opacity-0'}`}
               style={{
                 background: 'var(--white)',
-                border: '1px solid rgba(26, 46, 74, 0.1)',
+                border: '1px solid rgba(129, 53, 46, 0.1)',
                 animationDelay: '0.4s'
               }}
             >
@@ -125,7 +125,7 @@ export default function PricingPage() {
                 className={`p-10 relative ${mounted ? 'reveal-up' : 'opacity-0'}`}
                 style={{
                   background: 'var(--white)',
-                  border: '1px solid rgba(26, 46, 74, 0.1)',
+                  border: '1px solid rgba(129, 53, 46, 0.1)',
                   animationDelay: '0.5s'
                 }}
               >
@@ -304,10 +304,10 @@ export default function PricingPage() {
               <div className="w-16 h-px mx-auto mt-6" style={{ background: 'var(--gold)' }} />
             </div>
 
-            <div style={{ border: '1px solid rgba(26, 46, 74, 0.1)' }}>
+            <div style={{ border: '1px solid rgba(129, 53, 46, 0.1)' }}>
               <table className="w-full">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(26, 46, 74, 0.1)' }}>
+                  <tr style={{ borderBottom: '1px solid rgba(129, 53, 46, 0.1)' }}>
                     <th
                       className="text-left py-5 px-6 text-xs uppercase tracking-[0.15em] font-medium"
                       style={{ color: 'var(--navy)', opacity: 0.5 }}
@@ -342,7 +342,7 @@ export default function PricingPage() {
                     <tr
                       key={i}
                       style={{
-                        borderBottom: i < arr.length - 1 ? '1px solid rgba(26, 46, 74, 0.05)' : 'none',
+                        borderBottom: i < arr.length - 1 ? '1px solid rgba(129, 53, 46, 0.05)' : 'none',
                       }}
                     >
                       <td className="py-4 px-6" style={{ color: 'var(--navy)' }}>
@@ -375,7 +375,7 @@ export default function PricingPage() {
               className="p-12 text-center relative"
               style={{
                 background: 'var(--white)',
-                border: '1px solid rgba(26, 46, 74, 0.1)',
+                border: '1px solid rgba(129, 53, 46, 0.1)',
               }}
             >
               <div
@@ -452,7 +452,7 @@ export default function PricingPage() {
                 <details
                   key={i}
                   className="group"
-                  style={{ border: '1px solid rgba(26, 46, 74, 0.1)' }}
+                  style={{ border: '1px solid rgba(129, 53, 46, 0.1)' }}
                 >
                   <summary
                     className="cursor-pointer px-6 py-5 font-medium flex items-center justify-between transition-all duration-300 hover:bg-[rgba(26,46,74,0.02)]"

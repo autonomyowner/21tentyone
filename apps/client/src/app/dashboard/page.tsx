@@ -88,8 +88,8 @@ export default function DashboardPage() {
         style={{
           background: 'var(--cream)',
           backgroundImage: `
-            radial-gradient(ellipse at 20% 0%, rgba(45, 90, 138, 0.04) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 100%, rgba(107, 156, 196, 0.04) 0%, transparent 50%)
+            radial-gradient(ellipse at 20% 0%, rgba(157, 67, 58, 0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 100%, rgba(230, 200, 195, 0.04) 0%, transparent 50%)
           `,
         }}
       >
@@ -101,8 +101,8 @@ export default function DashboardPage() {
         <header
           className="sticky top-20 z-40 backdrop-blur-md"
           style={{
-            backgroundColor: 'rgba(245, 240, 232, 0.95)',
-            borderBottom: '1px solid rgba(26, 46, 74, 0.08)',
+            backgroundColor: 'rgba(251, 233, 231, 0.95)',
+            borderBottom: '1px solid rgba(129, 53, 46, 0.08)',
           }}
         >
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
@@ -128,7 +128,7 @@ export default function DashboardPage() {
                   className="hidden sm:flex items-center gap-2 px-4 py-2"
                   style={{
                     backgroundColor: 'var(--white)',
-                    border: '1px solid rgba(26, 46, 74, 0.1)',
+                    border: '1px solid rgba(129, 53, 46, 0.1)',
                   }}
                 >
                   <span
@@ -151,7 +151,7 @@ export default function DashboardPage() {
         {/* Main content */}
         <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 relative z-10">
           {/* Demo controls (for testing - can be removed in production) */}
-          <div className="mb-6 p-4" style={{ backgroundColor: 'var(--white)', border: '1px solid rgba(26, 46, 74, 0.08)' }}>
+          <div className="mb-6 p-4" style={{ backgroundColor: 'var(--white)', border: '1px solid rgba(129, 53, 46, 0.08)' }}>
             <p className="text-xs mb-2" style={{ color: 'var(--navy)', opacity: 0.5 }}>
               Demo: Jump to day to test milestones
             </p>
@@ -164,7 +164,7 @@ export default function DashboardPage() {
                   style={{
                     backgroundColor: currentDay === day ? 'var(--navy)' : 'transparent',
                     color: currentDay === day ? 'var(--cream)' : 'var(--navy)',
-                    border: `1px solid ${currentDay === day ? 'var(--navy)' : 'rgba(26, 46, 74, 0.2)'}`,
+                    border: `1px solid ${currentDay === day ? 'var(--navy)' : 'rgba(129, 53, 46, 0.2)'}`,
                   }}
                 >
                   Day {day}
@@ -180,7 +180,7 @@ export default function DashboardPage() {
               className="flex flex-col items-center justify-center p-6 sm:p-8 lg:col-span-1"
               style={{
                 background: 'var(--white)',
-                border: '1px solid rgba(26, 46, 74, 0.08)',
+                border: '1px solid rgba(129, 53, 46, 0.08)',
               }}
             >
               <ProgressRing currentDay={currentDay} />
@@ -199,7 +199,7 @@ export default function DashboardPage() {
               <div
                 className="sm:hidden mt-4 px-4 py-2"
                 style={{
-                  backgroundColor: 'rgba(212, 160, 57, 0.1)',
+                  backgroundColor: 'rgba(186, 84, 72, 0.1)',
                   border: '1px solid var(--gold)',
                 }}
               >
@@ -228,7 +228,7 @@ export default function DashboardPage() {
               className="p-4 sm:p-6"
               style={{
                 background: 'var(--white)',
-                border: '1px solid rgba(26, 46, 74, 0.08)',
+                border: '1px solid rgba(129, 53, 46, 0.08)',
               }}
             >
               <h2
@@ -275,7 +275,7 @@ export default function DashboardPage() {
                 className="p-4 sm:p-6"
                 style={{
                   background: 'var(--white)',
-                  border: '1px solid rgba(26, 46, 74, 0.08)',
+                  border: '1px solid rgba(129, 53, 46, 0.08)',
                 }}
               >
                 <h2
@@ -293,7 +293,7 @@ export default function DashboardPage() {
                         key={entry.id}
                         className="p-4"
                         style={{
-                          backgroundColor: 'rgba(26, 46, 74, 0.02)',
+                          backgroundColor: 'rgba(129, 53, 46, 0.02)',
                           borderLeft: '2px solid var(--gold)',
                         }}
                       >

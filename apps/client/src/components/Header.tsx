@@ -34,10 +34,10 @@ export default function Header() {
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;500&display=swap');
 
         .header-artistic {
-          --navy: #1a2e4a;
-          --blue: #2d5a8a;
-          --gold: #d4a039;
-          --cream: #f5f0e8;
+          --navy: #81352E;
+          --blue: #9D433A;
+          --gold: #BA5448;
+          --cream: #FBE9E7;
           --white: #ffffff;
         }
 
@@ -49,7 +49,7 @@ export default function Header() {
       <header
         className="header-artistic fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          background: scrolled ? 'rgba(26, 46, 74, 0.95)' : 'transparent',
+          background: scrolled ? 'rgba(129, 53, 46, 0.95)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
         }}
       >
@@ -117,7 +117,7 @@ export default function Header() {
                 </span>
                 <div
                   className="absolute inset-0 transition-transform duration-500 group-hover:translate-x-0 -translate-x-full"
-                  style={{ background: scrolled ? '#e8a54b' : 'var(--blue)' }}
+                  style={{ background: scrolled ? '#C1918C' : 'var(--blue)' }}
                 />
               </Link>
             </div>

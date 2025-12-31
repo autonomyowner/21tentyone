@@ -72,7 +72,7 @@ function Slider({ label, value, onChange, labels, color }: SliderProps) {
         {/* Track background */}
         <div
           className="absolute w-full h-2 rounded-full"
-          style={{ backgroundColor: 'rgba(26, 46, 74, 0.1)' }}
+          style={{ backgroundColor: 'rgba(129, 53, 46, 0.1)' }}
         />
 
         {/* Filled track */}
@@ -173,7 +173,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
       className="p-6"
       style={{
         background: 'var(--white)',
-        border: '1px solid rgba(26, 46, 74, 0.08)',
+        border: '1px solid rgba(129, 53, 46, 0.08)',
       }}
     >
       <div className="flex items-center justify-between mb-6">
@@ -184,7 +184,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
           <span
             className="text-xs px-2 py-1"
             style={{
-              backgroundColor: 'rgba(212, 160, 57, 0.15)',
+              backgroundColor: 'rgba(186, 84, 72, 0.15)',
               color: 'var(--gold)',
             }}
           >
@@ -199,7 +199,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         value={formData.mood}
         onChange={(mood) => setFormData((prev) => ({ ...prev, mood }))}
         labels={MOOD_LABELS}
-        color="#1a2e4a"
+        color="#81352E"
       />
 
       <Slider
@@ -207,7 +207,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         value={formData.energy}
         onChange={(energy) => setFormData((prev) => ({ ...prev, energy }))}
         labels={ENERGY_LABELS}
-        color="#2d5a8a"
+        color="#9D433A"
       />
 
       <Slider
@@ -217,7 +217,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
           setFormData((prev) => ({ ...prev, attachmentAwareness }))
         }
         labels={AWARENESS_LABELS}
-        color="#d4a039"
+        color="#BA5448"
       />
 
       {/* Divider */}
@@ -225,7 +225,7 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         className="h-px my-6"
         style={{
           background:
-            'linear-gradient(90deg, transparent 0%, rgba(26, 46, 74, 0.1) 50%, transparent 100%)',
+            'linear-gradient(90deg, transparent 0%, rgba(129, 53, 46, 0.1) 50%, transparent 100%)',
         }}
       />
 
@@ -247,8 +247,8 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
             rows={3}
             className="w-full px-4 py-3 text-sm resize-none transition-all duration-200 focus:ring-2"
             style={{
-              backgroundColor: 'rgba(26, 46, 74, 0.02)',
-              border: '1px solid rgba(26, 46, 74, 0.1)',
+              backgroundColor: 'rgba(129, 53, 46, 0.02)',
+              border: '1px solid rgba(129, 53, 46, 0.1)',
               color: 'var(--navy)',
               outline: 'none',
             }}
@@ -271,8 +271,8 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
             rows={2}
             className="w-full px-4 py-3 text-sm resize-none transition-all duration-200"
             style={{
-              backgroundColor: 'rgba(26, 46, 74, 0.02)',
-              border: '1px solid rgba(26, 46, 74, 0.1)',
+              backgroundColor: 'rgba(129, 53, 46, 0.02)',
+              border: '1px solid rgba(129, 53, 46, 0.1)',
               color: 'var(--navy)',
               outline: 'none',
             }}
@@ -295,8 +295,8 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
             rows={2}
             className="w-full px-4 py-3 text-sm resize-none transition-all duration-200"
             style={{
-              backgroundColor: 'rgba(26, 46, 74, 0.02)',
-              border: '1px solid rgba(26, 46, 74, 0.1)',
+              backgroundColor: 'rgba(129, 53, 46, 0.02)',
+              border: '1px solid rgba(129, 53, 46, 0.1)',
               color: 'var(--navy)',
               outline: 'none',
             }}
@@ -312,9 +312,9 @@ export function DailyCheckIn({ day, existingEntry, onSave }: DailyCheckInProps) 
         style={{
           background: isComplete
             ? 'var(--gold)'
-            : 'rgba(26, 46, 74, 0.2)',
+            : 'rgba(129, 53, 46, 0.2)',
           color: isComplete ? 'var(--navy)' : 'var(--navy)',
-          boxShadow: isComplete ? '0 4px 16px rgba(212, 160, 57, 0.3)' : 'none',
+          boxShadow: isComplete ? '0 4px 16px rgba(186, 84, 72, 0.3)' : 'none',
         }}
       >
         {isSaving ? (

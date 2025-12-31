@@ -92,9 +92,9 @@ const GoldRect = ({
     <div
       className={`absolute ${sizes[size]} ${className}`}
       style={{
-        background: 'linear-gradient(135deg, #d4a039 0%, #e8a54b 50%, #d4a039 100%)',
+        background: 'linear-gradient(135deg, #BA5448 0%, #C1918C 50%, #BA5448 100%)',
         animationDelay: `${delay}s`,
-        boxShadow: '0 8px 32px rgba(212, 160, 57, 0.3)'
+        boxShadow: '0 8px 32px rgba(186, 84, 72, 0.3)'
       }}
     />
   );
@@ -129,7 +129,7 @@ const WeekCard = ({
       className="relative p-8 md:p-10 transition-all duration-500 hover:translate-y-[-4px]"
       style={{
         background: isActive ? 'var(--navy)' : 'var(--white)',
-        border: isActive ? 'none' : '1px solid rgba(26, 46, 74, 0.1)'
+        border: isActive ? 'none' : '1px solid rgba(129, 53, 46, 0.1)'
       }}
     >
       <span
@@ -200,12 +200,12 @@ export default function TheTwentyOnePage() {
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap');
 
         :root {
-          --navy: #1a2e4a;
-          --blue: #2d5a8a;
-          --gold: #d4a039;
-          --cream: #f5f0e8;
-          --amber: #e8a54b;
-          --light-blue: #6b9cc4;
+          --navy: #81352E;
+          --blue: #9D433A;
+          --gold: #BA5448;
+          --cream: #FBE9E7;
+          --amber: #C1918C;
+          --light-blue: #E6C8C3;
           --white: #ffffff;
         }
 
@@ -340,19 +340,19 @@ export default function TheTwentyOnePage() {
           {/* Animated Paint Splatters */}
           <PaintSplatter
             className="w-[600px] h-[600px] -top-20 -left-40 paint-expand"
-            color="rgba(45, 90, 138, 0.15)"
+            color="rgba(157, 67, 58, 0.15)"
             delay={300}
             scale={1.2}
           />
           <PaintSplatter
             className="w-[500px] h-[500px] -bottom-32 -right-20 paint-expand"
-            color="rgba(26, 46, 74, 0.12)"
+            color="rgba(129, 53, 46, 0.12)"
             delay={600}
             scale={1}
           />
           <PaintSplatter
             className="w-[400px] h-[400px] top-1/4 right-1/4 paint-expand"
-            color="rgba(107, 156, 196, 0.1)"
+            color="rgba(230, 200, 195, 0.1)"
             delay={900}
             scale={0.8}
           />
@@ -693,7 +693,7 @@ export default function TheTwentyOnePage() {
                   className="p-8 transition-all duration-500 hover:translate-y-[-4px]"
                   style={{
                     background: 'var(--cream)',
-                    border: '1px solid rgba(26, 46, 74, 0.08)'
+                    border: '1px solid rgba(129, 53, 46, 0.08)'
                   }}
                 >
                   <h3
@@ -848,7 +848,7 @@ export default function TheTwentyOnePage() {
           className="relative py-16 px-6 border-t"
           style={{
             background: '#0a1420',
-            borderColor: 'rgba(245, 240, 232, 0.1)'
+            borderColor: 'rgba(251, 233, 231, 0.1)'
           }}
         >
           <div className="max-w-7xl mx-auto">

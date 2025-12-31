@@ -51,10 +51,10 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
       className="relative p-4 transition-all duration-300 group"
       style={{
         backgroundColor: isComplete
-          ? 'rgba(212, 160, 57, 0.06)'
+          ? 'rgba(186, 84, 72, 0.06)'
           : 'var(--white)',
         borderLeft: `4px solid ${categoryColor}`,
-        border: '1px solid rgba(26, 46, 74, 0.08)',
+        border: '1px solid rgba(129, 53, 46, 0.08)',
         borderLeftWidth: '4px',
         borderLeftColor: categoryColor,
       }}
@@ -78,13 +78,13 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
         <div>
           <h4
             className={`text-sm font-medium ${isComplete ? 'line-through' : ''}`}
-            style={{ color: isComplete ? 'rgba(26, 46, 74, 0.4)' : 'var(--navy)' }}
+            style={{ color: isComplete ? 'rgba(129, 53, 46, 0.4)' : 'var(--navy)' }}
           >
             {goal.title}
           </h4>
           <p
             className="text-xs mt-0.5"
-            style={{ color: isComplete ? 'rgba(26, 46, 74, 0.3)' : 'var(--navy)', opacity: isComplete ? 1 : 0.5 }}
+            style={{ color: isComplete ? 'rgba(129, 53, 46, 0.3)' : 'var(--navy)', opacity: isComplete ? 1 : 0.5 }}
           >
             {goal.description}
           </p>
@@ -106,7 +106,7 @@ function GoalItem({ goal, onUpdateProgress, onDelete }: GoalItemProps) {
       <div className="mt-3 mb-2">
         <div
           className="h-2.5 overflow-hidden"
-          style={{ backgroundColor: 'rgba(26, 46, 74, 0.06)' }}
+          style={{ backgroundColor: 'rgba(129, 53, 46, 0.06)' }}
         >
           <div
             className="h-full transition-all duration-500 ease-out"
@@ -242,14 +242,14 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(26, 46, 74, 0.4)', backdropFilter: 'blur(4px)' }}
+      style={{ backgroundColor: 'rgba(129, 53, 46, 0.4)', backdropFilter: 'blur(4px)' }}
       onClick={onClose}
     >
       <div
         className="w-full max-w-md p-6"
         style={{
           backgroundColor: 'var(--cream)',
-          boxShadow: '0 24px 48px rgba(26, 46, 74, 0.2)',
+          boxShadow: '0 24px 48px rgba(129, 53, 46, 0.2)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -270,7 +270,7 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
               className="w-full px-4 py-2.5 text-sm"
               style={{
                 backgroundColor: 'var(--white)',
-                border: '1px solid rgba(26, 46, 74, 0.12)',
+                border: '1px solid rgba(129, 53, 46, 0.12)',
                 color: 'var(--navy)',
                 outline: 'none',
               }}
@@ -289,7 +289,7 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
               className="w-full px-4 py-2.5 text-sm"
               style={{
                 backgroundColor: 'var(--white)',
-                border: '1px solid rgba(26, 46, 74, 0.12)',
+                border: '1px solid rgba(129, 53, 46, 0.12)',
                 color: 'var(--navy)',
                 outline: 'none',
               }}
@@ -309,7 +309,7 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
                 className="w-full px-4 py-2.5 text-sm"
                 style={{
                   backgroundColor: 'var(--white)',
-                  border: '1px solid rgba(26, 46, 74, 0.12)',
+                  border: '1px solid rgba(129, 53, 46, 0.12)',
                   color: 'var(--navy)',
                   outline: 'none',
                 }}
@@ -327,7 +327,7 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
                 className="w-full px-4 py-2.5 text-sm"
                 style={{
                   backgroundColor: 'var(--white)',
-                  border: '1px solid rgba(26, 46, 74, 0.12)',
+                  border: '1px solid rgba(129, 53, 46, 0.12)',
                   color: 'var(--navy)',
                   outline: 'none',
                 }}
@@ -364,7 +364,7 @@ function AddGoalModal({ isOpen, onClose, onAdd }: AddGoalModalProps) {
               onClick={onClose}
               className="flex-1 py-2.5 text-sm font-medium transition-colors"
               style={{
-                backgroundColor: 'rgba(26, 46, 74, 0.08)',
+                backgroundColor: 'rgba(129, 53, 46, 0.08)',
                 color: 'var(--navy)',
               }}
             >
@@ -403,7 +403,7 @@ export function GoalTracker({
       className="p-6"
       style={{
         background: 'var(--white)',
-        border: '1px solid rgba(26, 46, 74, 0.08)',
+        border: '1px solid rgba(129, 53, 46, 0.08)',
       }}
     >
       {/* Header */}

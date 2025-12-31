@@ -5,17 +5,17 @@ export const WEEK_PHASES = {
   awareness: {
     label: 'Awareness',
     description: 'Understanding your attachment patterns',
-    color: '#1a2e4a', // Navy
+    color: '#81352E', // Deep Burgundy
   },
   healing: {
     label: 'Healing',
     description: 'Processing and releasing old wounds',
-    color: '#2d5a8a', // Blue
+    color: '#9D433A', // Rust/Terracotta
   },
   integration: {
     label: 'Integration',
     description: 'Building secure attachment',
-    color: '#d4a039', // Gold
+    color: '#BA5448', // Warm Rust
   },
 };
 
@@ -377,14 +377,14 @@ export const DEFAULT_GOALS: Omit<HealingGoal, 'id' | 'createdAt' | 'updatedAt'>[
 ];
 
 export const CATEGORY_COLORS: Record<string, string> = {
-  reflection: '#1a2e4a', // Navy
-  exercise: '#2d5a8a', // Blue
-  journaling: '#d4a039', // Gold
-  breathing: '#6b9cc4', // Light Blue
-  attachment: '#1a2e4a', // Navy
-  relationship: '#2d5a8a', // Blue
-  'self-care': '#d4a039', // Gold
-  mindfulness: '#6b9cc4', // Light Blue
+  reflection: '#81352E', // Deep Burgundy
+  exercise: '#9D433A', // Rust/Terracotta
+  journaling: '#BA5448', // Warm Rust
+  breathing: '#E6C8C3', // Soft Mauve
+  attachment: '#81352E', // Deep Burgundy
+  relationship: '#9D433A', // Rust/Terracotta
+  'self-care': '#BA5448', // Warm Rust
+  mindfulness: '#C1918C', // Dusty Rose
 };
 
 export const CATEGORY_LABELS: Record<string, string> = {
