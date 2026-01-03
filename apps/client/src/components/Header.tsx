@@ -30,9 +30,8 @@ export default function Header() {
 
   return (
     <>
+      {/* Fonts loaded via Next.js optimization in layout.tsx */}
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;500&display=swap');
-
         .header-artistic {
           --navy: #81352E;
           --blue: #9D433A;
@@ -42,7 +41,7 @@ export default function Header() {
         }
 
         .header-artistic .heading-serif {
-          font-family: 'Cormorant Garamond', serif;
+          font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
         }
       `}</style>
 

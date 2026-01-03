@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
-import { Poppins, Inter, Cairo } from "next/font/google";
+import { Poppins, Inter, Cairo, Cormorant_Garamond, Outfit } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Header from "../components/Header";
 import { LanguageProvider } from "../components/LanguageProvider";
 import "./globals.css";
+
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: true,
 });
 
 const inter = Inter({
@@ -16,6 +20,7 @@ const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   display: "swap",
+  preload: true,
 });
 
 const cairo = Cairo({
@@ -23,6 +28,24 @@ const cairo = Cairo({
   subsets: ["arabic", "latin"],
   weight: ["400", "600", "700"],
   display: "swap",
+  preload: false,
+});
+
+const cormorantGaramond = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+  preload: true,
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -95,8 +118,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Preconnect to external origins for faster resource loading */}
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        {/* Preconnect to Google Analytics */}
+        {GA_MEASUREMENT_ID && (
+          <>
+            <link rel="preconnect" href="https://www.googletagmanager.com" />
+            <link rel="preconnect" href="https://www.google-analytics.com" />
+          </>
+        )}
+      </head>
       <body
-        className={`${poppins.variable} ${inter.variable} ${cairo.variable} antialiased min-h-screen`}
+        className={`${poppins.variable} ${inter.variable} ${cairo.variable} ${cormorantGaramond.variable} ${outfit.variable} antialiased min-h-screen`}
         style={{
           background: "var(--bg-page)",
           color: "var(--text-primary)",
@@ -107,6 +142,8 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
         </LanguageProvider>
+        {/* Google Analytics - only loads if measurement ID is set */}
+        {GA_MEASUREMENT_ID && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
       </body>
     </html>
   );
