@@ -891,7 +891,7 @@ export function FooterSection() {
         <div className="flex flex-col items-center text-center">
           <div className="mb-8">
             <Image
-              src="/brand-logo.jpg"
+              src="/brand-logo.png"
               alt="21|Twenty One"
               width={256}
               height={256}
