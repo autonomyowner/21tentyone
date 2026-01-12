@@ -43,7 +43,7 @@ export default function LoginPage() {
                 color: 'var(--matcha-600)',
               }}
             >
-              Matcha
+              T21
             </Link>
             <h1
               className="text-3xl mb-2"

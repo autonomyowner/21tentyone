@@ -26,6 +26,7 @@ export default function Header() {
     { label: 'Journey', href: '/dashboard' },
     { label: 'Assessment', href: '/assessment' },
     { label: 'Blog', href: '/blog' },
+    { label: 'Pricing', href: '/pricing' },
   ];
 
   return (

@@ -105,7 +105,7 @@ export default function WelcomeDemo() {
               <span className="dot green" />
             </div>
             <div className="chrome-url">
-              <span>vematcha.com/flash-session</span>
+              <span>thetwentyone.ai/flash-session</span>
             </div>
           </div>
 

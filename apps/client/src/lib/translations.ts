@@ -128,7 +128,7 @@ export const translations = {
       free: 'Free',
       discovery: 'Discovery',
       perMonth: '/month',
-      freeDesc: 'Perfect for discovering Matcha and understanding your first thought patterns.',
+      freeDesc: 'Perfect for discovering T21 and understanding your first thought patterns.',
       freeFeature1: '3 analyses per month',
       freeFeature2: 'Basic psychological profile',
       freeFeature3: 'Main biases identification',
@@ -174,7 +174,7 @@ export const translations = {
 
       // Guarantee
       guaranteeTitle: '30-day money-back guarantee',
-      guaranteeDesc: 'If Matcha doesn\'t help you better understand your thought patterns, we\'ll give you a full refund. No questions, no conditions.',
+      guaranteeDesc: 'If T21 doesn\'t help you better understand your thought patterns, we\'ll give you a full refund. No questions, no conditions.',
       cancelAnytime: 'Cancel in 1 click',
       noCommitment: 'No commitment',
       immediateRefund: 'Immediate refund',
@@ -194,7 +194,7 @@ export const translations = {
 
       // Final CTA
       readyToTransform: 'Ready to transform your way of thinking?',
-      joinThousands: 'Join thousands of people who have already started their journey with Matcha.',
+      joinThousands: 'Join thousands of people who have already started their journey with T21.',
     },
 
     // Login Page
@@ -217,7 +217,7 @@ export const translations = {
     // Signup Page
     signup: {
       title: 'Begin your inner journey',
-      subtitle: 'Create your Matcha account in seconds',
+      subtitle: 'Create your T21 account in seconds',
       choosePlan: 'Choose your plan',
       free: 'Free',
       freeDesc: '3 analyses/month',
@@ -321,7 +321,7 @@ export const translations = {
 
     // Chat
     chat: {
-      title: 'Chat with Matcha AI',
+      title: 'Chat with T21 AI',
       newChat: 'New Chat',
       noConversations: 'No conversations yet',
       welcomeTitle: 'Start a conversation',
@@ -466,7 +466,7 @@ export const translations = {
       free: 'Gratuit',
       discovery: 'Decouverte',
       perMonth: '/mois',
-      freeDesc: 'Parfait pour decouvrir Matcha et comprendre vos premiers schemas de pensee.',
+      freeDesc: 'Parfait pour decouvrir T21 et comprendre vos premiers schemas de pensee.',
       freeFeature1: '3 analyses par mois',
       freeFeature2: 'Profil psychologique de base',
       freeFeature3: 'Identification des biais principaux',
@@ -512,7 +512,7 @@ export const translations = {
 
       // Guarantee
       guaranteeTitle: 'Garantie satisfait ou rembourse 30 jours',
-      guaranteeDesc: 'Si Matcha ne vous aide pas a mieux comprendre vos schemas de pensee, nous vous remboursons integralement. Sans questions, sans conditions.',
+      guaranteeDesc: 'Si T21 ne vous aide pas a mieux comprendre vos schemas de pensee, nous vous remboursons integralement. Sans questions, sans conditions.',
       cancelAnytime: 'Annulation en 1 clic',
       noCommitment: 'Aucun engagement',
       immediateRefund: 'Remboursement immediat',
@@ -532,7 +532,7 @@ export const translations = {
 
       // Final CTA
       readyToTransform: 'Pret a transformer votre facon de penser ?',
-      joinThousands: 'Rejoignez des milliers de personnes qui ont deja commence leur voyage avec Matcha.',
+      joinThousands: 'Rejoignez des milliers de personnes qui ont deja commence leur voyage avec T21.',
     },
 
     // Login Page
@@ -555,7 +555,7 @@ export const translations = {
     // Signup Page
     signup: {
       title: 'Commencez votre voyage interieur',
-      subtitle: 'Creez votre compte Matcha en quelques secondes',
+      subtitle: 'Creez votre compte T21 en quelques secondes',
       choosePlan: 'Choisissez votre plan',
       free: 'Gratuit',
       freeDesc: '3 analyses/mois',
@@ -659,7 +659,7 @@ export const translations = {
 
     // Chat
     chat: {
-      title: 'Discutez avec Matcha AI',
+      title: 'Discutez avec T21 AI',
       newChat: 'Nouvelle discussion',
       noConversations: 'Aucune conversation',
       welcomeTitle: 'Commencez une conversation',

@@ -350,7 +350,7 @@ export default function ChatPage() {
               </svg>
             </button>
             <h1 className="text-base sm:text-lg font-medium truncate" style={{ color: 'var(--text-primary)' }}>
-              {t.chat?.title || 'Chat with Matcha'}
+              {t.chat?.title || 'Chat with T21'}
             </h1>
           </div>
           <div className="flex items-center gap-2">

@@ -101,15 +101,15 @@ function CheckoutContent() {
       } else {
         // Stripe not configured - show early access message
         alert(language === 'en'
-          ? 'Early access! Contact us at support@matcha.ai to activate your Pro subscription.'
-          : 'Accès anticipé ! Contactez-nous à support@matcha.ai pour activer votre abonnement Pro.');
+          ? 'Early access! Contact us at support@thetwenyone.com to activate your Pro subscription.'
+          : 'Accès anticipé ! Contactez-nous à support@thetwenyone.com pour activer votre abonnement Pro.');
         setIsProcessing(false);
       }
     } catch (error) {
       // Fallback for early access
       alert(language === 'en'
-        ? 'Early access! Contact us at support@matcha.ai to activate your Pro subscription.'
-        : 'Accès anticipé ! Contactez-nous à support@matcha.ai pour activer votre abonnement Pro.');
+        ? 'Early access! Contact us at support@thetwenyone.com to activate your Pro subscription.'
+        : 'Accès anticipé ! Contactez-nous à support@thetwenyone.com pour activer votre abonnement Pro.');
       setIsProcessing(false);
     }
   };
@@ -133,7 +133,7 @@ function CheckoutContent() {
               color: 'var(--matcha-600)',
             }}
           >
-            Matcha
+            T21
           </Link>
           <Link
             href="/pricing"
