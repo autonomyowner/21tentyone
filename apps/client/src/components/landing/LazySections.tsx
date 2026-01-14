@@ -23,6 +23,96 @@ function SectionSkeleton() {
   );
 }
 
+// Quiz CTA Section - Lead Capture
+export function QuizCTASection() {
+  return (
+    <section
+      className="relative py-16 md:py-20 px-6"
+      style={{ background: 'var(--navy)' }}
+    >
+      <div className="max-w-4xl mx-auto">
+        <div
+          className="relative p-8 md:p-12 text-center"
+          style={{
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)',
+            border: '1px solid rgba(186, 84, 72, 0.2)'
+          }}
+        >
+          {/* Decorative corner */}
+          <div
+            className="absolute top-0 left-0 w-16 h-16"
+            style={{
+              borderTop: '2px solid var(--gold)',
+              borderLeft: '2px solid var(--gold)',
+            }}
+          />
+          <div
+            className="absolute bottom-0 right-0 w-16 h-16"
+            style={{
+              borderBottom: '2px solid var(--gold)',
+              borderRight: '2px solid var(--gold)',
+            }}
+          />
+
+          <span
+            className="inline-block px-4 py-2 text-xs uppercase tracking-[0.2em] mb-6"
+            style={{ background: 'rgba(186, 84, 72, 0.2)', color: 'var(--gold)' }}
+          >
+            Free 2-Minute Quiz
+          </span>
+
+          <h2
+            className="heading-serif text-2xl md:text-3xl lg:text-4xl font-light mb-4"
+            style={{ color: 'var(--cream)', lineHeight: 1.2 }}
+          >
+            Not Sure If You Have{' '}
+            <span className="italic" style={{ color: 'var(--light-blue)' }}>
+              Attachment Issues?
+            </span>
+          </h2>
+
+          <p
+            className="text-base md:text-lg max-w-xl mx-auto mb-8"
+            style={{ color: 'var(--cream)', opacity: 0.7, lineHeight: 1.6 }}
+          >
+            Discover your attachment style in under 2 minutes and learn why you keep attracting the wrong people.
+          </p>
+
+          <Link
+            href="/quiz"
+            className="group relative inline-flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 overflow-hidden transition-all duration-500"
+            style={{ background: 'var(--gold)', color: 'var(--navy)' }}
+          >
+            <span className="relative z-10 text-sm uppercase tracking-[0.15em] font-semibold">
+              Take The Free Quiz
+            </span>
+            <svg
+              className="relative z-10 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            <div
+              className="absolute inset-0 transition-transform duration-500 group-hover:translate-x-0 -translate-x-full"
+              style={{ background: 'var(--amber)' }}
+            />
+          </Link>
+
+          <p
+            className="mt-6 text-xs"
+            style={{ color: 'var(--cream)', opacity: 0.4 }}
+          >
+            5 questions • Get your personalized results • 100% free
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // Introducing Section
 export function IntroducingSection() {
   return (
@@ -951,6 +1041,7 @@ export function FooterSection() {
 export default function LazySections() {
   return (
     <>
+      <QuizCTASection />
       <IntroducingSection />
       <HowItWorksSection />
       <BonusSection />
