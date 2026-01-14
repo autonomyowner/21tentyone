@@ -1,13 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { R2StorageService } from '../../providers/storage/r2.service';
 
 @Controller('health')
 export class HealthController {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly r2Storage: R2StorageService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   @Get()
   async check() {
@@ -27,7 +23,6 @@ export class HealthController {
       environment: process.env.NODE_ENV || 'development',
       services: {
         database: dbStatus,
-        storage: this.r2Storage.isReady() ? 'configured' : 'not configured',
       },
     };
   }

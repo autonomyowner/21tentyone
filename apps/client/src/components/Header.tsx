@@ -23,7 +23,6 @@ export default function Header() {
   };
 
   const navItems = [
-    { label: 'Journey', href: '/dashboard' },
     { label: 'Assessment', href: '/assessment' },
     { label: 'Blog', href: '/blog' },
     { label: 'Pricing', href: '/pricing' },
@@ -102,7 +101,7 @@ export default function Header() {
               </button>
 
               <Link
-                href="/dashboard"
+                href="/quiz"
                 className="group relative px-6 py-2.5 overflow-hidden transition-all duration-500"
                 style={{
                   background: scrolled ? 'var(--gold)' : 'var(--navy)',
@@ -197,7 +196,7 @@ export default function Header() {
 
           {/* Mobile CTA */}
           <Link
-            href="/dashboard"
+            href="/quiz"
             className="mt-6 px-10 py-4 transition-all duration-500"
             style={{
               background: 'var(--gold)',
