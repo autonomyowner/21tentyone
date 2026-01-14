@@ -3,15 +3,49 @@
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, Suspense } from 'react';
-import { useLanguage } from '../../components/LanguageProvider';
+
+// Product definitions
+const products = {
+  '21-day-protocol': {
+    id: '21-day-protocol',
+    name: '21-Day Protocol',
+    subtitle: 'Main Healing Program',
+    price: 27,
+    originalPrice: 67,
+    description: 'The complete 21-day healing protocol to transform your attachment patterns.',
+    features: [
+      'Complete 21-day healing protocol',
+      'Daily exercises & reflections',
+      'Audio meditations included',
+      'Nervous system regulation techniques',
+      'Relationship communication scripts',
+      'Lifetime access to all materials',
+    ],
+  },
+  'premium-pdf': {
+    id: 'premium-pdf',
+    name: 'Premium PDF Guide',
+    subtitle: 'Comprehensive Guide',
+    price: 9,
+    originalPrice: null,
+    description: 'An in-depth guide to understanding and healing anxious attachment.',
+    features: [
+      'Complete attachment theory overview',
+      'Deep-dive into anxious patterns',
+      'Detailed healing exercises',
+      'Journaling prompts & worksheets',
+      'Printable resources',
+    ],
+  },
+};
+
+type ProductKey = keyof typeof products;
 
 function CheckoutContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { t, language } = useLanguage();
-  const _plan = searchParams.get('plan') || 'pro';
-  void _plan; // Reserved for future use
-  const billing = searchParams.get('billing') || 'monthly';
+  const productId = (searchParams.get('product') || '21-day-protocol') as ProductKey;
+  const product = products[productId] || products['21-day-protocol'];
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,31 +54,8 @@ function CheckoutContent() {
     expiry: '',
     cvc: '',
     name: '',
-    country: language === 'en' ? 'United States' : 'France',
+    country: 'France',
   });
-
-  const currency = language === 'en' ? '$' : '€';
-  const price = billing === 'yearly' ? 144 : 15;
-  const priceLabel = billing === 'yearly' ? `144${currency}/${language === 'en' ? 'year' : 'an'}` : `15${currency}/${language === 'en' ? 'month' : 'mois'}`;
-  const savings = language === 'en' ? `$36` : `36€`;
-
-  const features = language === 'en'
-    ? [
-        'Unlimited analyses',
-        'Complete psychological profile',
-        'All cognitive biases detected',
-        'Monthly progress tracking',
-        'AI chat for deeper insights',
-        'Priority support',
-      ]
-    : [
-        'Analyses illimitées',
-        'Profil psychologique complet',
-        'Tous les biais cognitifs détectés',
-        'Suivi de progression mensuel',
-        'Chat IA pour approfondir',
-        'Support prioritaire',
-      ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -87,9 +98,10 @@ function CheckoutContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: formData.email,
-          billing,
-          successUrl: `${window.location.origin}/dashboard?upgraded=true`,
-          cancelUrl: `${window.location.origin}/checkout?plan=pro&billing=${billing}`,
+          productId: product.id,
+          price: product.price,
+          successUrl: `${window.location.origin}/thank-you?product=${product.id}`,
+          cancelUrl: `${window.location.origin}/checkout?product=${product.id}`,
         }),
       });
 
@@ -100,28 +112,24 @@ function CheckoutContent() {
         window.location.href = data.url;
       } else {
         // Stripe not configured - show early access message
-        alert(language === 'en'
-          ? 'Early access! Contact us at support@thetwenyone.com to activate your Pro subscription.'
-          : 'Accès anticipé ! Contactez-nous à support@thetwenyone.com pour activer votre abonnement Pro.');
+        alert('Early access! Contact us at support@thetwenyone.com to complete your purchase.');
         setIsProcessing(false);
       }
     } catch (error) {
       // Fallback for early access
-      alert(language === 'en'
-        ? 'Early access! Contact us at support@thetwenyone.com to activate your Pro subscription.'
-        : 'Accès anticipé ! Contactez-nous à support@thetwenyone.com pour activer votre abonnement Pro.');
+      alert('Early access! Contact us at support@thetwenyone.com to complete your purchase.');
       setIsProcessing(false);
     }
   };
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--cream-50)' }}>
+    <div className="min-h-screen" style={{ background: 'var(--cream)' }}>
       {/* Header */}
       <header
         className="sticky top-0 z-50 border-b backdrop-blur-md"
         style={{
           background: 'rgba(252, 250, 245, 0.9)',
-          borderColor: 'var(--border-soft)',
+          borderColor: 'rgba(129, 53, 46, 0.1)',
         }}
       >
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -130,7 +138,7 @@ function CheckoutContent() {
             className="text-xl font-semibold"
             style={{
               fontFamily: 'var(--font-dm-serif), Georgia, serif',
-              color: 'var(--matcha-600)',
+              color: 'var(--navy)',
             }}
           >
             T21
@@ -138,9 +146,9 @@ function CheckoutContent() {
           <Link
             href="/pricing"
             className="text-sm hover:underline"
-            style={{ color: 'var(--text-secondary)' }}
+            style={{ color: 'var(--navy)', opacity: 0.6 }}
           >
-            {t.checkout.backToPricing}
+            Back to Products
           </Link>
         </div>
       </header>
@@ -150,59 +158,58 @@ function CheckoutContent() {
           {/* Order Summary */}
           <div className="order-2 lg:order-1">
             <div
-              className="rounded-2xl p-8"
+              className="p-8"
               style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border-soft)',
-                boxShadow: 'var(--shadow-md)',
+                background: 'var(--white)',
+                border: '1px solid rgba(129, 53, 46, 0.1)',
               }}
             >
               <h2
                 className="text-xl mb-6"
                 style={{
                   fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                  color: 'var(--text-primary)',
+                  color: 'var(--navy)',
                 }}
               >
-                {t.checkout.orderSummary}
+                Order Summary
               </h2>
 
-              {/* Plan Details */}
+              {/* Product Details */}
               <div
-                className="p-4 rounded-xl mb-6"
-                style={{ background: 'var(--cream-100)' }}
+                className="p-4 mb-6"
+                style={{ background: 'var(--cream)', border: '1px solid rgba(129, 53, 46, 0.05)' }}
               >
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <span
-                      className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold mb-2"
+                      className="inline-block px-3 py-1 text-xs uppercase tracking-wider font-medium mb-2"
                       style={{
-                        background: 'var(--matcha-500)',
-                        color: 'white',
+                        background: 'var(--gold)',
+                        color: 'var(--navy)',
                       }}
                     >
-                      Pro
+                      {product.subtitle}
                     </span>
                     <h3
-                      className="font-medium"
-                      style={{ color: 'var(--text-primary)' }}
+                      className="font-medium text-lg"
+                      style={{ color: 'var(--navy)' }}
                     >
-                      {t.checkout.planTransformation}
+                      {product.name}
                     </h3>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      {billing === 'yearly' ? t.checkout.billedYearly : t.checkout.billedMonthly}
+                    <p className="text-sm mt-1" style={{ color: 'var(--navy)', opacity: 0.6 }}>
+                      One-time purchase
                     </p>
                   </div>
                   <div className="text-right">
                     <p
-                      className="text-xl font-bold"
-                      style={{ color: 'var(--text-primary)' }}
+                      className="text-2xl font-bold"
+                      style={{ color: 'var(--navy)' }}
                     >
-                      {priceLabel}
+                      €{product.price}
                     </p>
-                    {billing === 'yearly' && (
-                      <p className="text-xs" style={{ color: 'var(--matcha-600)' }}>
-                        {t.checkout.save} {savings}
+                    {product.originalPrice && (
+                      <p className="text-sm line-through" style={{ color: 'var(--navy)', opacity: 0.4 }}>
+                        €{product.originalPrice}
                       </p>
                     )}
                   </div>
@@ -212,19 +219,19 @@ function CheckoutContent() {
               {/* Features included */}
               <div className="mb-6">
                 <p
-                  className="text-sm font-medium mb-3"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="text-sm font-medium mb-3 uppercase tracking-wider"
+                  style={{ color: 'var(--gold)' }}
                 >
-                  {t.checkout.includedInSub}
+                  What's Included
                 </p>
                 <ul className="space-y-2">
-                  {features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm">
+                  {product.features.map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm">
                       <span
-                        className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: 'var(--matcha-500)' }}
+                        className="w-1.5 h-1.5"
+                        style={{ background: 'var(--gold)' }}
                       />
-                      <span style={{ color: 'var(--text-secondary)' }}>{feature}</span>
+                      <span style={{ color: 'var(--navy)', opacity: 0.7 }}>{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -233,44 +240,40 @@ function CheckoutContent() {
               {/* Divider */}
               <div
                 className="h-px my-6"
-                style={{ background: 'var(--border-soft)' }}
+                style={{ background: 'rgba(129, 53, 46, 0.1)' }}
               />
 
               {/* Total */}
               <div className="flex justify-between items-center mb-4">
-                <span style={{ color: 'var(--text-secondary)' }}>{t.checkout.subtotal}</span>
-                <span style={{ color: 'var(--text-primary)' }}>{price}{currency}</span>
-              </div>
-              <div className="flex justify-between items-center mb-4">
-                <span style={{ color: 'var(--text-secondary)' }}>{t.checkout.vat}</span>
-                <span style={{ color: 'var(--text-primary)' }}>{(price * 0.2).toFixed(2)}{currency}</span>
+                <span style={{ color: 'var(--navy)', opacity: 0.6 }}>Subtotal</span>
+                <span style={{ color: 'var(--navy)' }}>€{product.price}</span>
               </div>
               <div
                 className="h-px my-4"
-                style={{ background: 'var(--border-soft)' }}
+                style={{ background: 'rgba(129, 53, 46, 0.1)' }}
               />
               <div className="flex justify-between items-center">
                 <span
                   className="font-semibold"
-                  style={{ color: 'var(--text-primary)' }}
+                  style={{ color: 'var(--navy)' }}
                 >
-                  {t.checkout.total}
+                  Total
                 </span>
                 <span
-                  className="text-xl font-bold"
-                  style={{ color: 'var(--matcha-600)' }}
+                  className="text-2xl font-bold"
+                  style={{ color: 'var(--navy)' }}
                 >
-                  {(price * 1.2).toFixed(2)}{currency}
+                  €{product.price}
                 </span>
               </div>
 
               {/* Guarantee */}
               <div
-                className="mt-6 p-4 rounded-xl text-center"
-                style={{ background: 'var(--cream-100)' }}
+                className="mt-6 p-4 text-center"
+                style={{ background: 'var(--cream)', border: '1px solid rgba(129, 53, 46, 0.05)' }}
               >
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                  {t.checkout.guarantee}
+                <p className="text-sm" style={{ color: 'var(--navy)', opacity: 0.6 }}>
+                  30-day money-back guarantee. Lifetime access.
                 </p>
               </div>
             </div>
@@ -282,13 +285,13 @@ function CheckoutContent() {
               className="text-2xl mb-2"
               style={{
                 fontFamily: 'var(--font-dm-serif), Georgia, serif',
-                color: 'var(--text-primary)',
+                color: 'var(--navy)',
               }}
             >
-              {t.checkout.finalizeSubscription}
+              Complete Your Purchase
             </h1>
-            <p className="mb-8" style={{ color: 'var(--text-secondary)' }}>
-              {t.checkout.securePayment}
+            <p className="mb-8" style={{ color: 'var(--navy)', opacity: 0.6 }}>
+              Secure payment powered by Stripe
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -297,9 +300,9 @@ function CheckoutContent() {
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium mb-2"
-                  style={{ color: 'var(--text-primary)' }}
+                  style={{ color: 'var(--navy)' }}
                 >
-                  {t.checkout.emailAddress}
+                  Email Address
                 </label>
                 <input
                   type="email"
@@ -308,12 +311,12 @@ function CheckoutContent() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  placeholder={language === 'en' ? 'you@example.com' : 'vous@exemple.com'}
-                  className="w-full px-4 py-3 rounded-xl text-base transition-all outline-none"
+                  placeholder="you@example.com"
+                  className="w-full px-4 py-3 text-base transition-all outline-none"
                   style={{
-                    background: 'var(--bg-card)',
-                    border: '1px solid var(--border-soft)',
-                    color: 'var(--text-primary)',
+                    background: 'var(--white)',
+                    border: '1px solid rgba(129, 53, 46, 0.2)',
+                    color: 'var(--navy)',
                   }}
                 />
               </div>
@@ -322,13 +325,13 @@ function CheckoutContent() {
               <div>
                 <label
                   className="block text-sm font-medium mb-2"
-                  style={{ color: 'var(--text-primary)' }}
+                  style={{ color: 'var(--navy)' }}
                 >
-                  {t.checkout.cardInfo}
+                  Card Information
                 </label>
                 <div
-                  className="rounded-xl overflow-hidden"
-                  style={{ border: '1px solid var(--border-soft)' }}
+                  className="overflow-hidden"
+                  style={{ border: '1px solid rgba(129, 53, 46, 0.2)' }}
                 >
                   <input
                     type="text"
@@ -336,12 +339,12 @@ function CheckoutContent() {
                     value={formData.cardNumber}
                     onChange={handleInputChange}
                     required
-                    placeholder={t.checkout.cardPlaceholder}
+                    placeholder="1234 1234 1234 1234"
                     className="w-full px-4 py-3 text-base outline-none"
                     style={{
-                      background: 'var(--bg-card)',
-                      color: 'var(--text-primary)',
-                      borderBottom: '1px solid var(--border-soft)',
+                      background: 'var(--white)',
+                      color: 'var(--navy)',
+                      borderBottom: '1px solid rgba(129, 53, 46, 0.1)',
                     }}
                   />
                   <div className="flex">
@@ -354,9 +357,9 @@ function CheckoutContent() {
                       placeholder="MM/YY"
                       className="w-1/2 px-4 py-3 text-base outline-none"
                       style={{
-                        background: 'var(--bg-card)',
-                        color: 'var(--text-primary)',
-                        borderRight: '1px solid var(--border-soft)',
+                        background: 'var(--white)',
+                        color: 'var(--navy)',
+                        borderRight: '1px solid rgba(129, 53, 46, 0.1)',
                       }}
                     />
                     <input
@@ -368,8 +371,8 @@ function CheckoutContent() {
                       placeholder="CVC"
                       className="w-1/2 px-4 py-3 text-base outline-none"
                       style={{
-                        background: 'var(--bg-card)',
-                        color: 'var(--text-primary)',
+                        background: 'var(--white)',
+                        color: 'var(--navy)',
                       }}
                     />
                   </div>
@@ -381,9 +384,9 @@ function CheckoutContent() {
                 <label
                   htmlFor="name"
                   className="block text-sm font-medium mb-2"
-                  style={{ color: 'var(--text-primary)' }}
+                  style={{ color: 'var(--navy)' }}
                 >
-                  {t.checkout.nameOnCard}
+                  Name on Card
                 </label>
                 <input
                   type="text"
@@ -392,12 +395,12 @@ function CheckoutContent() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  placeholder={t.checkout.namePlaceholder}
-                  className="w-full px-4 py-3 rounded-xl text-base transition-all outline-none"
+                  placeholder="Full name"
+                  className="w-full px-4 py-3 text-base transition-all outline-none"
                   style={{
-                    background: 'var(--bg-card)',
-                    border: '1px solid var(--border-soft)',
-                    color: 'var(--text-primary)',
+                    background: 'var(--white)',
+                    border: '1px solid rgba(129, 53, 46, 0.2)',
+                    color: 'var(--navy)',
                   }}
                 />
               </div>
@@ -407,39 +410,30 @@ function CheckoutContent() {
                 <label
                   htmlFor="country"
                   className="block text-sm font-medium mb-2"
-                  style={{ color: 'var(--text-primary)' }}
+                  style={{ color: 'var(--navy)' }}
                 >
-                  {t.checkout.country}
+                  Country
                 </label>
                 <select
                   id="country"
                   name="country"
                   value={formData.country}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl text-base transition-all outline-none"
+                  className="w-full px-4 py-3 text-base transition-all outline-none"
                   style={{
-                    background: 'var(--bg-card)',
-                    border: '1px solid var(--border-soft)',
-                    color: 'var(--text-primary)',
+                    background: 'var(--white)',
+                    border: '1px solid rgba(129, 53, 46, 0.2)',
+                    color: 'var(--navy)',
                   }}
                 >
-                  {language === 'en' ? (
-                    <>
-                      <option value="United States">United States</option>
-                      <option value="United Kingdom">United Kingdom</option>
-                      <option value="Canada">Canada</option>
-                      <option value="Australia">Australia</option>
-                      <option value="France">France</option>
-                    </>
-                  ) : (
-                    <>
-                      <option value="France">{t.checkout.france}</option>
-                      <option value="Belgique">{t.checkout.belgium}</option>
-                      <option value="Suisse">{t.checkout.switzerland}</option>
-                      <option value="Canada">{t.checkout.canada}</option>
-                      <option value="Luxembourg">{t.checkout.luxembourg}</option>
-                    </>
-                  )}
+                  <option value="France">France</option>
+                  <option value="Belgium">Belgium</option>
+                  <option value="Switzerland">Switzerland</option>
+                  <option value="Canada">Canada</option>
+                  <option value="United States">United States</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="Germany">Germany</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
@@ -447,27 +441,24 @@ function CheckoutContent() {
               <button
                 type="submit"
                 disabled={isProcessing}
-                className="w-full py-4 rounded-xl font-medium text-base transition-all disabled:opacity-70"
+                className="w-full py-4 font-medium text-base transition-all disabled:opacity-70 uppercase tracking-wider"
                 style={{
-                  background: isProcessing
-                    ? 'var(--matcha-400)'
-                    : 'linear-gradient(135deg, var(--matcha-500) 0%, var(--matcha-600) 100%)',
-                  color: 'white',
-                  boxShadow: '0 4px 14px rgba(104, 166, 125, 0.4)',
+                  background: isProcessing ? 'var(--navy)' : 'var(--gold)',
+                  color: isProcessing ? 'var(--cream)' : 'var(--navy)',
                 }}
               >
                 {isProcessing ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    {t.checkout.processing}
+                    Processing...
                   </span>
                 ) : (
-                  `${t.checkout.pay} ${(price * 1.2).toFixed(2)}${currency}`
+                  `Pay €${product.price}`
                 )}
               </button>
 
               {/* Security Note */}
-              <div className="flex items-center justify-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
+              <div className="flex items-center justify-center gap-2 text-sm" style={{ color: 'var(--navy)', opacity: 0.5 }}>
                 <svg
                   width="16"
                   height="16"
@@ -479,18 +470,18 @@ function CheckoutContent() {
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
-                <span>{t.checkout.secureSSL}</span>
+                <span>SSL Secured Payment</span>
               </div>
 
               {/* Terms */}
-              <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
-                {t.checkout.termsAccept}{' '}
+              <p className="text-xs text-center" style={{ color: 'var(--navy)', opacity: 0.5 }}>
+                By completing this purchase, you agree to our{' '}
                 <Link href="/terms" className="underline hover:no-underline">
-                  {t.checkout.termsOfUse}
+                  Terms of Use
                 </Link>{' '}
-                {t.checkout.and}{' '}
+                and{' '}
                 <Link href="/privacy" className="underline hover:no-underline">
-                  {t.checkout.privacyPolicy}
+                  Privacy Policy
                 </Link>
                 .
               </p>
@@ -502,15 +493,15 @@ function CheckoutContent() {
       {/* Stripe Badge */}
       <div className="pb-12 text-center">
         <div
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
-          style={{ background: 'var(--cream-200)' }}
+          className="inline-flex items-center gap-2 px-4 py-2"
+          style={{ background: 'rgba(129, 53, 46, 0.05)' }}
         >
-          <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            {t.checkout.poweredBy}
+          <span className="text-sm" style={{ color: 'var(--navy)', opacity: 0.5 }}>
+            Powered by
           </span>
           <span
             className="font-semibold"
-            style={{ color: 'var(--text-secondary)' }}
+            style={{ color: 'var(--navy)', opacity: 0.7 }}
           >
             stripe
           </span>
@@ -523,8 +514,8 @@ function CheckoutContent() {
 export default function CheckoutPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--cream-50)' }}>
-        <div className="w-8 h-8 border-2 border-[var(--matcha-500)] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--cream)' }}>
+        <div className="w-8 h-8 border-2 border-[var(--navy)] border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <CheckoutContent />
