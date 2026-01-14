@@ -378,7 +378,7 @@ export const ArtisticFooter = () => {
             Your 21-day journey to emotional freedom.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-8 mb-12">
+          <div className="flex flex-wrap justify-center gap-8 mb-8">
             {[
               { label: 'Privacy', href: '/privacy' },
               { label: 'Terms', href: '/terms' },
@@ -394,6 +394,14 @@ export const ArtisticFooter = () => {
               </a>
             ))}
           </div>
+
+          <a
+            href="mailto:support@thetwenyone.com"
+            className="text-sm mb-12 transition-colors duration-300 hover:text-[var(--gold)]"
+            style={{ color: 'var(--cream)', opacity: 0.7 }}
+          >
+            support@thetwenyone.com
+          </a>
 
           <p
             className="text-xs"
