@@ -3,17 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { HealthModule } from './modules/health/health.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
-import { AnalysesModule } from './modules/analyses/analyses.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
-import { PlansModule } from './modules/plans/plans.module';
-import { WebhooksModule } from './modules/webhooks/webhooks.module';
-import { ChatModule } from './modules/chat/chat.module';
-import { TtsModule } from './modules/tts/tts.module';
 import { StripeModule } from './modules/stripe/stripe.module';
-import { CycleModule } from './modules/cycle/cycle.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ProductsModule } from './modules/products/products.module';
+import { PurchasesModule } from './modules/purchases/purchases.module';
+import { EmailModule } from './modules/email/email.module';
+import { AdminModule } from './modules/admin/admin.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -22,40 +17,34 @@ import configuration from './config/configuration';
       isGlobal: true,
       load: [configuration],
     }),
-    // Global rate limiting: 100 requests per minute per IP
+    // Global rate limiting
     ThrottlerModule.forRoot([
       {
         name: 'short',
-        ttl: 1000, // 1 second
-        limit: 3, // 3 requests per second
+        ttl: 1000,
+        limit: 3,
       },
       {
         name: 'medium',
-        ttl: 60000, // 1 minute
-        limit: 60, // 60 requests per minute
+        ttl: 60000,
+        limit: 60,
       },
       {
         name: 'long',
-        ttl: 3600000, // 1 hour
-        limit: 1000, // 1000 requests per hour
+        ttl: 3600000,
+        limit: 1000,
       },
     ]),
     PrismaModule,
-    AuthModule,
-    UsersModule,
-    AnalysesModule,
-    DashboardModule,
-    PlansModule,
-    WebhooksModule,
-    ChatModule,
-    TtsModule,
-    StripeModule,
-    CycleModule,
     HealthModule,
+    StripeModule,
+    ProductsModule,
+    PurchasesModule,
+    EmailModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [
-    // Apply rate limiting globally
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

@@ -1,0 +1,324 @@
+% t21_treatment_plan.sty
+% T21 Branded Treatment Plan Style
+% Warm Burgundy/Cream Wellness Aesthetic
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{t21_treatment_plan}[2025/01/12 T21 Treatment Plan Style]
+
+% Required packages
+\RequirePackage[margin=1in, top=1.2in, bottom=1.2in]{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{tikz}
+\RequirePackage{fontspec}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+\RequirePackage{enumitem}
+\RequirePackage{booktabs}
+\RequirePackage{longtable}
+\RequirePackage{array}
+\RequirePackage{colortbl}
+\RequirePackage{hyperref}
+\RequirePackage{tabularx}
+
+% ============================================
+% T21 COLOR PALETTE - Warm Burgundy/Cream
+% ============================================
+\definecolor{t21primary}{HTML}{81352E}       % Dark Burgundy - Primary
+\definecolor{t21accent}{HTML}{BA5448}        % Medium Burgundy - Accent
+\definecolor{t21secondary}{HTML}{9D433A}     % Secondary Burgundy
+\definecolor{t21cream50}{HTML}{FBE9E7}       % Lightest Cream
+\definecolor{t21cream100}{HTML}{F5E0DB}      % Light Cream
+\definecolor{t21cream200}{HTML}{EACCC6}      % Cream
+\definecolor{t21cream300}{HTML}{E6C8C3}      % Medium Cream
+\definecolor{t21muted}{HTML}{A87A75}         % Muted Terracotta
+\definecolor{t21text}{HTML}{81352E}          % Text (matches primary)
+\definecolor{t21textlight}{HTML}{9D433A}     % Light text
+\definecolor{t21warning}{HTML}{C45C4C}       % Warning red-burgundy
+\definecolor{t21success}{HTML}{6B8E6B}       % Muted sage green for success/goals
+
+% T21 Fonts - Poppins for headings, Inter for body
+\setmainfont{Inter}
+\setsansfont{Poppins}
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=t21primary,
+    citecolor=t21secondary,
+    urlcolor=t21accent,
+    pdfborder={0 0 0}
+}
+
+% ============================================
+% HEADER AND FOOTER STYLING
+% ============================================
+\setlength{\headheight}{24pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\color{t21primary}\sffamily\small\textbf{T21 Attachment Healing Program}}
+\fancyhead[R]{\color{t21muted}\sffamily\small 21-Day Intensive}
+\fancyfoot[C]{\color{t21muted}\small\thepage}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{t21primary}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0.5pt}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{t21cream200}\leaders\hrule height \footrulewidth\hfill}}
+
+% ============================================
+% SECTION STYLING
+% ============================================
+\titleformat{\section}
+  {\color{t21primary}\Large\sffamily\bfseries}
+  {\thesection}{1em}{}
+  [\color{t21accent}\titlerule]
+
+\titleformat{\subsection}
+  {\color{t21secondary}\large\sffamily\bfseries}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\color{t21muted}\normalsize\sffamily\bfseries}
+  {\thesubsubsection}{1em}{}
+
+% ============================================
+% TITLE PAGE - T21 BRANDED
+% ============================================
+\newcommand{\t21title}[2]{
+  \begin{tcolorbox}[
+    enhanced,
+    colback=t21primary,
+    colframe=t21primary,
+    arc=0mm,
+    boxrule=0pt,
+    left=25pt,
+    right=25pt,
+    top=35pt,
+    bottom=35pt,
+    width=\textwidth
+  ]
+    \color{white}
+    \begin{center}
+      {\fontsize{14pt}{16pt}\selectfont\sffamily\bfseries T21}\\[8pt]
+      {\fontsize{11pt}{13pt}\selectfont\sffamily ATTACHMENT HEALING PROGRAM}\\[20pt]
+      {\fontsize{24pt}{28pt}\selectfont\sffamily\bfseries #1}\\[12pt]
+      {\fontsize{14pt}{16pt}\selectfont\sffamily #2}\\[18pt]
+      {\normalsize\sffamily\color{t21cream100}\today}
+    \end{center}
+  \end{tcolorbox}
+  \vspace{1cm}
+}
+
+% ============================================
+% CUSTOM BOXES - T21 BRANDED
+% ============================================
+
+% Info box - Cream background with burgundy border
+\newtcolorbox{infobox}[1][]{
+  enhanced,
+  colback=t21cream50,
+  colframe=t21secondary,
+  arc=4mm,
+  boxrule=1.5pt,
+  left=12pt,
+  right=12pt,
+  top=12pt,
+  bottom=12pt,
+  title=#1,
+  fonttitle=\sffamily\bfseries,
+  coltitle=white,
+  colbacktitle=t21secondary
+}
+
+% Warning box - Soft warning with burgundy tones
+\newtcolorbox{warningbox}[1][Important]{
+  enhanced,
+  colback=t21cream100,
+  colframe=t21warning,
+  arc=4mm,
+  boxrule=1.5pt,
+  left=12pt,
+  right=12pt,
+  top=12pt,
+  bottom=12pt,
+  title=#1,
+  fonttitle=\sffamily\bfseries,
+  coltitle=white,
+  colbacktitle=t21warning
+}
+
+% Goal box - Sage green for goals/success
+\newtcolorbox{goalbox}[1][Treatment Goals]{
+  enhanced,
+  colback=green!5,
+  colframe=t21success,
+  arc=4mm,
+  boxrule=1.5pt,
+  left=12pt,
+  right=12pt,
+  top=12pt,
+  bottom=12pt,
+  title=#1,
+  fonttitle=\sffamily\bfseries,
+  coltitle=white,
+  colbacktitle=t21success
+}
+
+% Key points box - Accent burgundy
+\newtcolorbox{keybox}[1][Key Points]{
+  enhanced,
+  colback=t21cream50,
+  colframe=t21accent,
+  arc=4mm,
+  boxrule=1.5pt,
+  left=12pt,
+  right=12pt,
+  top=12pt,
+  bottom=12pt,
+  title=#1,
+  fonttitle=\sffamily\bfseries,
+  coltitle=white,
+  colbacktitle=t21accent
+}
+
+% Phase box - For treatment phases
+\newtcolorbox{phasebox}[1][Phase]{
+  enhanced,
+  colback=white,
+  colframe=t21primary,
+  arc=4mm,
+  boxrule=2pt,
+  left=15pt,
+  right=15pt,
+  top=15pt,
+  bottom=15pt,
+  title=#1,
+  fonttitle=\sffamily\bfseries\large,
+  coltitle=white,
+  colbacktitle=t21primary,
+  attach boxed title to top left={yshift=-3mm, xshift=5mm},
+  boxed title style={arc=3mm, boxrule=0pt}
+}
+
+% Day activity box
+\newtcolorbox{daybox}[1][Day]{
+  enhanced,
+  colback=t21cream50,
+  colframe=t21cream300,
+  arc=3mm,
+  boxrule=1pt,
+  left=10pt,
+  right=10pt,
+  top=8pt,
+  bottom=8pt,
+  title=#1,
+  fonttitle=\sffamily\bfseries,
+  coltitle=t21primary,
+  colbacktitle=t21cream100
+}
+
+% Patient info section style
+\newenvironment{patientinfo}{
+  \begin{tcolorbox}[
+    enhanced,
+    colback=white,
+    colframe=t21cream200,
+    arc=3mm,
+    boxrule=1.5pt,
+    left=15pt,
+    right=15pt,
+    top=12pt,
+    bottom=12pt
+  ]
+  \sffamily
+}{
+  \end{tcolorbox}
+}
+
+% Emergency contact box
+\newtcolorbox{emergencybox}{
+  enhanced,
+  colback=t21cream100,
+  colframe=t21warning,
+  arc=4mm,
+  boxrule=2pt,
+  left=15pt,
+  right=15pt,
+  top=15pt,
+  bottom=15pt,
+  title=CRISIS RESOURCES,
+  fonttitle=\sffamily\bfseries\Large,
+  coltitle=white,
+  colbacktitle=t21warning
+}
+
+% ============================================
+% TABLE STYLING
+% ============================================
+\newcommand{\tableheadercolor}{\rowcolor{t21primary}}
+\newcommand{\tablerowcolor}{\rowcolor{t21cream50}}
+
+\newenvironment{t21table}[1]{
+  \begin{table}[h]
+  \centering
+  \small\sffamily
+  \renewcommand{\arraystretch}{1.4}
+}{
+  \end{table}
+}
+
+% ============================================
+% LIST STYLING
+% ============================================
+\setlist[itemize,1]{label=\textcolor{t21primary}{\textbullet}, leftmargin=*, itemsep=4pt}
+\setlist[enumerate,1]{label=\textcolor{t21primary}{\arabic*.}, leftmargin=*, itemsep=4pt}
+\setlist[itemize,2]{label=\textcolor{t21accent}{--}, leftmargin=*, itemsep=2pt}
+
+% ============================================
+% SPECIAL T21 ELEMENTS
+% ============================================
+
+% Week divider
+\newcommand{\weekdivider}[1]{
+  \vspace{0.8cm}
+  \begin{center}
+  \begin{tikzpicture}
+    \draw[t21cream200, line width=1pt] (-4,0) -- (-1.5,0);
+    \node[fill=white, inner sep=6pt] at (0,0) {\color{t21primary}\sffamily\bfseries\large #1};
+    \draw[t21cream200, line width=1pt] (1.5,0) -- (4,0);
+  \end{tikzpicture}
+  \end{center}
+  \vspace{0.3cm}
+}
+
+% Intervention tag
+\newcommand{\intervention}[1]{%
+  \tcbox[
+    on line,
+    colback=t21cream100,
+    colframe=t21cream200,
+    arc=2mm,
+    boxrule=0.5pt,
+    left=4pt,
+    right=4pt,
+    top=2pt,
+    bottom=2pt
+  ]{\small\sffamily\color{t21primary}#1}%
+}
+
+% Goal tag
+\newcommand{\goaltag}[1]{%
+  \tcbox[
+    on line,
+    colback=green!10,
+    colframe=t21success,
+    arc=2mm,
+    boxrule=0.5pt,
+    left=4pt,
+    right=4pt,
+    top=2pt,
+    bottom=2pt
+  ]{\small\sffamily\color{t21success}#1}%
+}
+
+\endinput

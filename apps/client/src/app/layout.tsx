@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Inter, Cairo, Cormorant_Garamond, Outfit } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import Header from "../components/Header";
+import { ConditionalHeader } from "../components/ConditionalHeader";
 import { LanguageProvider } from "../components/LanguageProvider";
 import "./globals.css";
 
@@ -139,7 +139,7 @@ export default function RootLayout({
         }}
       >
         <LanguageProvider>
-          <Header />
+          <ConditionalHeader />
           <main>{children}</main>
         </LanguageProvider>
         {/* Google Analytics - only loads if measurement ID is set */}

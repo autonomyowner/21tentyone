@@ -1,10 +1,11 @@
 {
-  "name": "@matcha/api",
+  "name": "@twentyone/api",
   "version": "1.0.0",
-  "description": "Matcha Backend API - NestJS",
+  "description": "21|Twenty One Backend API - NestJS",
   "main": "dist/main.js",
   "prisma": {
-    "schema": "prisma/schema.prisma"
+    "schema": "prisma/schema.prisma",
+    "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
     "build": "npx nest build",
@@ -20,21 +21,18 @@
     "postinstall": "prisma generate --schema=./prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "prisma:seed": "prisma db seed"
   },
   "keywords": [
     "nestjs",
-    "matcha",
+    "twentyone",
     "api",
-    "psychological-profiling"
+    "attachment-healing"
   ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.940.0",
-    "@aws-sdk/s3-request-presigner": "^3.940.0",
-    "@clerk/clerk-sdk-node": "^5.1.6",
-    "@nestjs/bull": "^11.0.4",
     "@nestjs/cli": "^11.0.14",
     "@nestjs/common": "^10.4.15",
     "@nestjs/config": "^3.3.0",
@@ -42,14 +40,11 @@
     "@nestjs/platform-express": "^10.4.15",
     "@nestjs/throttler": "^6.4.0",
     "@prisma/client": "^5.22.0",
-    "bull": "^4.16.5",
-    "ioredis": "^5.8.2",
-    "next": "16.1.1",
     "prisma": "^5.22.0",
     "reflect-metadata": "^0.2.2",
+    "resend": "^4.0.0",
     "rxjs": "^7.8.2",
     "stripe": "^17.3.1",
-    "svix": "^1.81.0",
     "typescript": "^5.7.2",
     "zod": "^3.24.0"
   },

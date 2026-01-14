@@ -7,236 +7,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserTier {
-  FREE
-  PRO
+model Customer {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  stripeId  String?    @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  purchases Purchase[]
 }
 
-enum AnalysisStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
-enum SessionType {
-  REGULAR
-  EMDR_FLASH
-}
-
-enum EmdrPhase {
-  PREPARATION
-  TRAUMA_RECALL
-  BILATERAL_START
-  POSITIVE_RESOURCE
-  BILATERAL_POSITIVE
-  INTEGRATION
-  COMPLETED
-}
-
-enum CyclePhase {
-  MENSTRUAL
-  FOLLICULAR
-  OVULATION
-  LUTEAL
-}
-
-model User {
-  id        String   @id // Clerk user ID
-  email     String   @unique
-  firstName String?  @map("first_name")
-  tier      UserTier @default(FREE)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  analyses      Analysis[]
-  usageLimit    UsageLimit?
-  conversations Conversation[]
-
-  // Cycle tracking
-  cycleEntries  CycleEntry[]
-  cycleSettings CycleSettings?
-  cycleLogs     CycleLog[]
-  cycleInsights CycleInsight[]
-
-  @@map("users")
-}
-
-model Analysis {
-  id             String         @id @default(cuid())
-  userId         String         @map("user_id")
-  inputText      String         @map("input_text") @db.Text
-  status         AnalysisStatus @default(PENDING)
-  biases         Json?
-  patterns       Json?
-  insights       Json?
-  emotionalState Json?          @map("emotional_state")
-  processingTime Int?           @map("processing_time") // milliseconds
-  errorMessage   String?        @map("error_message")
-  createdAt      DateTime       @default(now()) @map("created_at")
-  completedAt    DateTime?      @map("completed_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, createdAt(sort: Desc)])
-  @@map("analyses")
-}
-
-model UsageLimit {
-  id                  String   @id @default(cuid())
-  userId              String   @unique @map("user_id")
-  analysesThisMonth   Int      @default(0) @map("analyses_this_month")
-  chatMessagesThisMonth Int    @default(0) @map("chat_messages_this_month")
-  monthResetAt        DateTime @map("month_reset_at")
-  createdAt           DateTime @default(now()) @map("created_at")
-  updatedAt           DateTime @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("usage_limits")
-}
-
-model Conversation {
-  id          String      @id @default(cuid())
-  userId      String      @map("user_id")
-  title       String?
-  sessionType SessionType @default(REGULAR) @map("session_type")
-  createdAt   DateTime    @default(now()) @map("created_at")
-  updatedAt   DateTime    @updatedAt @map("updated_at")
-
-  // Real-time analysis (updated with each message)
-  emotionalState    Json?   @map("emotional_state")
-  biases            Json?
-  patterns          Json?
-  insights          Json?
-  analysisUpdatedAt DateTime? @map("analysis_updated_at")
-
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages    Message[]
-  emdrSession EmdrSession?
-
-  @@index([userId, updatedAt(sort: Desc)])
-  @@map("conversations")
-}
-
-enum MessageRole {
-  USER
-  ASSISTANT
-  SYSTEM
-}
-
-model Message {
-  id             String   @id @default(cuid())
-  conversationId String   @map("conversation_id")
-  role           MessageRole
-  content        String   @db.Text
-  createdAt      DateTime @default(now()) @map("created_at")
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-  @@index([conversationId, createdAt])
-  @@map("messages")
-}
-
-model EmdrSession {
-  id             String    @id @default(cuid())
-  conversationId String    @unique @map("conversation_id")
-  currentPhase   EmdrPhase @default(PREPARATION) @map("current_phase")
-
-  // Configuration
-  blinkIntervalMin Int @default(3000) @map("blink_interval_min")
-  blinkIntervalMax Int @default(8000) @map("blink_interval_max")
-  blinksPerSet     Int @default(5) @map("blinks_per_set")
-  tapIntervalMs    Int @default(1000) @map("tap_interval_ms")
-
-  // Tracking
-  distressStart  Int? @map("distress_start")
-  distressEnd    Int? @map("distress_end")
-  setsCompleted  Int  @default(0) @map("sets_completed")
-
-  // Timestamps
-  startedAt   DateTime  @default(now()) @map("started_at")
-  completedAt DateTime? @map("completed_at")
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-  @@map("emdr_sessions")
-}
-
-// ==========================================
-// CYCLE TRACKING MODELS
-// ==========================================
-
-model CycleEntry {
-  id          String    @id @default(cuid())
-  userId      String    @map("user_id")
-  periodStart DateTime  @map("period_start")
-  periodEnd   DateTime? @map("period_end")
-  cycleLength Int?      @map("cycle_length") // Calculated after next period starts
-  notes       String?   @db.Text
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, periodStart(sort: Desc)])
-  @@map("cycle_entries")
-}
-
-model CycleSettings {
-  id                     String    @id @default(cuid())
-  userId                 String    @unique @map("user_id")
-  isTrackingEnabled      Boolean   @default(true) @map("is_tracking_enabled")
-  averageCycleLength     Int       @default(28) @map("average_cycle_length")
-  averagePeriodLength    Int       @default(5) @map("average_period_length")
-  sendPhaseNotifications Boolean   @default(true) @map("send_phase_notifications")
-  lastPeriodStart        DateTime? @map("last_period_start")
-  createdAt              DateTime  @default(now()) @map("created_at")
-  updatedAt              DateTime  @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("cycle_settings")
-}
-
-model CycleLog {
-  id       String     @id @default(cuid())
-  userId   String     @map("user_id")
-  date     DateTime   @db.Date
-  phase    CyclePhase
-  cycleDay Int        @map("cycle_day")
-  // Symptoms (1-5 scale)
-  energy   Int?
-  mood     Int?
-  anxiety  Int?
-  cramps   Int?
-  bloating Int?
-  headache Int?
-  notes    String?    @db.Text
-  createdAt DateTime  @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, date])
-  @@index([userId, date(sort: Desc)])
-  @@index([userId, phase])
-  @@map("cycle_logs")
-}
-
-model CycleInsight {
+model Product {
   id          String     @id @default(cuid())
-  userId      String     @map("user_id")
-  phase       CyclePhase
-  insightType String     @map("insight_type") // e.g., "emotion_correlation", "pattern", "recommendation"
-  title       String
-  description String     @db.Text
-  dataPoints  Int        @default(0) @map("data_points") // Number of cycles analyzed
-  confidence  Float      @default(0) // 0-1 confidence score
-  metadata    Json?      // Additional data for visualization
-  generatedAt DateTime   @default(now()) @map("generated_at")
+  name        String
+  slug        String     @unique
+  price       Int        // Price in cents (2700 = €27)
+  description String?
+  fileUrl     String?
+  active      Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  purchases   Purchase[]
+}
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Purchase {
+  id              String   @id @default(cuid())
+  customerId      String
+  customer        Customer @relation(fields: [customerId], references: [id])
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id])
+  amount          Int
+  currency        String   @default("eur")
+  stripePaymentId String?  @unique
+  status          String   @default("completed")
+  emailSent       Boolean  @default(false)
+  createdAt       DateTime @default(now())
 
-  @@index([userId, phase])
-  @@map("cycle_insights")
+  @@index([customerId])
+  @@index([productId])
+  @@index([createdAt])
+}
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  template  String
+  resendId  String?
+  status    String   @default("sent")
+  createdAt DateTime @default(now())
 }
