@@ -1,11 +1,9 @@
 import { v } from "convex/values";
 import { query, internalMutation } from "./_generated/server";
-import { requireAdmin } from "./lib/auth";
 
-// List email logs with pagination (admin only)
+// List email logs with pagination
 export const list = query({
   args: {
-    token: v.string(),
     page: v.optional(v.number()),
     limit: v.optional(v.number()),
     status: v.optional(
@@ -19,8 +17,6 @@ export const list = query({
     ),
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
     const page = args.page ?? 1;
     const limit = args.limit ?? 20;
     const offset = (page - 1) * limit;
@@ -57,14 +53,10 @@ export const list = query({
   },
 });
 
-// Get email log statistics (admin only)
+// Get email log statistics
 export const getStats = query({
-  args: {
-    token: v.string(),
-  },
-  handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
+  args: {},
+  handler: async (ctx) => {
     const allEmails = await ctx.db.query("emailLogs").collect();
 
     const stats = {
@@ -113,45 +105,6 @@ export const getStats = query({
   },
 });
 
-// Get email log by ID (admin only)
-export const getById = query({
-  args: {
-    token: v.string(),
-    id: v.id("emailLogs"),
-  },
-  handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
-    const emailLog = await ctx.db.get(args.id);
-    if (!emailLog) {
-      return null;
-    }
-
-    // If there's a purchaseId, get purchase details
-    let purchase = null;
-    if (emailLog.purchaseId) {
-      const purchaseDoc = await ctx.db.get(emailLog.purchaseId);
-      if (purchaseDoc) {
-        const customer = await ctx.db.get(purchaseDoc.customerId);
-        const product = await ctx.db.get(purchaseDoc.productId);
-        purchase = {
-          id: purchaseDoc._id,
-          customerEmail: customer?.email ?? "Unknown",
-          productName: product?.name ?? "Unknown Product",
-          amount: purchaseDoc.amount,
-          amountFormatted: `€${(purchaseDoc.amount / 100).toFixed(2)}`,
-        };
-      }
-    }
-
-    return {
-      ...emailLog,
-      createdAt: new Date(emailLog.createdAt).toISOString(),
-      purchase,
-    };
-  },
-});
-
 // Internal: Create email log entry
 export const create = internalMutation({
   args: {
@@ -183,7 +136,7 @@ export const create = internalMutation({
   },
 });
 
-// Internal: Update email log status (e.g., from webhook)
+// Internal: Update email log status
 export const updateStatus = internalMutation({
   args: {
     resendId: v.string(),
@@ -197,7 +150,6 @@ export const updateStatus = internalMutation({
     errorMessage: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Find by resendId - need to scan since we don't have an index
     const allLogs = await ctx.db.query("emailLogs").collect();
     const emailLog = allLogs.find((log) => log.resendId === args.resendId);
 

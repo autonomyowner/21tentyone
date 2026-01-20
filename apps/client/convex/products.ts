@@ -1,8 +1,7 @@
 import { v } from "convex/values";
-import { query, mutation } from "./_generated/server";
-import { requireAdmin } from "./lib/auth";
+import { query, mutation, internalQuery } from "./_generated/server";
 
-// List all products (public - no auth required)
+// List all products (public)
 export const list = query({
   args: {
     includeInactive: v.optional(v.boolean()),
@@ -25,43 +24,6 @@ export const list = query({
       createdAt: new Date(product.createdAt).toISOString(),
       updatedAt: new Date(product.updatedAt).toISOString(),
     }));
-  },
-});
-
-// List products with sales statistics (admin only)
-export const listWithStats = query({
-  args: {
-    token: v.string(),
-  },
-  handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
-    const products = await ctx.db.query("products").collect();
-
-    const productsWithStats = await Promise.all(
-      products.map(async (product) => {
-        const purchases = await ctx.db
-          .query("purchases")
-          .withIndex("by_productId", (q) => q.eq("productId", product._id))
-          .filter((q) => q.eq(q.field("status"), "completed"))
-          .collect();
-
-        const salesCount = purchases.length;
-        const totalRevenue = purchases.reduce((sum, p) => sum + p.amount, 0);
-
-        return {
-          ...product,
-          priceFormatted: `€${(product.price / 100).toFixed(2)}`,
-          salesCount,
-          totalRevenue,
-          totalRevenueFormatted: `€${(totalRevenue / 100).toFixed(2)}`,
-          createdAt: new Date(product.createdAt).toISOString(),
-          updatedAt: new Date(product.updatedAt).toISOString(),
-        };
-      })
-    );
-
-    return productsWithStats;
   },
 });
 
@@ -89,33 +51,9 @@ export const getBySlug = query({
   },
 });
 
-// Get a product by ID (admin only)
-export const getById = query({
-  args: {
-    token: v.string(),
-    id: v.id("products"),
-  },
-  handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
-    const product = await ctx.db.get(args.id);
-    if (!product) {
-      return null;
-    }
-
-    return {
-      ...product,
-      priceFormatted: `€${(product.price / 100).toFixed(2)}`,
-      createdAt: new Date(product.createdAt).toISOString(),
-      updatedAt: new Date(product.updatedAt).toISOString(),
-    };
-  },
-});
-
-// Create a new product (admin only)
+// Create a new product
 export const create = mutation({
   args: {
-    token: v.string(),
     name: v.string(),
     slug: v.string(),
     price: v.number(),
@@ -124,8 +62,6 @@ export const create = mutation({
     active: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
     // Check if slug already exists
     const existing = await ctx.db
       .query("products")
@@ -150,10 +86,9 @@ export const create = mutation({
   },
 });
 
-// Update a product (admin only)
+// Update a product
 export const update = mutation({
   args: {
-    token: v.string(),
     id: v.id("products"),
     name: v.optional(v.string()),
     slug: v.optional(v.string()),
@@ -163,9 +98,7 @@ export const update = mutation({
     active: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
-    const { token, id, ...updates } = args;
+    const { id, ...updates } = args;
 
     // If slug is being updated, check for uniqueness
     if (updates.slug) {
@@ -192,15 +125,12 @@ export const update = mutation({
   },
 });
 
-// Toggle product active status (admin only)
+// Toggle product active status
 export const toggleActive = mutation({
   args: {
-    token: v.string(),
     id: v.id("products"),
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
     const product = await ctx.db.get(args.id);
     if (!product) {
       throw new Error("Product not found");
@@ -215,15 +145,12 @@ export const toggleActive = mutation({
   },
 });
 
-// Delete a product (admin only)
+// Delete a product
 export const remove = mutation({
   args: {
-    token: v.string(),
     id: v.id("products"),
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
     // Check if there are any purchases for this product
     const purchases = await ctx.db
       .query("purchases")

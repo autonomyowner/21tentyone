@@ -10,13 +10,11 @@
 
 import type * as admin from "../admin.js";
 import type * as adminAuth from "../adminAuth.js";
-import type * as adminUsers from "../adminUsers.js";
 import type * as customers from "../customers.js";
 import type * as email from "../email.js";
 import type * as emailHelpers from "../emailHelpers.js";
 import type * as emailLogs from "../emailLogs.js";
 import type * as http from "../http.js";
-import type * as lib_auth from "../lib/auth.js";
 import type * as products from "../products.js";
 import type * as purchases from "../purchases.js";
 import type * as stripe from "../stripe.js";
@@ -31,13 +29,11 @@ import type {
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   adminAuth: typeof adminAuth;
-  adminUsers: typeof adminUsers;
   customers: typeof customers;
   email: typeof email;
   emailHelpers: typeof emailHelpers;
   emailLogs: typeof emailLogs;
   http: typeof http;
-  "lib/auth": typeof lib_auth;
   products: typeof products;
   purchases: typeof purchases;
   stripe: typeof stripe;
