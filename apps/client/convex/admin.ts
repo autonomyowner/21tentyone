@@ -1,15 +1,10 @@
 import { v } from "convex/values";
 import { query } from "./_generated/server";
-import { requireAdmin } from "./lib/auth";
 
-// Get dashboard metrics (admin only)
+// Get dashboard metrics
 export const getMetrics = query({
-  args: {
-    token: v.string(),
-  },
-  handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
+  args: {},
+  handler: async (ctx) => {
     const now = Date.now();
     const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
     const sixtyDaysAgo = now - 60 * 24 * 60 * 60 * 1000;
@@ -51,19 +46,19 @@ export const getMetrics = query({
         ? ((recentCustomers.length - previousCustomers.length) /
             previousCustomers.length) *
           100
-        : 100;
+        : recentCustomers.length > 0 ? 100 : 0;
 
     const revenueGrowth =
       previousRevenue > 0
         ? ((recentRevenue - previousRevenue) / previousRevenue) * 100
-        : 100;
+        : recentRevenue > 0 ? 100 : 0;
 
     const purchaseGrowth =
       previousPurchases.length > 0
         ? ((recentPurchases.length - previousPurchases.length) /
             previousPurchases.length) *
           100
-        : 100;
+        : recentPurchases.length > 0 ? 100 : 0;
 
     // Get products count
     const activeProducts = await ctx.db
@@ -91,15 +86,12 @@ export const getMetrics = query({
   },
 });
 
-// Get revenue breakdown by period (admin only)
+// Get revenue breakdown by period
 export const getRevenue = query({
   args: {
-    token: v.string(),
     period: v.union(v.literal("7d"), v.literal("30d"), v.literal("90d")),
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
     const now = Date.now();
     const periodMs =
       args.period === "7d"
@@ -171,14 +163,10 @@ export const getRevenue = query({
   },
 });
 
-// Get sales by product (admin only)
+// Get sales by product
 export const getSalesByProduct = query({
-  args: {
-    token: v.string(),
-  },
-  handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
+  args: {},
+  handler: async (ctx) => {
     const products = await ctx.db.query("products").collect();
 
     const salesByProduct = await Promise.all(
@@ -207,65 +195,5 @@ export const getSalesByProduct = query({
 
     // Sort by revenue descending
     return salesByProduct.sort((a, b) => b.totalRevenue - a.totalRevenue);
-  },
-});
-
-// Get customer growth chart data (admin only)
-export const getCustomerGrowth = query({
-  args: {
-    token: v.string(),
-    period: v.union(v.literal("7d"), v.literal("30d"), v.literal("90d")),
-  },
-  handler: async (ctx, args) => {
-    await requireAdmin(ctx, args.token);
-
-    const now = Date.now();
-    const days = args.period === "7d" ? 7 : args.period === "30d" ? 30 : 90;
-    const startDate = now - days * 24 * 60 * 60 * 1000;
-
-    const customers = await ctx.db.query("customers").collect();
-
-    // Count customers created each day
-    const dailyNewCustomers: Record<string, number> = {};
-
-    for (const customer of customers) {
-      if (customer.createdAt >= startDate) {
-        const date = new Date(customer.createdAt).toISOString().split("T")[0];
-        dailyNewCustomers[date] = (dailyNewCustomers[date] || 0) + 1;
-      }
-    }
-
-    // Calculate cumulative customers
-    const customersBeforeStart = customers.filter(
-      (c) => c.createdAt < startDate
-    ).length;
-
-    const growthData = [];
-    let runningTotal = customersBeforeStart;
-
-    for (let i = days - 1; i >= 0; i--) {
-      const date = new Date(now - i * 24 * 60 * 60 * 1000);
-      const dateStr = date.toISOString().split("T")[0];
-      const newCustomers = dailyNewCustomers[dateStr] || 0;
-      runningTotal += newCustomers;
-
-      growthData.push({
-        date: dateStr,
-        dateFormatted: date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        }),
-        newCustomers,
-        totalCustomers: runningTotal,
-      });
-    }
-
-    return {
-      period: args.period,
-      totalCustomers: customers.length,
-      newCustomersInPeriod: customers.filter((c) => c.createdAt >= startDate)
-        .length,
-      growthData,
-    };
   },
 });

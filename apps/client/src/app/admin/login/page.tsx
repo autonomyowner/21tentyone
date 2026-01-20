@@ -1,26 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAdminAuth, useAdminSetupNeeded, useCreateInitialAdmin } from '@/hooks/useConvexAdmin';
+import { useAdminAuth } from '@/hooks/useConvexAdmin';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { login, isAuthenticated, isLoading: authLoading } = useAdminAuth();
-  const { setupNeeded, isLoading: setupLoading } = useAdminSetupNeeded();
-  const createInitialAdmin = useCreateInitialAdmin();
+  const { login, isAuthenticated, isLoading } = useAdminAuth();
 
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSetupMode, setIsSetupMode] = useState(false);
 
   // Redirect if already authenticated
-  if (isAuthenticated && !authLoading) {
-    router.push('/admin');
-    return null;
-  }
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.push('/admin');
+    }
+  }, [isAuthenticated, isLoading, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +26,7 @@ export default function AdminLoginPage() {
     setIsSubmitting(true);
 
     try {
-      const result = await login(email, password);
+      const result = await login(username, password);
       if (result.success) {
         router.push('/admin');
       } else {
@@ -41,30 +39,7 @@ export default function AdminLoginPage() {
     }
   };
 
-  const handleSetup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsSubmitting(true);
-
-    try {
-      const result = await createInitialAdmin({ email, password });
-      if (result.success) {
-        // Now login with the created credentials
-        const loginResult = await login(email, password);
-        if (loginResult.success) {
-          router.push('/admin');
-        }
-      } else {
-        setError(result.error || 'Setup failed');
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  if (authLoading || setupLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="animate-pulse text-slate-500">Loading...</div>
@@ -72,7 +47,9 @@ export default function AdminLoginPage() {
     );
   }
 
-  const showSetup = setupNeeded || isSetupMode;
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
@@ -80,9 +57,7 @@ export default function AdminLoginPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-slate-900">21|Twenty One</h1>
-            <p className="text-slate-500 mt-2">
-              {showSetup ? 'Create Admin Account' : 'Admin Login'}
-            </p>
+            <p className="text-slate-500 mt-2">Admin Login</p>
           </div>
 
           {error && (
@@ -91,18 +66,18 @@ export default function AdminLoginPage() {
             </div>
           )}
 
-          <form onSubmit={showSetup ? handleSetup : handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
-                Email
+              <label htmlFor="username" className="block text-sm font-medium text-slate-700 mb-1">
+                Username
               </label>
               <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-                placeholder="admin@example.com"
+                placeholder="admin"
                 required
               />
             </div>
@@ -119,7 +94,6 @@ export default function AdminLoginPage() {
                 className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                 placeholder="••••••••"
                 required
-                minLength={8}
               />
             </div>
 
@@ -128,21 +102,9 @@ export default function AdminLoginPage() {
               disabled={isSubmitting}
               className="w-full py-2.5 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Please wait...' : showSetup ? 'Create Account' : 'Sign In'}
+              {isSubmitting ? 'Please wait...' : 'Sign In'}
             </button>
           </form>
-
-          {setupNeeded && !isSetupMode && (
-            <p className="mt-4 text-center text-sm text-slate-500">
-              No admin account exists.{' '}
-              <button
-                onClick={() => setIsSetupMode(true)}
-                className="text-blue-600 hover:underline"
-              >
-                Create one
-              </button>
-            </p>
-          )}
         </div>
       </div>
     </div>

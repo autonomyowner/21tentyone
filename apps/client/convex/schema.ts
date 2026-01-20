@@ -71,25 +71,4 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_createdAt", ["createdAt"])
     .index("by_purchaseId", ["purchaseId"]),
-
-  // Admin users table - stores admin credentials
-  adminUsers: defineTable({
-    email: v.string(),
-    passwordHash: v.string(), // bcrypt hash
-    role: v.union(v.literal("admin"), v.literal("super_admin")),
-    createdAt: v.number(),
-    lastLoginAt: v.optional(v.number()),
-  })
-    .index("by_email", ["email"]),
-
-  // Admin sessions table - tracks active admin sessions
-  adminSessions: defineTable({
-    adminId: v.id("adminUsers"),
-    token: v.string(), // Random session token
-    expiresAt: v.number(), // Unix timestamp
-    createdAt: v.number(),
-  })
-    .index("by_token", ["token"])
-    .index("by_adminId", ["adminId"])
-    .index("by_expiresAt", ["expiresAt"]),
 });
