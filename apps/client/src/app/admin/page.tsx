@@ -89,7 +89,7 @@ export default function AdminDashboard() {
             ) : revenue?.revenueHistory && revenue.revenueHistory.length > 0 ? (
               <RevenueChart
                 data={revenue.revenueHistory.map(r => ({
-                  date: r.date,
+                  month: r.date,
                   value: r.revenue / 100
                 }))}
                 title=""
