@@ -1,9 +1,10 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin';
-import { useAdminAuth } from '@/hooks/useConvexAdmin';
+
+const AUTH_KEY = 't21_admin_auth';
 
 export default function AdminLayout({
   children,
@@ -11,39 +12,38 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { isAuthenticated, isLoading } = useAdminAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
-  // Don't require auth for login page
   const isLoginPage = pathname === '/admin/login';
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated && !isLoginPage) {
-      router.push('/admin/login');
-    }
-  }, [isAuthenticated, isLoading, isLoginPage, router]);
+    // Check auth from localStorage
+    const auth = localStorage.getItem(AUTH_KEY);
+    setIsAuthenticated(auth === 'true');
+  }, [pathname]); // Re-check on pathname change
 
-  // Show loading state
-  if (isLoading && !isLoginPage) {
+  // Still loading
+  if (isAuthenticated === null) {
+    if (isLoginPage) {
+      return <>{children}</>;
+    }
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{
-          background: '#F8FAFC',
-        }}
-      >
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="animate-pulse text-slate-500">Loading...</div>
       </div>
     );
   }
 
-  // Login page - render without sidebar
+  // Login page - always render
   if (isLoginPage) {
     return <>{children}</>;
   }
 
-  // Not authenticated - show nothing while redirecting
+  // Not authenticated - redirect to login
   if (!isAuthenticated) {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/admin/login';
+    }
     return null;
   }
 

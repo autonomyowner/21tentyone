@@ -1,24 +1,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAdminAuth } from '@/hooks/useConvexAdmin';
+import { useAction } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
+
+const AUTH_KEY = 't21_admin_auth';
 
 export default function AdminLoginPage() {
-  const router = useRouter();
-  const { login, isAuthenticated, isLoading } = useAdminAuth();
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
 
-  // Redirect if already authenticated
+  const loginAction = useAction(api.adminAuth.login);
+
+  // Check if already logged in
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      router.push('/admin');
+    const auth = localStorage.getItem(AUTH_KEY);
+    if (auth === 'true') {
+      window.location.href = '/admin';
+    } else {
+      setIsChecking(false);
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,29 +31,27 @@ export default function AdminLoginPage() {
     setIsSubmitting(true);
 
     try {
-      const result = await login(username, password);
+      const result = await loginAction({ username, password });
       if (result.success) {
-        router.push('/admin');
+        localStorage.setItem(AUTH_KEY, 'true');
+        // Use window.location for full page reload
+        window.location.href = '/admin';
       } else {
         setError(result.error || 'Login failed');
+        setIsSubmitting(false);
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
-    } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (isLoading) {
+  if (isChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="animate-pulse text-slate-500">Loading...</div>
       </div>
     );
-  }
-
-  if (isAuthenticated) {
-    return null;
   }
 
   return (
