@@ -24,17 +24,18 @@ export const list = query({
     const limit = args.limit ?? 20;
     const offset = (page - 1) * limit;
 
-    let purchasesQuery = ctx.db.query("purchases");
-
-    if (args.status) {
-      purchasesQuery = purchasesQuery.withIndex("by_status", (q) =>
-        q.eq("status", args.status!)
-      );
-    } else {
-      purchasesQuery = purchasesQuery.withIndex("by_createdAt");
-    }
-
-    const allPurchases = await purchasesQuery.order("desc").collect();
+    // Fetch purchases based on status filter
+    const allPurchases = args.status
+      ? await ctx.db
+          .query("purchases")
+          .withIndex("by_status", (q) => q.eq("status", args.status!))
+          .order("desc")
+          .collect()
+      : await ctx.db
+          .query("purchases")
+          .withIndex("by_createdAt")
+          .order("desc")
+          .collect();
 
     const total = allPurchases.length;
     const paginatedPurchases = allPurchases.slice(offset, offset + limit);
