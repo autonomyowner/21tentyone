@@ -161,7 +161,7 @@ export function T21Chatbot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-16 h-16 bg-[var(--matcha)] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50 hover:scale-110"
+          className="fixed bottom-6 right-6 w-16 h-16 bg-red-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50 hover:scale-110 hover:bg-red-700"
           aria-label="Open chat"
         >
           <svg
