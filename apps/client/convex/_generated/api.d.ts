@@ -10,6 +10,8 @@
 
 import type * as admin from "../admin.js";
 import type * as adminAuth from "../adminAuth.js";
+import type * as chat from "../chat.js";
+import type * as chatbot from "../chatbot.js";
 import type * as customers from "../customers.js";
 import type * as email from "../email.js";
 import type * as emailHelpers from "../emailHelpers.js";
@@ -30,6 +32,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   adminAuth: typeof adminAuth;
+  chat: typeof chat;
+  chatbot: typeof chatbot;
   customers: typeof customers;
   email: typeof email;
   emailHelpers: typeof emailHelpers;

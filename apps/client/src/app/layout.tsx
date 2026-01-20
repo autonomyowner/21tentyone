@@ -4,6 +4,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { ConditionalHeader } from "../components/ConditionalHeader";
 import { LanguageProvider } from "../components/LanguageProvider";
 import { ConvexClientProvider } from "../lib/convex";
+import { T21Chatbot } from "../components/T21Chatbot";
 import "./globals.css";
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -141,6 +142,7 @@ export default function RootLayout({
           <LanguageProvider>
             <ConditionalHeader />
             <main>{children}</main>
+            <T21Chatbot />
           </LanguageProvider>
         </ConvexClientProvider>
         {GA_MEASUREMENT_ID && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}

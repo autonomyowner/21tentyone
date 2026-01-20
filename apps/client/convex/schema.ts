@@ -86,4 +86,28 @@ export default defineSchema({
     .index("by_source", ["source"])
     .index("by_createdAt", ["createdAt"])
     .index("by_convertedToCustomer", ["convertedToCustomer"]),
+
+  // AI Leads table - chatbot email captures
+  aiLeads: defineTable({
+    email: v.string(),
+    sessionId: v.string(), // Browser session identifier
+    messageCount: v.number(), // Number of messages exchanged
+    lastInteraction: v.number(), // Last activity timestamp
+    convertedToCustomer: v.boolean(),
+    customerId: v.optional(v.id("customers")),
+    createdAt: v.number(),
+  })
+    .index("by_email", ["email"])
+    .index("by_sessionId", ["sessionId"])
+    .index("by_createdAt", ["createdAt"]),
+
+  // Chat messages table - conversation history
+  chatMessages: defineTable({
+    sessionId: v.string(),
+    role: v.union(v.literal("user"), v.literal("assistant")),
+    content: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_sessionId", ["sessionId"])
+    .index("by_createdAt", ["createdAt"]),
 });
