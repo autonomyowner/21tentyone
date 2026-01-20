@@ -171,10 +171,10 @@ export default function PrivacyPage() {
               <p style={{ opacity: 0.7, lineHeight: 1.8 }}>We use trusted third-party services to operate our platform:</p>
               <ul className="list-none mt-4 space-y-2" style={{ opacity: 0.7 }}>
                 {[
-                  'Authentication: Clerk (secure user authentication)',
                   'Payments: Stripe (payment processing)',
-                  'AI Processing: Anthropic (conversation AI)',
-                  'Hosting: Render, Vercel (cloud infrastructure)'
+                  'Email: Resend (transactional emails)',
+                  'Database: Convex (real-time backend)',
+                  'Hosting: Vercel (cloud infrastructure)'
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
                     <span className="w-1.5 h-1.5" style={{ background: 'var(--gold)' }} />
