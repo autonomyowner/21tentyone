@@ -138,7 +138,7 @@ export default function QuizPage() {
       setStep(nextStep);
       setIsAnimating(false);
       setClickedOption(null);
-    }, 300);
+    }, 180);
   };
 
   const handleAnswer = (questionKey: keyof QuizAnswers, value: string) => {
@@ -154,8 +154,8 @@ export default function QuizPage() {
       ? questionSteps[currentQ + 1] as Step
       : 'email';
 
-    // Delay to let user see selection before transitioning
-    setTimeout(() => goToStep(nextStep), 500);
+    // Quick delay to let user see selection before transitioning
+    setTimeout(() => goToStep(nextStep), 280);
   };
 
   const calculateAttachmentStyle = (): AttachmentStyle => {
@@ -324,7 +324,7 @@ export default function QuizPage() {
                     onClick={() => handleAnswer(step as keyof QuizAnswers, option.value)}
                     disabled={clickedOption !== null}
                     style={{
-                      animationDelay: `${index * 50}ms`,
+                      animationDelay: `${index * 30}ms`,
                     }}
                   >
                     <span className="option-text">{option.label}</span>
