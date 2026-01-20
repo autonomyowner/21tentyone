@@ -151,7 +151,7 @@ export const handleWebhookEvent = internalAction({
 
 // Helper function to handle checkout.session.completed
 async function handleCheckoutCompleted(
-  ctx: { runMutation: typeof import("./_generated/server").ActionCtx["runMutation"] },
+  ctx: { runMutation: (fn: any, args: any) => Promise<any> },
   session: Stripe.Checkout.Session
 ) {
   const customerEmail = session.customer_email;

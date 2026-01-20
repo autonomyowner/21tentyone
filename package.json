@@ -1,32 +1,20 @@
 {
   "name": "t21",
   "version": "1.0.0",
-  "description": "T21 - 21-Day Attachment Healing Program",
-  "main": "index.js",
-  "overrides": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "16.1.1"
-  },
-  "scripts": {
-    "dev": "concurrently \"npm --workspace apps/client run dev\" \"npm run convex:dev\"",
-    "dev:client": "npm --workspace apps/client run dev",
-    "convex:dev": "cd apps/client && npx convex dev",
-    "convex:deploy": "cd apps/client && npx convex deploy",
-    "convex:logs": "cd apps/client && npx convex logs",
-    "build": "npm --workspace apps/client run build",
-    "start": "npm --workspace apps/client run start",
-    "lint": "npm --workspace apps/client run lint"
-  },
-  "keywords": ["ai", "psychology", "profiling", "saas"],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "description": "21|Twenty One - Heal Your Attachment, Build Healthy Relationships",
   "private": true,
   "workspaces": [
-    "apps/api",
     "apps/client"
   ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:client\" \"npm run convex:dev\"",
+    "dev:client": "npm --workspace t21-client run dev",
+    "convex:dev": "cd apps/client && npx convex dev",
+    "convex:deploy": "cd apps/client && npx convex deploy",
+    "build": "npm --workspace t21-client run build",
+    "start": "npm --workspace t21-client run start",
+    "lint": "npm --workspace t21-client run lint"
+  },
   "devDependencies": {
     "concurrently": "^9.1.2"
   }

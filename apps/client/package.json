@@ -1,18 +1,15 @@
 {
-  "name": "matcha-client",
-  "version": "0.1.1",
+  "name": "t21-client",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.35.5",
     "@next/third-parties": "^16.1.1",
-    "@react-pdf/renderer": "^4.3.2",
     "bcryptjs": "^3.0.3",
     "convex": "^1.31.5",
     "next": "^16.0.8",
@@ -24,7 +21,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@next/bundle-analyzer": "^15.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",

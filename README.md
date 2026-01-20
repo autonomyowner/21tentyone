@@ -1,16 +1,48 @@
-# NeuroCanvas
+# 21|Twenty One
 
-AI-powered thought mapping SaaS. Turn free-form thoughts (voice or text) into structured, interactive mind maps.
+Heal Your Attachment, Build Healthy Relationships - A 21-day healing program.
 
-- Vision: Think freely. Map infinitely.
-- Core: Text/voice input → AI parsing → React Flow editor → save, version, collaborate.
+## Tech Stack
 
-Key docs:
-- PRD: `PRD - NeuroCanvas.md`
-- Build checklist: `TASKS - Build Checklist.md`
-- Branding: `docs/branding.md`
-- Coding standards: `docs/coding-standards.md`
-- Definition of Done: `docs/dod.md`
-- Repo setup & workflows: `docs/repo-setup.md`
+- **Frontend**: Next.js 16 + React 19 + Tailwind CSS
+- **Backend**: Convex (real-time database, serverless functions)
+- **Payments**: Stripe
+- **Email**: Resend
 
-Project status: Phase 0 (hygiene & planning).
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development (Next.js + Convex)
+npm run dev
+
+# Or run separately
+npm run dev:client    # Next.js only
+npm run convex:dev    # Convex only
+```
+
+## Environment Variables
+
+### Local (.env.local in apps/client/)
+```
+NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
+```
+
+### Convex Dashboard
+Set these in the Convex dashboard:
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `RESEND_API_KEY`
+- `EMAIL_FROM`
+- `CLIENT_URL`
+
+## Deployment
+
+The site is deployed on Vercel with automatic deployments from the main branch.
+
+```bash
+# Deploy Convex
+npm run convex:deploy
+```
