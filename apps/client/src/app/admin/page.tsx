@@ -86,11 +86,11 @@ export default function AdminDashboard() {
               <div className="h-64 flex items-center justify-center text-slate-500">
                 Loading...
               </div>
-            ) : revenue && revenue.length > 0 ? (
+            ) : revenue?.revenueHistory && revenue.revenueHistory.length > 0 ? (
               <RevenueChart
-                data={revenue.map(r => ({
+                data={revenue.revenueHistory.map(r => ({
                   date: r.date,
-                  value: r.amount / 100
+                  value: r.revenue / 100
                 }))}
                 title=""
               />
@@ -115,13 +115,13 @@ export default function AdminDashboard() {
                 {sales.map((product) => (
                   <div key={product.productId} className="p-3 bg-slate-50 rounded-lg">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-slate-900">{product.productName}</span>
+                      <span className="text-sm font-medium text-slate-900">{product.name}</span>
                       <span className="text-sm font-semibold text-slate-900">
                         {formatCurrency(product.totalRevenue)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-xs text-slate-500">
-                      <span>{product.totalSales} sales</span>
+                      <span>{product.salesCount} sales</span>
                       <span>{formatCurrency(product.price)} each</span>
                     </div>
                   </div>
