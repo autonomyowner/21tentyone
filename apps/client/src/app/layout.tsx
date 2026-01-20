@@ -3,6 +3,7 @@ import { Poppins, Inter, Cairo, Cormorant_Garamond, Outfit } from "next/font/goo
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { ConditionalHeader } from "../components/ConditionalHeader";
 import { LanguageProvider } from "../components/LanguageProvider";
+import { ConvexClientProvider } from "../lib/convex";
 import "./globals.css";
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -119,10 +120,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Preconnect to external origins for faster resource loading */}
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-        {/* Preconnect to Google Analytics */}
         {GA_MEASUREMENT_ID && (
           <>
             <link rel="preconnect" href="https://www.googletagmanager.com" />
@@ -138,11 +137,12 @@ export default function RootLayout({
           fontFamily: "var(--font-inter), var(--font-cairo), system-ui, sans-serif",
         }}
       >
-        <LanguageProvider>
-          <ConditionalHeader />
-          <main>{children}</main>
-        </LanguageProvider>
-        {/* Google Analytics - only loads if measurement ID is set */}
+        <ConvexClientProvider>
+          <LanguageProvider>
+            <ConditionalHeader />
+            <main>{children}</main>
+          </LanguageProvider>
+        </ConvexClientProvider>
         {GA_MEASUREMENT_ID && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
       </body>
     </html>

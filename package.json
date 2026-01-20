@@ -9,17 +9,14 @@
     "next": "16.1.1"
   },
   "scripts": {
-    "dev": "npm --workspace apps/client run dev",
-    "dev:api": "npm --workspace apps/api run start:dev",
-    "dev:all": "concurrently \"npm run dev\" \"npm run dev:api\"",
+    "dev": "concurrently \"npm --workspace apps/client run dev\" \"npm run convex:dev\"",
+    "dev:client": "npm --workspace apps/client run dev",
+    "convex:dev": "cd apps/client && npx convex dev",
+    "convex:deploy": "cd apps/client && npx convex deploy",
+    "convex:logs": "cd apps/client && npx convex logs",
     "build": "npm --workspace apps/client run build",
-    "build:api": "npm --workspace apps/api run build",
     "start": "npm --workspace apps/client run start",
-    "start:api": "npm --workspace apps/api run start:prod",
-    "lint": "npm --workspace apps/client run lint",
-    "prisma:generate": "npm --workspace apps/api run prisma:generate",
-    "prisma:migrate": "npm --workspace apps/api run prisma:migrate",
-    "prisma:studio": "npm --workspace apps/api run prisma:studio"
+    "lint": "npm --workspace apps/client run lint"
   },
   "keywords": ["ai", "psychology", "profiling", "saas"],
   "author": "",
