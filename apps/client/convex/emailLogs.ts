@@ -25,17 +25,18 @@ export const list = query({
     const limit = args.limit ?? 20;
     const offset = (page - 1) * limit;
 
-    let emailsQuery = ctx.db.query("emailLogs");
-
-    if (args.status) {
-      emailsQuery = emailsQuery.withIndex("by_status", (q) =>
-        q.eq("status", args.status!)
-      );
-    } else {
-      emailsQuery = emailsQuery.withIndex("by_createdAt");
-    }
-
-    const allEmails = await emailsQuery.order("desc").collect();
+    // Fetch emails based on status filter
+    const allEmails = args.status
+      ? await ctx.db
+          .query("emailLogs")
+          .withIndex("by_status", (q) => q.eq("status", args.status!))
+          .order("desc")
+          .collect()
+      : await ctx.db
+          .query("emailLogs")
+          .withIndex("by_createdAt")
+          .order("desc")
+          .collect();
 
     const total = allEmails.length;
     const paginatedEmails = allEmails.slice(offset, offset + limit);
