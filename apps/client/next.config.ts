@@ -1,10 +1,5 @@
 import type { NextConfig } from "next";
 
-// Bundle analyzer for performance debugging
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
-
 const nextConfig: NextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
@@ -26,11 +21,8 @@ const nextConfig: NextConfig = {
   // Experimental features for better performance
   experimental: {
     // Optimize package imports to reduce bundle size
-    optimizePackageImports: ['@clerk/nextjs'],
+    optimizePackageImports: ['recharts', 'convex'],
   },
-
-  // Turbopack configuration (Next.js 16+ uses Turbopack by default)
-  turbopack: {},
 
   // Headers for caching and security
   async headers() {
@@ -74,37 +66,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-
-  // Webpack optimizations
-  webpack: (config, { isServer }) => {
-    // Optimize bundle splitting
-    if (!isServer) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          ...config.optimization?.splitChunks,
-          cacheGroups: {
-            ...((config.optimization?.splitChunks as any)?.cacheGroups || {}),
-            // Separate vendor chunks for better caching
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              chunks: 'all',
-              priority: 10,
-            },
-            // Separate Clerk into its own chunk
-            clerk: {
-              test: /[\\/]node_modules[\\/]@clerk[\\/]/,
-              name: 'clerk',
-              chunks: 'all',
-              priority: 20,
-            },
-          },
-        },
-      };
-    }
-    return config;
-  },
 };
 
-export default withBundleAnalyzer(nextConfig);
+export default nextConfig;
