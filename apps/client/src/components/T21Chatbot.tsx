@@ -187,9 +187,11 @@ export function T21Chatbot() {
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-[#333] bg-gradient-to-r from-[var(--matcha)] to-[var(--matcha-dark)] rounded-t-2xl">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-2xl">
-                🌱
-              </div>
+              <img
+                src="/brand-logo.png"
+                alt="T21"
+                className="w-10 h-10 rounded-full object-cover"
+              />
               <div>
                 <h3 className="font-semibold text-white">T21 Assistant</h3>
                 <p className="text-xs text-white/80">Always here to help</p>
