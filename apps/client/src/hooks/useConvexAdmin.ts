@@ -162,3 +162,41 @@ export function useStripeActions() {
     getPaymentDashboardLink,
   };
 }
+
+/**
+ * Hook for leads stats
+ */
+export function useLeadsStats() {
+  const stats = useQuery(api.leads.getStats, {});
+  return {
+    stats,
+    isLoading: stats === undefined,
+  };
+}
+
+/**
+ * Hook for recent leads
+ */
+export function useRecentLeads(limit?: number) {
+  const leads = useQuery(api.leads.getRecent, { limit });
+  return {
+    leads: leads ?? [],
+    isLoading: leads === undefined,
+  };
+}
+
+/**
+ * Hook for leads list with pagination
+ */
+export function useLeads(options?: { page?: number; limit?: number }) {
+  const result = useQuery(api.leads.list, {
+    page: options?.page ?? 1,
+    limit: options?.limit ?? 20,
+  });
+
+  return {
+    leads: result?.leads ?? [],
+    pagination: result?.pagination,
+    isLoading: result === undefined,
+  };
+}

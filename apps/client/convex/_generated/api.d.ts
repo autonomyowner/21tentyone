@@ -15,6 +15,7 @@ import type * as email from "../email.js";
 import type * as emailHelpers from "../emailHelpers.js";
 import type * as emailLogs from "../emailLogs.js";
 import type * as http from "../http.js";
+import type * as leads from "../leads.js";
 import type * as products from "../products.js";
 import type * as purchases from "../purchases.js";
 import type * as stripe from "../stripe.js";
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   emailHelpers: typeof emailHelpers;
   emailLogs: typeof emailLogs;
   http: typeof http;
+  leads: typeof leads;
   products: typeof products;
   purchases: typeof purchases;
   stripe: typeof stripe;

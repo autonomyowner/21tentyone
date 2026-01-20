@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import './quiz.css';
 
 type Step = 'intro' | 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'email' | 'results';
@@ -116,7 +117,6 @@ const attachmentResults = {
 };
 
 export default function QuizPage() {
-  const router = useRouter();
   const [step, setStep] = useState<Step>('intro');
   const [answers, setAnswers] = useState<QuizAnswers>({ q1: '', q2: '', q3: '', q4: '', q5: '' });
   const [email, setEmail] = useState('');
@@ -124,6 +124,8 @@ export default function QuizPage() {
   const [emailError, setEmailError] = useState('');
   const [isAnimating, setIsAnimating] = useState(false);
   const [clickedOption, setClickedOption] = useState<string | null>(null);
+
+  const createLead = useMutation(api.leads.createFromQuiz);
 
   const steps: Step[] = ['intro', 'q1', 'q2', 'q3', 'q4', 'q5', 'email', 'results'];
   const questionSteps = ['q1', 'q2', 'q3', 'q4', 'q5'];
@@ -200,32 +202,20 @@ export default function QuizPage() {
 
     setIsSubmitting(true);
 
-    // Store email (you can connect to your backend/email service here)
     try {
-      // For now, store in localStorage and log
-      const quizData = {
+      const attachmentStyle = calculateAttachmentStyle();
+
+      // Save lead to Convex database
+      await createLead({
         email,
-        attachmentStyle: calculateAttachmentStyle(),
-        answers,
-        completedAt: new Date().toISOString(),
-      };
+        attachmentStyle,
+        quizAnswers: answers,
+      });
 
-      // Store locally
-      const existingLeads = JSON.parse(localStorage.getItem('quiz-leads') || '[]');
-      existingLeads.push(quizData);
-      localStorage.setItem('quiz-leads', JSON.stringify(existingLeads));
-
-      // Log for debugging (replace with actual API call)
-      console.log('Quiz lead captured:', quizData);
-
-      // TODO: Send to your email service/backend
-      // await fetch('/api/quiz-lead', { method: 'POST', body: JSON.stringify(quizData) });
-
-      setTimeout(() => {
-        setIsSubmitting(false);
-        goToStep('results');
-      }, 800);
-    } catch {
+      setIsSubmitting(false);
+      goToStep('results');
+    } catch (error) {
+      console.error('Failed to save lead:', error);
       setIsSubmitting(false);
       setEmailError('Something went wrong. Please try again.');
     }

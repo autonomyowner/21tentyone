@@ -11,6 +11,8 @@ import {
   useRevenue,
   useSalesByProduct,
   useRecentPurchases,
+  useLeadsStats,
+  useRecentLeads,
 } from '@/hooks/useConvexAdmin';
 
 export default function AdminDashboard() {
@@ -20,6 +22,8 @@ export default function AdminDashboard() {
   const { revenue, isLoading: revenueLoading } = useRevenue(revenuePeriod);
   const { sales, isLoading: salesLoading } = useSalesByProduct();
   const { purchases, isLoading: purchasesLoading } = useRecentPurchases(5);
+  const { stats: leadsStats, isLoading: leadsStatsLoading } = useLeadsStats();
+  const { leads: recentLeads, isLoading: recentLeadsLoading } = useRecentLeads(5);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('de-DE', {
@@ -34,7 +38,13 @@ export default function AdminDashboard() {
 
       <main className="p-6">
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+          <MetricCard
+            title="Quiz Leads"
+            value={leadsStatsLoading ? '...' : (leadsStats?.totalLeads || 0)}
+            change={leadsStats?.growth || 0}
+            changeLabel="vs last 30d"
+          />
           <MetricCard
             title="Total Revenue"
             value={metricsLoading ? '...' : formatCurrency(metrics?.totalRevenue || 0)}
@@ -54,8 +64,8 @@ export default function AdminDashboard() {
             changeLabel="vs last period"
           />
           <MetricCard
-            title="Avg. Order Value"
-            value={metricsLoading ? '...' : formatCurrency(metrics?.averageOrderValue || 0)}
+            title="Lead Conversion"
+            value={leadsStatsLoading ? '...' : `${leadsStats?.conversionRate || 0}%`}
             change={0}
             changeLabel="all time"
           />
@@ -133,6 +143,62 @@ export default function AdminDashboard() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Recent Leads */}
+        <div className="bg-white rounded-xl border border-slate-200 mb-6">
+          <div className="p-5 border-b border-slate-200">
+            <h3 className="text-lg font-semibold text-slate-900">Recent Quiz Leads</h3>
+          </div>
+          {recentLeadsLoading ? (
+            <div className="p-5">
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="animate-pulse h-12 bg-slate-100 rounded-lg" />
+                ))}
+              </div>
+            </div>
+          ) : recentLeads && recentLeads.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-slate-200 bg-slate-50">
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase">Email</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase">Attachment Style</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase">Source</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 uppercase">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentLeads.map((lead) => (
+                    <tr key={lead._id} className="border-b border-slate-100 hover:bg-slate-50">
+                      <td className="px-5 py-3">
+                        <p className="text-sm font-medium text-slate-900">{lead.email}</p>
+                      </td>
+                      <td className="px-5 py-3">
+                        <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 capitalize">
+                          {lead.attachmentStyle?.replace('-', ' ') || 'N/A'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3 text-sm text-slate-600 capitalize">{lead.source}</td>
+                      <td className="px-5 py-3 text-sm text-slate-500">
+                        {new Date(lead.createdAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="p-8 text-center text-slate-500">
+              No leads yet - quiz submissions will appear here
+            </div>
+          )}
         </div>
 
         {/* Recent Purchases */}

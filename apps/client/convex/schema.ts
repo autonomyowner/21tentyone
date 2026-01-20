@@ -71,4 +71,19 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_createdAt", ["createdAt"])
     .index("by_purchaseId", ["purchaseId"]),
+
+  // Leads table - quiz submissions and email captures
+  leads: defineTable({
+    email: v.string(),
+    source: v.string(), // "quiz", "newsletter", etc.
+    attachmentStyle: v.optional(v.string()), // For quiz: "anxious", "avoidant", etc.
+    quizAnswers: v.optional(v.any()), // Store quiz answers as JSON
+    convertedToCustomer: v.boolean(),
+    customerId: v.optional(v.id("customers")),
+    createdAt: v.number(),
+  })
+    .index("by_email", ["email"])
+    .index("by_source", ["source"])
+    .index("by_createdAt", ["createdAt"])
+    .index("by_convertedToCustomer", ["convertedToCustomer"]),
 });
