@@ -200,3 +200,43 @@ export function useLeads(options?: { page?: number; limit?: number }) {
     isLoading: result === undefined,
   };
 }
+
+/**
+ * Hook for AI leads stats (chatbot leads)
+ */
+export function useAILeadsStats() {
+  const stats = useQuery(api.chat.getAILeadsStats, {});
+  return {
+    stats,
+    isLoading: stats === undefined,
+  };
+}
+
+/**
+ * Hook for recent AI leads (chatbot leads)
+ */
+export function useRecentAILeads(limit?: number) {
+  const leads = useQuery(api.chat.getRecentAILeads, { limit });
+  return {
+    leads: leads ?? [],
+    isLoading: leads === undefined,
+  };
+}
+
+/**
+ * Hook for AI leads list with pagination
+ */
+export function useAILeads(options?: { page?: number; limit?: number }) {
+  const result = useQuery(api.chat.listAILeads, {
+    page: options?.page ?? 1,
+    limit: options?.limit ?? 20,
+  });
+
+  return {
+    leads: result?.leads ?? [],
+    totalCount: result?.totalCount ?? 0,
+    totalPages: result?.totalPages ?? 1,
+    currentPage: result?.currentPage ?? 1,
+    isLoading: result === undefined,
+  };
+}

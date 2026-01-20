@@ -14,10 +14,11 @@ export function T21Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [emailInput, setEmailInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState('');
   const [hasProvidedEmail, setHasProvidedEmail] = useState(false);
-  const [showEmailPrompt, setShowEmailPrompt] = useState(false);
+  const [emailError, setEmailError] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = useAction(api.chatbot.sendMessage);
@@ -39,37 +40,69 @@ export function T21Chatbot() {
     }
   }, []);
 
-  // Load conversation history when session starts
+  // Load conversation history and show welcome message
   useEffect(() => {
     if (conversationHistory && conversationHistory.length > 0) {
       setMessages(conversationHistory);
-    } else if (isOpen && messages.length === 0) {
-      // Show welcome message
+    } else if (isOpen && hasProvidedEmail && messages.length === 0) {
+      // Show welcome message after email is provided
       setMessages([
         {
           role: 'assistant',
           content:
-            "Hi! I'm T21, your friendly guide to understanding attachment styles and healing. How can I help you today?",
+            "Thank you! I'm here to help you understand your attachment style and guide you through the 21-day transformation journey. What would you like to know?",
           createdAt: Date.now(),
         },
       ]);
     }
-  }, [conversationHistory, isOpen]);
+  }, [conversationHistory, isOpen, hasProvidedEmail]);
 
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Show email prompt after 3 messages if not provided
-  useEffect(() => {
-    if (!hasProvidedEmail && messages.length >= 6 && !showEmailPrompt) {
-      setShowEmailPrompt(true);
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    setEmailError('');
+
+    if (!emailInput.trim()) {
+      setEmailError('Please enter your email');
+      return;
     }
-  }, [messages.length, hasProvidedEmail, showEmailPrompt]);
+
+    if (!validateEmail(emailInput.trim())) {
+      setEmailError('Please enter a valid email');
+      return;
+    }
+
+    try {
+      await captureAILead({ email: emailInput.trim(), sessionId });
+      localStorage.setItem('t21_chat_email', emailInput.trim());
+      setHasProvidedEmail(true);
+
+      // Show welcome message after email capture
+      setMessages([
+        {
+          role: 'assistant',
+          content:
+            "Thank you! I'm here to help you understand your attachment style and guide you through the 21-day transformation journey. What would you like to know?",
+          createdAt: Date.now(),
+        },
+      ]);
+    } catch (error) {
+      console.error('Email capture error:', error);
+      setEmailError('Something went wrong. Please try again.');
+    }
+  };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+    if (!inputValue.trim() || isLoading || !hasProvidedEmail) return;
 
     const userMessage = inputValue.trim();
     setInputValue('');
@@ -84,18 +117,6 @@ export function T21Chatbot() {
     setMessages((prev) => [...prev, newUserMessage]);
 
     try {
-      // Check if message contains email
-      const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-      const emailMatch = userMessage.match(emailRegex);
-
-      if (emailMatch && !hasProvidedEmail) {
-        const email = emailMatch[0];
-        await captureAILead({ email, sessionId });
-        localStorage.setItem('t21_chat_email', email);
-        setHasProvidedEmail(true);
-        setShowEmailPrompt(false);
-      }
-
       // Send to AI
       const response = await sendMessage({
         sessionId,
@@ -131,27 +152,6 @@ export function T21Chatbot() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
-    }
-  };
-
-  const handleEmailSubmit = async (email: string) => {
-    if (!email.trim()) return;
-
-    try {
-      await captureAILead({ email, sessionId });
-      localStorage.setItem('t21_chat_email', email);
-      setHasProvidedEmail(true);
-      setShowEmailPrompt(false);
-
-      // Add confirmation message
-      const confirmMessage: Message = {
-        role: 'assistant',
-        content: "Thanks for sharing your email! I'll continue helping you learn more about attachment healing.",
-        createdAt: Date.now(),
-      };
-      setMessages((prev) => [...prev, confirmMessage]);
-    } catch (error) {
-      console.error('Email capture error:', error);
     }
   };
 
@@ -215,103 +215,127 @@ export function T21Chatbot() {
             </button>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#1a1a1a]">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                    msg.role === 'user'
-                      ? 'bg-[var(--matcha)] text-white'
-                      : 'bg-[#2a2a2a] text-white'
-                  }`}
-                >
-                  <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                </div>
-              </div>
-            ))}
-
-            {/* Email Prompt */}
-            {showEmailPrompt && !hasProvidedEmail && (
-              <div className="flex justify-start">
-                <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-[#2a2a2a] border border-[var(--matcha)]">
-                  <p className="text-sm text-white mb-2">
-                    Want me to send you helpful resources? Share your email:
-                  </p>
-                  <input
-                    type="email"
-                    placeholder="your@email.com"
-                    className="w-full px-3 py-2 rounded-lg border border-[#444] bg-[#1a1a1a] text-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--matcha)]"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        handleEmailSubmit(e.currentTarget.value);
-                        e.currentTarget.value = '';
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-[#2a2a2a] rounded-2xl px-4 py-2">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                    <div
-                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                      style={{ animationDelay: '0.2s' }}
-                    />
-                    <div
-                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                      style={{ animationDelay: '0.4s' }}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input */}
-          <div className="p-4 border-t border-[#333] bg-[#1a1a1a] rounded-b-2xl">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask me anything..."
-                className="flex-1 px-4 py-2 rounded-full border border-[#444] bg-[#2a2a2a] text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--matcha)]"
-                disabled={isLoading}
+          {/* Email Capture Screen */}
+          {!hasProvidedEmail && (
+            <div className="flex-1 flex flex-col items-center justify-center p-6 bg-[#1a1a1a]">
+              <img
+                src="/brand-logo.png"
+                alt="T21"
+                className="w-20 h-20 rounded-full object-cover mb-4"
               />
-              <button
-                onClick={handleSendMessage}
-                disabled={isLoading || !inputValue.trim()}
-                className="w-10 h-10 bg-[var(--matcha)] text-white rounded-full flex items-center justify-center hover:bg-[var(--matcha-dark)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Send message"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-5 h-5"
+              <h4 className="text-xl font-semibold text-white mb-2 text-center">
+                Hi, I'm T21!
+              </h4>
+              <p className="text-gray-300 text-center text-sm mb-6 leading-relaxed">
+                I'm your AI assistant for the 21-day transformation journey. Before we start, could you share your email? This way, our team can send you helpful resources and keep you updated on your healing journey.
+              </p>
+              <form onSubmit={handleEmailSubmit} className="w-full max-w-xs">
+                <input
+                  type="email"
+                  value={emailInput}
+                  onChange={(e) => {
+                    setEmailInput(e.target.value);
+                    setEmailError('');
+                  }}
+                  placeholder="your@email.com"
+                  className="w-full px-4 py-3 rounded-xl border border-[#444] bg-[#2a2a2a] text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--matcha)] mb-2"
+                />
+                {emailError && (
+                  <p className="text-red-400 text-xs mb-2">{emailError}</p>
+                )}
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-[var(--matcha)] text-white rounded-xl font-medium hover:bg-[var(--matcha-dark)] transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                  />
-                </svg>
-              </button>
+                  Start Chatting
+                </button>
+              </form>
+              <p className="text-gray-500 text-xs mt-4 text-center">
+                We respect your privacy and won't spam you.
+              </p>
             </div>
-          </div>
+          )}
+
+          {/* Chat Area - Only show after email is provided */}
+          {hasProvidedEmail && (
+            <>
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#1a1a1a]">
+                {messages.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                        msg.role === 'user'
+                          ? 'bg-[var(--matcha)] text-white'
+                          : 'bg-[#2a2a2a] text-white'
+                      }`}
+                    >
+                      <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                    </div>
+                  </div>
+                ))}
+
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <div className="bg-[#2a2a2a] rounded-2xl px-4 py-2">
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                        <div
+                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                          style={{ animationDelay: '0.2s' }}
+                        />
+                        <div
+                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                          style={{ animationDelay: '0.4s' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Input */}
+              <div className="p-4 border-t border-[#333] bg-[#1a1a1a] rounded-b-2xl">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Ask me anything..."
+                    className="flex-1 px-4 py-2 rounded-full border border-[#444] bg-[#2a2a2a] text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--matcha)]"
+                    disabled={isLoading}
+                  />
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={isLoading || !inputValue.trim()}
+                    className="w-10 h-10 bg-[var(--matcha)] text-white rounded-full flex items-center justify-center hover:bg-[var(--matcha-dark)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Send message"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </>

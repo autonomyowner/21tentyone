@@ -97,3 +97,87 @@ export const updateAILeadActivity = mutation({
     }
   },
 });
+
+// Get AI leads stats for admin dashboard
+export const getAILeadsStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const allLeads = await ctx.db.query("aiLeads").collect();
+    const totalLeads = allLeads.length;
+
+    // Count leads from last 30 days
+    const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    const recentLeads = allLeads.filter((l) => l.createdAt > thirtyDaysAgo).length;
+
+    // Count leads from previous 30 days for growth calculation
+    const sixtyDaysAgo = Date.now() - 60 * 24 * 60 * 60 * 1000;
+    const previousPeriodLeads = allLeads.filter(
+      (l) => l.createdAt > sixtyDaysAgo && l.createdAt <= thirtyDaysAgo
+    ).length;
+
+    // Calculate growth percentage
+    const growth =
+      previousPeriodLeads > 0
+        ? Math.round(((recentLeads - previousPeriodLeads) / previousPeriodLeads) * 100)
+        : recentLeads > 0
+        ? 100
+        : 0;
+
+    // Conversion rate
+    const convertedLeads = allLeads.filter((l) => l.convertedToCustomer).length;
+    const conversionRate = totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0;
+
+    return {
+      totalLeads,
+      recentLeads,
+      growth,
+      conversionRate,
+    };
+  },
+});
+
+// Get recent AI leads for admin dashboard
+export const getRecentAILeads = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 10;
+
+    const leads = await ctx.db
+      .query("aiLeads")
+      .withIndex("by_createdAt")
+      .order("desc")
+      .take(limit);
+
+    return leads;
+  },
+});
+
+// List all AI leads with pagination
+export const listAILeads = query({
+  args: {
+    page: v.optional(v.number()),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const page = args.page || 1;
+    const limit = args.limit || 20;
+
+    const allLeads = await ctx.db
+      .query("aiLeads")
+      .withIndex("by_createdAt")
+      .order("desc")
+      .collect();
+
+    const totalCount = allLeads.length;
+    const totalPages = Math.ceil(totalCount / limit);
+    const startIndex = (page - 1) * limit;
+    const leads = allLeads.slice(startIndex, startIndex + limit);
+
+    return {
+      leads,
+      totalCount,
+      totalPages,
+      currentPage: page,
+    };
+  },
+});
